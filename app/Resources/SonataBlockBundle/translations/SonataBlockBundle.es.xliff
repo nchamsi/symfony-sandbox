@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="sonata.block.container">
+                <source>sonata.block.container</source>
+                <target>Contenedor</target>
+            </trans-unit>
+            <trans-unit id="sonata.block.text">
+                <source>sonata.block.text</source>
+                <target>Texto Simple</target>
+            </trans-unit>
+            <trans-unit id="sonata.block.rss">
+                <source>sonata.block.rss</source>
+                <target>Canal RSS</target>
+            </trans-unit>
+            <trans-unit id="sonata.block.menu">
+                <source>sonata.block.menu</source>
+                <target>Menú</target>
+            </trans-unit>
+            <trans-unit id="sonata.block.template">
+                <source>sonata.block.template</source>
+                <target>Plantilla</target>
+            </trans-unit>
+            <trans-unit id="Account Block">
+                <source>Account Block</source>
+                <target>Cuenta de Usuario</target>
+            </trans-unit>
+            <trans-unit id="Breadcrumb (Homepage)">
+                <source>Breadcrumb (Homepage)</source>
+                <target>Barra de navegación (Inicio)</target>
+            </trans-unit>
+            <trans-unit id="Children Page (core)">
+                <source>Children Page (core)</source>
+                <target>Páginas subordinadas</target>
+            </trans-unit>
+            <trans-unit id="Shared Block">
+                <source>Shared Block</source>
+                <target>Bloque Compartido</target>
+            </trans-unit>
+            <trans-unit id="User Profile Menu">
+                <source>User Profile Menu</source>
+                <target>Menu de Perfil</target>
+            </trans-unit>
+            <trans-unit id="sonata.page.block.breadcrumb">
+                <source>sonata.page.block.breadcrumb</source>
+                <target>Barra de Navegación (Sonata Page)</target>
+            </trans-unit>
+            <trans-unit id="sonata.page.block.container">
+                <source>sonata.page.block.container</source>
+                <target>Contenedor (Sonata Page)</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.block.breadcrumb_index">
+                <source>sonata.user.block.breadcrumb_index</source>
+                <target>Navegación del Perfil (Inicio)</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.block.breadcrumb_profile">
+                <source>sonata.user.block.breadcrumb_profile</source>
+                <target>Navegación del Perfil</target>
+            </trans-unit>
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,11 @@
+{% extends "SonataAdminBundle:CRUD:edit.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('form div.form-actions button[name="btn_update_and_edit"]').parent().append('<a class="btn btn-info" href="{{admin.generateObjectUrl('show',object)}}"><i class="fa fa-user"></i> {{'user_block_profile'|trans({}, 'SonataUserBundle')}}</a>');
+            $('form div.form-actions button[name="btn_update_and_edit"]').parent().append('<a class="btn btn-info" href="{{path('sonata_admin_dashboard')}}" style="margin-left:5px;"><i class="fa fa-home"></i> {{'title_dashboard'|trans({},'SonataAdminBundle')}}</a>');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,15 @@
+<strong>{{ log.source.typLabel  | trans({},'AppBundle') }}</strong> [<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal_{{log.id}}">{{log.source.label}}</a>]
+{{ admin.trans('log.update_action_label', {}, admin.translationDomain) }}.
+<div class="modal fade" id="myModal_{{log.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-header-blue">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ audit_assoc(log.source) }}</h4>
+      </div>
+      <div class="modal-body">
+        {{ audit_diff(log, admin) }}
+      </div>
+    </div>
+  </div>
+</div>

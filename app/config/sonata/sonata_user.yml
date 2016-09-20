@@ -1,0 +1,80 @@
+#
+# more information can be found here https://sonata-project.org/bundles/user
+#
+# Enable Doctrine to map the provided entities
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                mappings:
+                    FOSUserBundle: ~
+                    SonataUserBundle: ~
+                    ApplicationSonataUserBundle: ~
+
+        resolve_target_entities:
+            Sonata\UserBundle\Entity\BaseUser: Application\Sonata\UserBundle\Entity\User\User
+            Sonata\UserBundle\Entity\BaseGroup: Application\Sonata\UserBundle\Entity\User\Group
+
+# if you change the class configuration, please also alter the fos_user.yml file
+sonata_user:
+    class:
+        user:  %security_user_class%
+        group: %security_group_class%
+
+    security_acl:             false
+    table:
+        user_group:     %security_user_group_table%
+
+    impersonating:
+        route:                page_slug
+        parameters:           { path: / }
+
+    google_authenticator:
+        server:               %sonata_user.google_authenticator.server%
+        enabled:              false
+
+    manager_type:             orm
+
+    profile:
+        dashboard:
+            blocks:
+                - { position: left, type: sonata.block.service.text, settings: { content: "<h2>Welcome!</h2> <p>This is a sample user profile dashboard, feel free to override it in the configuration! Want to make this text dynamic? For instance display the user's name? Create a dedicated block and edit the configuration!</p>"} }
+        menu:
+            - { route: 'fos_user_profile_show', label: 'sonata_profile_title', domain: 'SonataUserBundle'}
+            - { route: 'fos_user_profile_edit', label: 'sonata_user_profile_breadcrumb_edit', domain: 'SonataUserBundle'}
+            - { route: 'fos_user_profile_edit_authentication', label: 'title_user_edit_authentication', domain: 'SonataUserBundle'}
+            - { route: 'fos_user_change_password', label: 'title_user_edit_password', domain: 'SonataUserBundle'}
+            #- { route: 'sonata_user_resetting_request', label: 'title_user_resetting', domain: 'SonataUserBundle'}
+            #- { route: '', label: '', domain: 'SonataUserBundle'}
+
+        form:
+            type:                 application_sonata_user_profile
+            handler:              application_sonata_user.profile.form.handler
+            name:                 application_sonata_user_profile_form
+            validation_groups:
+                #- Default
+                - Profile
+                - Default
+
+        register:
+            # You may customize the registration forms over here
+            form:
+                type:                 application_sonata_user_registration
+                handler:              application_sonata_user.registration.form.handler
+                name:                 application_sonata_user_registration_form
+                validation_groups:
+                    # Defaults:
+                    - Registration
+                    - Default
+
+    admin:                  # Admin Classes
+        user:
+            class:          %security_user_admin_class%
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          %security_group_admin_class%
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+

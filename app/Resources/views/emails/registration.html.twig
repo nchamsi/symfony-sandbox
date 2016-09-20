@@ -1,0 +1,18 @@
+{# app/Resources/views/Emails/registration.html.twig #}
+<h3>You did it! You registered!</h3>
+{# example, assuming you have a route named "login" #}
+To login, go to: 
+<hr>
+
+<a href="{{ url('_index') }}">URL to: {{  url('_index') }}"</a><br>
+
+<hr>
+
+<a href="{{ path('_index') }}">Path to: {{  path('_index') }}</a>
+
+<hr>
+Thanks!
+
+<hr>
+{# Makes an absolute URL to the /images/logo.png file #}
+<img src="{{ absolute_url(asset('/apple-touch-icon.png')) }}">

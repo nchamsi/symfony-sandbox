@@ -1,0 +1,26 @@
+{% extends "SonataUserBundle:Profile:action.html.twig" %}
+
+
+{% block sonata_profile_content %}
+    <div class="row">
+        <div class="span12 col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'title_user_edit_authentication'|trans({}, 'SonataUserBundle') }}</h3>
+                </div>
+                <div class="panel-body">
+                    {% include "SonataUserBundle:Profile:edit_authentication_content.html.twig" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock sonata_profile_content %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){
+            //$('.sonata_profile_menu a.list-group-item[href="{{path('sonata_user_profile_edit_authentication')}}"]').addClass('active');
+        });
+    </script>
+{% endblock javascripts %}

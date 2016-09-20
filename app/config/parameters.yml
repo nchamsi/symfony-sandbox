@@ -1,0 +1,63 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_name: symfony
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt
+    webapp_host: 127.0.0.1
+    webapp_url:  http://%webapp_host%   # http://%webapp_host%/symfony/web or http://127.0.0.1/symfony/web
+        
+    webapp.logo:              /logo.png
+    webapp.short_title:       Symfony
+    webapp.title:             Symfony
+    
+    # Sonata Admin Options
+    sonata_admin.title:             Symfony
+    sonata_admin.short_title:       Symfony
+    sonata_admin.logo_title:        /logo.png
+    # Skin Color [black, blue, green, purple, red, yellow]
+    sonata_admin.skin:              skin-blue
+
+    # Sonata Admin Options
+    sonata_admin.title:             Sonata Project
+    sonata_admin.logo_title:        /bundles/sonataadmin/logo_title.png
+
+    # Sonata News Options
+    
+    sonata_news.blog_title:         My Awesome Blog
+    sonata_news.blog_link:          http://awesome-blog.ltd
+    sonata_news.blog_description:   My Awesome blog description
+    sonata_news.salt:               ThisTokenIsNotSoSecretChangeIt
+    sonata_news.comment.emails:     [mail@example.org]
+    sonata_news.comment.email_from: no-reply@example.org
+
+    # Sonata Media options
+    
+    sonata_media.cdn.host:     %webapp_url%/uploads/media # http://127.0.0.1:8000/uploads/media
+
+    # Sonata User Options
+    
+    security_user_class: Application\Sonata\UserBundle\Entity\User\User
+    security_group_class: Application\Sonata\UserBundle\Entity\User\Group
+    security_user_group_table: user__user_group
+    security_user_admin_class: Application\Sonata\UserBundle\Admin\User\UserAdmin
+    security_group_admin_class: Application\Sonata\UserBundle\Admin\User\GroupAdmin
+    sonata_user.google_authenticator.server: app.symfony-sonata-project.com
+    sonata_page.varnish.command: 'if [ ! -r "/etc/varnish/secret" ]; then echo "VALID ERROR :/"; else varnishadm -S /etc/varnish/secret -T 127.0.0.1:6082 {{ COMMAND }} "{{ EXPRESSION }}"; fi;'
+    sonata.fixtures.product.fake: 0
+    sonata.fixtures.customer.fake: 10
+    sonata.fixtures.page.create_subsite: false
+    simplethings.entityaudit.table_prefix: sf_audit__
+    simplethings.entityaudit.table_suffix: null
+    simplethings.entityaudit.revision_table_name: sf_audit__alls_revisions
+    jwt_private_key_path: '%kernel.root_dir%/var/jwt/server.key'
+    jwt_public_key_path: '%kernel.root_dir%/var/jwt/server.crt'
+    jwt_key_pass_phrase: '1234'
+    jwt_token_ttl: 86400

@@ -1,0 +1,3 @@
+#application_data_dog_audit_homepage:
+#    path:     /
+#    defaults: { _controller: ApplicationApplicationDataDogAuditBundle:Default:index }

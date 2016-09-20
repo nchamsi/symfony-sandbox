@@ -1,0 +1,3 @@
+#application_sonata_classification_homepage:
+#    path:     /hello/{name}
+#    defaults: { _controller: ApplicationSonataClassificationBundle:Default:index }

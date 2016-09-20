@@ -1,0 +1,236 @@
+#
+# more information can be found here https://sonata-project.org/bundles/admin
+#
+twig:
+    base_template_class: Sonata\CacheBundle\Twig\TwigTemplate14
+
+    form:
+        resources:
+            - 'SonataFormatterBundle:Form:formatter.html.twig'
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+            - 'SonataCoreBundle:Form:datepicker.html.twig'
+            - 'ShtumiUsefulBundle::fields.html.twig'       
+
+    globals:
+        sonata_admin_short_title: "%sonata_admin.short_title%"
+        sonata_admin_skin: "%sonata_admin.skin%"
+
+sonata_block:
+    blocks:
+        sonata.admin.block.search_result:
+             contexts: [admin]
+
+sonata_admin:
+    # default value, change it to sonata.admin.security.handler.acl to use ACL
+    security:
+        handler: sonata.admin.security.handler.role
+
+        # acl security information
+    #    information:
+    #        GUEST:    [VIEW, LIST]
+    #        STAFF:    [EDIT, LIST, CREATE]
+    #        EDITOR:   [OPERATOR, EXPORT]
+    #        ADMIN:    [MASTER]
+        # permissions not related to an object instance and also to be available when objects do not exist
+        # the DELETE admin permission means the user is allowed to batch delete objects
+    #    admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER]
+        # permission related to the objects
+    #    object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER]
+
+    title:      %sonata_admin.title%
+    title_logo: %sonata_admin.logo_title%
+
+    options:
+        title_mode:  both         # One of "single_text"; "single_image"; "both"
+        html5_validate: true # does not use html5 validation
+        pager_links: 5        # pager max links to display
+        # another options
+        sort_admins:          false
+        confirm_exit:         true
+        use_select2:          true
+        use_icheck:           true
+        use_bootlint:         false
+        use_stickyforms:      true
+        form_type:            standard
+        dropdown_number_groups_per_colums:  2
+        # Enable locking when editing an object, if the corresponding object manager supports it.
+        lock_protection:      true
+        
+
+    templates:
+        # default global templates
+        # the layout template include javascript/stylesheet to the formatter bundle,
+        # if you don't need it use the default one: SonataAdminBundle::standard_layout.html.twig
+        layout:  SonataAdminBundle::standard_layout.html.twig
+        ajax:    SonataAdminBundle::ajax_layout.html.twig
+
+        # default value if done set, actions templates, should extends a global templates
+        list:    SonataAdminBundle:CRUD:list.html.twig
+        show:    SonataAdminBundle:CRUD:show.html.twig
+        edit:    SonataAdminBundle:CRUD:edit.html.twig
+
+        base_list_field:    ApplicationSonataAdminBundle:CRUD:base_list_field.html.twig
+
+    dashboard:
+        blocks:
+            -
+                type:     sonata.admin.block.stats   # block id
+                position: top                        # zone in the dashboard
+                class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+                settings:
+                    code:  sonata.user.admin.user
+                    icon:  fa-user                  # font awesome icon
+                    text:  Users
+                    color: bg-green                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+                    filters:                         # filter values
+                        #enabled: {value: true}
+            -
+                type:     sonata.admin.block.stats   # block id
+                position: top                        # zone in the dashboard
+                class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+                settings:
+                    code:  sonata.user.admin.user
+                    icon:  fa-user                  # font awesome icon
+                    text:  Enabled Users
+                    color: bg-aqua                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+                    filters:                         # filter values
+                        enabled: {value: true}
+            -
+                type:     sonata.admin.block.stats   # block id
+                position: top                        # zone in the dashboard
+                class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+                settings:
+                    code:  sonata.user.admin.user
+                    icon:  fa-user                  # font awesome icon
+                    text:  Disabled Users
+                    color: bg-red                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+                    filters:                         # filter values
+                        enabled: { type: '',value: 2}
+            #- { position: left, type: sonata.admin.block.admin_list }
+            #- { position: right, type: sonata.admin_doctrine_orm.block.audit}
+            #- { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
+
+        groups:
+            sonata.admin.group.administration:
+                label:           sonata_administration
+                label_catalogue: SonataAdminBundle
+                #label:           users
+                #label_catalogue: SonataUserBundle
+                icon: '<i class="glyphicon glyphicon-user"></i>'
+                items: 
+                    - sonata.user.admin.user
+                    - sonata.user.admin.group
+                    - data_dog_audit.admin.audit_log
+
+            sonata.admin.group.site_builder:
+                label:           sonata_page
+                label_catalogue: SonataPageBundle
+                icon:            '<i class="fa fa-puzzle-piece"></i>'
+                items:
+                    #- sonata.page.admin.site
+                    #- sonata.page.admin.snapshot
+                    #- sonata.page.admin.page
+                    #- sonata.page.admin.shared_block
+
+            sonata.admin.group.classification:
+                label:           sonata_classification
+                label_catalogue: SonataClassificationBundle
+                icon:            '<i class="fa fa-sitemap"></i>'
+                items:
+                    #- sonata.classification.admin.category
+                    #- sonata.classification.admin.tag
+                    #- sonata.classification.admin.collection
+                    #- sonata.classification.admin.context
+
+            sonata.admin.group.content:
+                label:           sonata_media
+                label_catalogue: SonataMediaBundle
+                icon:            '<i class="fa fa-th"></i>'
+                items:
+                    #- sonata.media.admin.media
+                    #- sonata.media.admin.gallery
+
+
+    assets:
+        stylesheets:
+            # The sandbox includes default pre-optimized version of some css and js
+            # So you can either use them, and add your custom assets here
+            #   ~ or ~
+            # tweak the assetic.yml and the following lines
+            - assetic/sonata_admin_css.css
+            - assetic/sonata_formatter_css.css
+            - assetic/sonata_jqueryui_css.css
+            - bundles/sonataadmin/vendor/admin-lte/dist/css/skins/skin-black.min.css
+            # Skin Color [black, blue, green, purple, red, yellow]
+            - bundles/sonataadmin/vendor/admin-lte/dist/css/skins/%sonata_admin.skin%.min.css
+            - assets/vendor/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css
+            - assets/vendor/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css
+            #- bundles/sonataadmin/vendor/iCheck/skins/square/blue.css
+            - bundles/applicationsonataadmin/vendor/iCheck/skins/flat/blue.css
+
+            - bundles/sonatapage/sonata-page.back.min.css
+            # Default admin assets
+#            - bundles/sonatacore/vendor/bootstrap/dist/css/bootstrap.min.css
+#            - bundles/sonatacore/vendor/components-font-awesome/css/font-awesome.min.css
+#            - bundles/sonatacore/vendor/ionicons/css/ionicons.min.css
+#            - bundles/sonataadmin/vendor/admin-lte/dist/css/AdminLTE.min.css
+#            - bundles/sonataadmin/vendor/iCheck/skins/flat/blue.css
+#            - bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
+#            - bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css
+#            - bundles/sonatacore/vendor/select2/select2.css
+#            - bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css
+#            - bundles/sonataadmin/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css
+#            - bundles/sonataadmin/css/styles.css
+#            - bundles/sonataadmin/css/layout.css
+#            - bundles/sonataadmin/css/tree.css
+
+            # Formatter assets
+#            - bundles/sonataformatter/markitup/skins/sonata/style.css
+#            - bundles/sonataformatter/markitup/sets/markdown/style.css
+#            - bundles/sonataformatter/markitup/sets/html/style.css
+#            - bundles/sonataformatter/markitup/sets/textile/style.css
+
+            # Page assets
+#            - bundles/sonatapage/sonata-page.back.min.css
+
+
+        javascripts:
+            - assetic/sonata_admin_js.js
+#            - bundles/sonataadmin/Admin.js
+#            - bundles/sonataadmin/treeview.js
+            - assetic/sonata_jqueryui_js.js
+            - assetic/sonata_formatter_js.js
+            - bundles/sonataformatter/vendor/ckeditor/ckeditor.js
+            - assets/vendor/hinclude/hinclude.js
+            - assets/vendor/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js
+            - assets/vendor/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js
+            - assets/vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js
+
+            - bundles/sonatapage/sonata-page.back.min.js
+            # Default admin assets
+#            - bundles/sonatacore/vendor/jquery/dist/jquery.min.js
+#            - bundles/sonataadmin/vendor/jquery.scrollTo/jquery.scrollTo.min.js
+#            - bundles/sonatacore/vendor/moment/min/moment.min.js
+#            - bundles/sonatacore/vendor/bootstrap/dist/js/bootstrap.min.js
+#            - bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js
+#            - bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js
+#            - bundles/sonataadmin/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js
+#            - bundles/sonataadmin/jquery/jquery.form.js
+#            - bundles/sonataadmin/jquery/jquery.confirmExit.js
+#            - bundles/sonataadmin/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js
+#            - bundles/sonatacore/vendor/select2/select2.min.js
+#            - bundles/sonataadmin/vendor/admin-lte/dist/js/app.min.js
+#            - bundles/sonataadmin/vendor/iCheck/icheck.min.js
+#            - bundles/sonataadmin/vendor/slimScroll/jquery.slimscroll.min.js
+#            - bundles/sonataadmin/Admin.js
+#            - bundles/sonataadmin/treeview.js
+
+            # Formatter assets
+#            - bundles/sonataformatter/vendor/markitup-markitup/markitup/jquery.markitup.js
+#            - bundles/sonataformatter/markitup/sets/markdown/set.js
+#            - bundles/sonataformatter/markitup/sets/html/set.js
+#            - bundles/sonataformatter/markitup/sets/textile/set.js
+
+            # Page assets
+#            - bundles/sonatapage/sonata-page.back.js
+

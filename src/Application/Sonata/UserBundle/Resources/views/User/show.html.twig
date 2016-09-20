@@ -1,0 +1,18 @@
+{% extends "SonataAdminBundle:CRUD:show.html.twig" %}
+
+{% block show %}
+    {{ parent() }}
+    <div id="user-media-{{object.id}}" style="padding: 20px;">
+        {% media object.media, 'admin' with {'style':'width:120px;height:120px;','class':'img-circle' } %}
+    </div>    
+{% endblock show %}    
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $($('table')[1]).find('tbody tr:first').append('<td rowspan="25" width="140px;"><td>');
+            $($('table')[1]).find('tbody tr:first td[rowspan="25"]').append($('#user-media-{{object.id}}'));
+        });
+        $('.sonata-ba-view-container th').css({'width': '230px'});
+    </script>
+{% endblock %}

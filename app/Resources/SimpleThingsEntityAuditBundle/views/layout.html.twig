@@ -1,0 +1,32 @@
+{% set base_template = 'SonataAdminBundle::standard_layout.html.twig' %}
+{% extends "SonataAdminBundle:Core:dashboard.html.twig" %}
+
+{% block content %}
+
+    <div class="panel panel-default" data-spy="scroll" data-target=".panel-body">
+        <div class='panel-heading col-md-12'>
+            <h3 class='panel-title col-md-10 col-lg-10'> {% block simplethings_entityaudit_title '' %}</h3>
+            <div class="col-md-2 col-lg-2" style="text-align: right;">
+                <a href="{{ path('simple_things_entity_audit_home') }}">
+                    <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-home"></i> </button>
+                </a>             
+                {% block simplethings_entityaudit_paginator ''%}
+            </div>
+        </div>
+        <div class="panel-body" style="overflow: auto !important;padding-left:15px;padding-right:25px;">
+            {% block simplethings_entityaudit_content '' %}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent()}}
+
+        <script>
+            $(document).on('ready', function () {
+                var a_audit = $('ul.sidebar-menu ul.treeview-menu li a[href="{{ url('simple_things_entity_audit_home',{},false) }}"]');
+                $(a_audit).parent().parent().parent().addClass('active current_ancestor menu-open').trigger('click');
+                $(a_audit).parent().addClass('active current');
+            });
+        </script>    
+    {% endblock %}        

@@ -1,0 +1,39 @@
+<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="/" style="padding: 8px;">
+                <span><img src="{{asset(webapp_logo)}}" height="35px"/> <label style="font-size: large">{{webapp_short_title}}</label></span>
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <!-- -->{%block page_navbar_user_menu %}
+            <ul class="nav navbar-nav navbar-right">
+                <!-- -->{%block navbar_user_menu %}
+                <!-- -->{%include (':layout:_navbar_user_menu.html.twig')%}
+                <!-- -->{%endblock navbar_user_menu %}
+            </ul>
+            <!-- -->{%endblock page_navbar_user_menu %}
+
+            <!-- -->{%block page_navbar_home_pages_menu %}
+            <ul class="nav navbar-nav navbar-right">
+                <!-- -->{%block navbar_home_pages_menu %}
+                <!-- -->{%include (':layout:_navbar_pages_menu.html.twig')%}
+                <!-- -->{%endblock navbar_home_pages_menu %}
+
+            </ul>
+            <!-- -->{%endblock page_navbar_home_pages_menu %}
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+

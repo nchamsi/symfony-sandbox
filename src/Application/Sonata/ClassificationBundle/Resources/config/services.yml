@@ -1,0 +1,4 @@
+services:
+#    application_sonata_classification.example:
+#        class: Application\Sonata\ClassificationBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

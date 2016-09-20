@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>{%block page_title%}{{webapp_short_title}} : {%block title%}{%endblock title %}{%endblock page_title%}</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="{{asset('assets/themes/startbootstrap-modern-business/css/bootstrap.min.css')}}" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="{{asset('assets/themes/startbootstrap-modern-business/css/landing-page.css')}}" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="{{asset('assets/themes/startbootstrap-modern-business/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+        <link href="{{asset('bundles/applicationsonataadmin/vendor/iCheck/skins/flat/blue.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{asset('bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{asset('bundles/sonatacore/vendor/select2/select2.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{asset('bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css')}}" rel="stylesheet" type="text/css">
+
+        <link href="{{asset('assets/vendor/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{asset('assets/vendor/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" type="text/css">
+
+        <link href="{{asset('assets/vendor/angular/angular-material.min.css')}}" rel="stylesheet" type="text/css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <style>
+            .page_header
+            {
+                margin-top:50px;
+            }
+            .page_content
+            {
+                padding-top:10px;
+                padding-bottom: 10px;
+            }
+            .bigicon {
+                font-size: 35px;
+                /*color: #36A0FF;*/
+            }
+            span.control-label__text
+            {
+                margin-left: 5px;
+            }
+            input[type="file"] {
+                height: 34px;
+            }
+        </style>
+        <!-- CSS -->{% block stylesheets %}{% endblock stylesheets%}
+
+    </head>
+
+    <body>
+
+        <!-- Navigation -->
+
+        <!-- -->{%block page_navigation %}
+        <div class="page_navigation">
+            <!-- -->{%block navigation %}
+            <!-- -->{%include (':layout:_navbar.html.twig')%}
+            <!-- -->{%endblock navigation %}
+        </div>
+        <!-- -->{%endblock page_navigation %}
+
+        <!-- Header -->
+
+        <!-- -->{%block page_header %}
+        <div class="page_header">
+            <!-- -->{%block header %}
+            <!-- -->{%include (':layout:_header.html.twig')%}
+            <!-- -->{%endblock header %}
+        </div>
+        <!-- -->{%endblock page_header %}
+
+        <!-- Page Content -->
+
+        <!-- -->{%block page_content %}
+        <div class="page_content" style="min-height: 400px;">
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- -->{%block content %}{%endblock content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- -->{%endblock page_content %}
+
+        <!-- /.banner -->
+
+        <!-- Footer -->
+        <!-- -->{%block page_footer %}
+        <div class="page_footer">
+            <!-- -->{%block footer %}
+            <!-- -->{%include (':layout:_footer.html.twig')%}
+            <!-- -->{%endblock footer %}
+        </div>
+        <!-- -->{%endblock page_footer %}
+
+        <!-- jQuery -->
+        <script src="{{asset('assets/themes/startbootstrap-modern-business/js/jquery.js')}}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{{asset('assets/themes/startbootstrap-modern-business/js/bootstrap.min.js')}}"></script>
+
+        <script src="{{asset('bundles/sonatacore/vendor/moment/min/moment.min.js')}}"></script>
+        <script src="{{asset('bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
+        <script src="{{asset('bundles/sonataadmin/vendor/iCheck/icheck.min.js')}}"></script>
+        <script src="{{asset('bundles/sonatacore/vendor/select2/select2.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/hinclude/hinclude.js')}}"></script>
+        <script src="{{asset('assets/vendor/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js')}}"></script>
+        <script src="{{asset('assets/vendor/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js')}}"></script>
+        <script src="{{asset('assets/vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <script src="{{asset('assets/vendor/angular/angular.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/angular/angular-aria.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/angular/angular-animate.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/angular/angular-material.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/angular/angular-route.min.js')}}"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('textarea.html').wysihtml5();
+
+                $('select').select2();
+
+                $('input[type="checkbox"]').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+
+                $('input[type="date"], input.date').datetimepicker({
+                    pickTime: false,
+                    format: 'YYYY-MM-DD'
+                });
+                $('input[type="time"], input.time').datetimepicker({
+                    pickDate: false,
+                    useSeconds: true,
+                    format: 'HH:mm:ss'
+                });
+                $('input[type="datetime"], input.datetime').datetimepicker({
+                    useSeconds: true,
+                    format: 'YYYY-MM-DD HH:mm:ss'
+
+                });
+            });
+        </script>
+        <!-- JavaScript -->{% block javascripts %}{% endblock javascripts%}
+    </body>
+
+</html>

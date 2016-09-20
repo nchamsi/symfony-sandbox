@@ -1,0 +1,50 @@
+{% extends "SimpleThingsEntityAuditBundle::layout.html.twig" %}
+
+
+
+{% macro showValue(value) %}
+    {% if value.timestamp is defined %}
+        {{ value|date('m/d/Y') }}
+    {% elseif value is iterable %}
+        <ul>
+            {% for element in value %}
+                <li>{{ element }}</li>
+                {% endfor %}
+        </ul>
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+{% import _self as helper %}
+
+{% block simplethings_entityaudit_title %}
+	<h4 class="col-md-10 col-lg-10">{{ 'Comparing revisions' | trans({},'SonataAdminBundle')}} {{ oldRev }} vs {{ newRev }}</h4>
+{% endblock simplethings_entityaudit_title %}
+
+{% block simplethings_entityaudit_content %}
+    <table class="table table-bordered table-hover table-striped">
+        <thead><tr>
+                <th width="25%">{{'Field' | trans({},'SonataAdminBundle') }}</th>
+                <th width="25%">{{'Deleted' | trans({},'SonataAdminBundle') }}</th>
+                <th width="25%">{{'Updated' | trans({},'SonataAdminBundle') }}</th>
+                <th width="25%">{{'Same' | trans({},'SonataAdminBundle') }}</th>
+            </tr></thead>
+        <tbody>
+            {% for field, value in diff %}
+                <tr>
+                    <td>{{ field }}</td>
+                    <td>
+                        {{ helper.showValue(value.old) }}
+                    </td>
+                    <td>
+                        {{ helper.showValue(value.new) }}
+                    </td>
+                    <td>
+                        {{ helper.showValue(value.same) }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock simplethings_entityaudit_content %}

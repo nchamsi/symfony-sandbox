@@ -1,0 +1,14 @@
+services:
+
+#    app.services.example:
+#        class: AppBundle\Services\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+#        tags:
+#            - { name: some_tag_name, option1: value, option2: value }
+#        calls:
+#            - [ setAnotherService,[@service_id]]
+#            - [ setAnotherStringValue,[plain_value]]
+#            - [ setAnotherParameterValue,[%parameter%]]
+
+# Services from Bundle
+#

@@ -1,0 +1,90 @@
+
+Ejemplos de Relaciones entre Entidades y sus configuraciones con Annotation
+
+----------------------------------------------------------------------------------------
+
+Nota* :
+
+Luego de configurar las relaciones según los ejemplos que a continuaciónse indican,
+ir a cada una de las entidades, borrar los contructores, metodos getX y setX generados
+anteriormente y realizar lo siguiente:
+
+- cerrar la ventana de la consola (si está abierta), abrirla y ejecutar el comando:
+
+	php app/console doctrine:generate:entities AppBundle       (para actualizar el constructor y los métodos getX y setX de cada clase)
+ 
+- cerrar la ventana de la consola (si está abierta), abrirla y ejecutar el comando:
+
+	php app/console doctrine:schema:update --force              (para actualizar las tablas y relaciones en la base de datos)
+
+-----------------------------------------------------------------------------
+
+1 --> 1   (Cliente --> DireccionParticular)
+
+En el fichero AppBundle/Entity/Cliente.php :
+
+    /**
+     * @ORM\OneToOne(targetEntity="DireccionParticular", mappedBy="cliente", cascade={"all"}, orphanRemoval=true)
+     */
+    private $direccion_particular;
+
+	
+En el fichero AppBundle/Entity/DireccionParticular.php:
+
+    /**
+     * @ORM\OneToOne(targetEntity="Cliente", cascade={"all"})
+     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", nullable=false)
+     */
+    private $cliente;
+	
+----------------------------------------------------------------------------	
+
+1 --> N  (Cliente --> CuentaBancaria)
+
+En el fichero AppBundle/Entity/Cliente.php :
+
+    /**
+     * @ORM\OneToMany(targetEntity="CuentaBancaria", mappedBy="cliente", cascade={"all"}, orphanRemoval=true)
+     */
+    private $cuentas_bancarias;
+	
+
+En el fichero AppBundle/Entity/CuentaBancaria.php :	
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Cliente")
+     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", nullable=false)
+     */
+    private $cliente;	
+
+-----------------------------------------------------------------------------
+
+N --> 1  (Cuenta --> TipoDeCuenta)
+
+En el fichero AppBundle/Entity/CuentaBancaria.php :
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoDeCuenta")
+     * @ORM\JoinColumn(name="tipo_de_cuenta_id", referencedColumnName="id")
+     */
+    private $tipo_de_cuenta;
+
+-----------------------------------------------------------------------------
+
+N --> N    (Cliente --> Banco)
+
+En el fichero AppBundle/Entity/Cliente.php :
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Banco")
+     * @ORM\JoinTable(
+	 *	              name="cliente_banco",
+	 *                joinColumns={@ORM\JoinColumn(name="cliente_id", referencedColumnName="id")},
+     *                inverseJoinColumns={@ORM\JoinColumn(name="banco_id",referencedColumnName="id")}
+	 *               )
+     */
+    private $bancos;
+	
+-----------------------------------------------------------------------------
+
+

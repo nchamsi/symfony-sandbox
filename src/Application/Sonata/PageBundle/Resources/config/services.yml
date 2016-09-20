@@ -1,0 +1,4 @@
+services:
+#    application_sonata_page.example:
+#        class: Application\Sonata\PageBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

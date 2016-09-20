@@ -1,0 +1,16 @@
+{% block sonata_media_type_widget %}
+    <div class="row-fluid" style="overflow: auto !important;">
+        <div class="col-lg-9">
+            <div class="col-lg-3">
+                {% if value is not empty and value.providerReference %}
+                    {% thumbnail value, 'admin' with {'width':'100%','height':'', 'class': 'img-polaroid media-object'} %}
+                {% else %}
+                    <img src="{{ asset('bundles/sonatamedia/grey.png') }}" class="img-polaroid media-object" style="width: 85px; height: 85px"/>
+                {% endif %}
+            </div>  
+            <div class="col-lg-9" style="padding-top: 20px">
+                {{ block('form_widget') }}
+            </div>
+        </div>
+    </div>
+{% endblock sonata_media_type_widget %}

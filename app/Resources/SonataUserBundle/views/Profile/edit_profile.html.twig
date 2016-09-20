@@ -1,0 +1,38 @@
+{% extends "SonataUserBundle:Profile:action.html.twig" %}
+
+
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+    label.control-label[for="application_sonata_user_profile_form_media_binaryContent"],
+    label.control-label[for="application_sonata_user_profile_form_media_unlink"]
+    {
+        display: none !important;
+    }
+    </style>
+{% endblock stylesheets %}    
+{% block sonata_profile_content %}
+
+    {{ form_errors(form) }}
+
+    {% form_theme form _self %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "title_user_account" | trans({}, 'SonataUserBundle')}}</h3>
+        </div>
+        <div class="panel-body">
+            {% include "SonataUserBundle:Profile:edit_profile_content.html.twig" %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function () {
+            //$('.sonata_profile_menu a.list-group-item[href="{{path('sonata_user_profile_edit')}}"]').addClass('active');
+            
+        });
+    </script>
+{% endblock javascripts %}

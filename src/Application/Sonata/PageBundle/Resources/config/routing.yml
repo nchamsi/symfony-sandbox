@@ -1,0 +1,3 @@
+#application_sonata_page_homepage:
+#    path:     /hello/{name}
+#    defaults: { _controller: ApplicationSonataPageBundle:Default:index }

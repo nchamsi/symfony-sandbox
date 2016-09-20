@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="es" datatype="plaintext" original="AppBundle.en.xliff">
+        <body>
+            <trans-unit id="admin.dashboard.menu.admin.label">
+                <source>admin.dashboard.menu.admin.label</source>
+                <target>Configuración</target>
+            </trans-unit>
+            <trans-unit id="admin.dashboard.menu.user.label">
+                <source>admin.dashboard.menu.user.label</source>
+                <target>Procesos</target>
+            </trans-unit>
+            <!--
+            <trans-unit id="admin.dashboard.sample.list">
+                <source>Sample List</source>
+                <target>Samples</target>
+            </trans-unit>
+            -->
+        </body>
+    </file>
+</xliff>

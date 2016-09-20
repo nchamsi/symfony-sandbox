@@ -1,0 +1,26 @@
+{% extends not app.request.isXmlHttpRequest?"SimpleThingsEntityAuditBundle::ajax_layout.html.twig":"SimpleThingsEntityAuditBundle::layout.html.twig" %}
+
+{% block simplethings_entityaudit_title %}
+    {{'Entities changed in revision' | trans({},'SonataAdminBundle') }} {{ revision.rev }} 
+{% endblock simplethings_entityaudit_title %}    
+
+{% block simplethings_entityaudit_content %}
+    
+<table class="table table-bordered table-hover table-striped">
+    <thead><tr>
+        <th>{{'Class Name' | trans({},'SonataAdminBundle') }}</th>
+        <th>{{'Identifiers' | trans({},'SonataAdminBundle') }}</th>
+        <th>{{'Revision Type' | trans({},'SonataAdminBundle') }}</th>
+    </tr></thead>
+    <tbody>
+{% for changedEntity in changedEntities %}
+    <tr>
+        <td><a href="{{ path('simple_things_entity_audit_viewentity_detail', { 'rev': revision.rev, 'className': changedEntity.className, 'id': changedEntity.id | join(',') }) }}">{{ changedEntity.className }}</a></td>
+        <td>{{ changedEntity.id | join(', ') }}</td>
+        <td>{{ changedEntity.revisionType }}</td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+{% endblock simplethings_entityaudit_content %}

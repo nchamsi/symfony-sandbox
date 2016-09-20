@@ -1,0 +1,141 @@
+
+Ejemplos de relaciones entre Entidades y sus configuraciones con XML
+
+----------------------------------------------------------------------------------------
+
+Nota* :
+
+Luego de configurar las relaciones según los ejemplos que a continuación se indican,
+ir a cada una de las entidades, borrar los contructores, metodos getX y setX generados
+anteriormente y realizar lo siguiente:
+
+- cerrar la ventana de la consola (si está abierta), abrirla y ejecutar el comando:
+
+	php app/console doctrine:generate:entities AppBundle       (para actualizar el constructor y los métodos getX y setX de cada clase)
+ 
+- cerrar la ventana de la consola (si está abierta), abrirla y ejecutar el comando:
+
+	php app/console doctrine:schema:update --force              (para actualizar las tablas y relaciones en la base de datos)
+
+-----------------------------------------------------------------------------
+
+1 --> 1   (Cliente  -->  DireccionParticular)
+
+En el fichero AppBundle/Resources/config/doctrine/Cliente.orm.xml:
+
+        <one-to-one field="direccion_particular" target-entity="DireccionParticular" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-one>
+
+En el fichero AppBundle/Resources/config/doctrine/DireccionParticular.orm.xml:
+	
+        <one-to-one field="cliente" target-entity="Cliente">
+            <join-column name="cliente_id" referenced-column-name="id" nullable="false"/>
+        </one-to-one>
+
+Explicación *:
+
+- En la primera configuración (en el fichero Cliente.orm.xml) el valor field="direccion_particular" es para indicar
+  el nombre de la relación entre Cliente y DireccionParticular, en otras palabras, es el nombre del atributo en la 
+  clase Cliente que hace referencia a la DireccionParticular con la que se relaciona. El valor target-entity="DireccionParticular"
+  es para indicar el nombre de la clase con la cual Cliente se relaciona. El valor mapped-by="cliente" indica que en la relación
+  que se configurará en la otra Entidad existe un campo llamado "cliente" que referencia al Cliente correspondiente a esa relación.
+  El valor orphan-removal="true" indica que si se elimina un Cliente igual debe elimiarse la DireccionParticular asociada a él.
+
+- En la segunda configuración (en el fichero DireccionParticular.orm.xml) el valor field="cliente" indica el nombre de la
+  relación, o nombre del atributo, en la clase DireccionParticular que hace referencia al cliente asociado. El valor
+  target-entity="Cliente" indica la clase con la cual se relaciona. El valor <join-column name="cliente_id" indica el nombre
+  de la columna, o campo, de la tabla asociada a DireccionParticular en la base de datos que se convertirá en llave foránea 
+  de la relación con la tabla asociada a Cliente. El valor referenced-column-name="id" indica la columna ID de la tabla asociada
+  a la clase Cliente a la cual hará referencia la llave foránea antes indicada.
+
+----------------------------------------------------------------------------	
+
+1 --> N  (Cliente -->  CuentaBancaria)
+
+En el fichero AppBundle/Resources/config/doctrine/Cliente.orm.xml:
+	
+        <one-to-many field="cuentas_bancarias" target-entity="CuentaBancaria" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+
+En el fichero AppBundle/Resources/config/doctrine/CuentaBancaria.orm.xml:
+
+        <many-to-one field="cliente" target-entity="Cliente">
+            <join-column name="cliente_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+
+Explicación *:
+
+- En la primera configuración (en el fichero Cliente.orm.xml) el valor field="cuentas_bancarias" es para indicar
+  el nombre de la relación entre Cliente y CuentaBancaria (es importante destacar que si la relación es 1-->N es porque
+  un Cliente está asociado a varias Cuentas Bancarias, es por eso que el nombre del atributo debe ser en plural).
+  El valor target-entity="CuentaBancaria" es para indicar el nombre de la clase con la cual Cliente se relaciona.
+  El valor mapped-by="cliente" indica que en la relación que se configurará en la otra Entidad existe un campo 
+  llamado "cliente" que referencia al Cliente correspondiente a esa relación. El valor orphan-removal="true" indica
+  que si se elimina un Cliente igual deben elimiarse las Cuentas Bancarias asociadas a él.
+
+- En la segunda configuración (en el fichero CuentaBancaria.orm.xml) el valor field="cliente" indica el nombre de la
+  relación, o nombre del atributo, en la clase CuentaBancaria que hace referencia al cliente asociado. El valor
+  target-entity="Cliente" indica la clase con la cual se relaciona. El valor <join-column name="cliente_id" indica el nombre
+  de la columna, o campo, de la tabla asociada a CuentaBancaria en la base de datos que se convertirá en llave foránea 
+  de la relación con la tabla asociada a Cliente. El valor referenced-column-name="id" indica la columna ID de la tabla asociada
+  a la clase Cliente a la cual hará referencia la llave foránea antes indicada.
+
+-----------------------------------------------------------------------------
+
+N --> 1  (CuentaBancaria --> TipoDeCuenta)
+
+En el fichero AppBundle/Resources/config/doctrine/CuentaBancaria.orm.xml:
+
+        <many-to-one field="tipo_de_cuenta" target-entity="TipoDeCuenta">
+            <join-column name="tipo_de_cuenta_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+
+Explicación *:
+
+- En la configuración (en el fichero CuentaBancaria.orm.xml) el valor field="tipo_de_cuenta" indica el nombre de la
+  relación, o nombre del atributo, en la clase CuentaBancaria que hace referencia al tipo de cuenta asociado. El valor
+  target-entity="TipoDeCuenta" indica la clase con la cual se relaciona. El valor <join-column name="tipo_de_cuenta_id"
+  indica el nombre de la columna, o campo, de la tabla asociada a CuentaBancaria en la base de datos que se convertirá
+  en llave foránea de la relación con la tabla asociada a TipoDeCuenta. El valor referenced-column-name="id" indica la
+  columna ID de la tabla asociada a la clase TipoDeCuenta a la cual hará referencia la llave foránea antes indicada.
+		
+-----------------------------------------------------------------------------
+
+N --> N    (Cliente --> Banco)
+
+En el fichero AppBundle/Resources/config/doctrine/Cliente.orm.xml:
+
+		<many-to-many field="bancos" target-entity="Banco">
+			<join-table name="cliente_banco">
+				<join-columns>
+					<join-column name="cliente_id" referenced-column-name="id"/>
+				</join-columns>
+				<inverse-join-columns>
+					<join-column name="banco_id" referenced-column-name="id"/>
+				</inverse-join-columns>
+			</join-table>
+		</many-to-many>
+	
+Explicación *:
+
+- En la configuración (en el fichero Cliente.orm.xml) el valor field="bancos" es para indicar
+  el nombre de la relación entre Cliente y Banco (es importante destacar que si la relación es N-->N es porque
+  un Cliente está asociado a varios Bancos, es por eso que el nombre del atributo debe ser en plural).
+  El valor target-entity="Banco" es para indicar el nombre de la clase con la cual Cliente se relaciona.
+  El valor <join-table name="cliente_banco"> es para indicar el nombre de la tabla intermedia que se creará
+  automáticamente para establecer la relación entre las dos tablas asociadas a ambas entidades. El valor 
+  <join-columns> y dentro de este <join-column name="cliente_id" referenced-column-name="id"/> es para indicar 
+  el nombre de la columna a crear en la tabla intermedia que hace referencia al ID de la tabla asociada a Cliente.
+  El valor <inverse-join-columns> y dentro de este <join-column name="banco_id" referenced-column-name="id"/> es
+  para indicar el nombre del campo que hace referencia como llave foránea al ID de la tabla asociada a la entidad
+  Banco.
+
+-----------------------------------------------------------------------------
+
+

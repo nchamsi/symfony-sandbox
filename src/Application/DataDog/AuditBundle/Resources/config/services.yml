@@ -1,0 +1,22 @@
+services:
+#    application_data_dog_audit.example:
+#        class: Application\DataDog\AuditBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+            
+    datadog.logout.handler.session:
+        class: Application\DataDog\AuditBundle\Security\DataDogSessionLogoutHandler
+        public: false
+        arguments: ["@security.context","@service_container"]
+          
+    twig.audit.extension:
+        class: Application\DataDog\AuditBundle\Twig\AuditExtension
+        tags:
+          - { name: twig.extension }
+
+    data_dog_audit.admin.audit_log:
+        class: Application\DataDog\AuditBundle\Admin\AuditLogAdmin
+        arguments: [~, DataDog\AuditBundle\Entity\AuditLog, ApplicationDataDogAuditBundle:AuditLogAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: datadog_admin, label: System Logs, label_catalogue: ApplicationDataDogAuditBundle, label_translator_strategy: sonata.admin.label.strategy.underscore}
+        calls:
+            - [ setTranslationDomain, [ApplicationDataDogAuditBundle]]

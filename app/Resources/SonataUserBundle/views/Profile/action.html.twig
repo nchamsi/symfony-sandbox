@@ -1,0 +1,33 @@
+{% extends "::base.html.twig" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+
+    {#% block sonata_page_breadcrumb %}
+        {% if breadcrumb_context is not defined %}
+            {% set breadcrumb_context = 'user_index' %}
+        {% endif %}
+        <div class="row-fluid clearfix">
+            {{ sonata_block_render_event('breadcrumb', { 'context': breadcrumb_context, 'current_uri': app.request.requestUri, 'translationDomain':'SonataUserBundle' }) }}
+        </div>
+    {% endblock %#}
+
+    <div class="sonata-user-show row row-fluid">
+        <div class="col-lg-3 sonata_profile_menu">
+            {% block sonata_profile_menu %}
+                {{ sonata_block_render({'type': 'sonata.user.block.menu'}, {'current_uri': app.request.requestUri}) }}
+            {% endblock %}
+        </div>
+
+        <div class="span9 col-lg-9">
+            {% include 'SonataCoreBundle:FlashMessage:render.html.twig' %}
+            <!-- -->    {% block sonata_profile_content%}{% endblock%}
+        </div>
+    </div>
+            
+{% endblock content %}
+
+
+
