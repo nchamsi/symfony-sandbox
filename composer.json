@@ -1,5 +1,5 @@
 {
-    "name": "symfony/symfony-sandbox-2.8.+",
+    "name": "symfony/symfony2-sandbox",
     "license": "proprietary",
     "type": "project",
     "autoload": {
