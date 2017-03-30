@@ -8,7 +8,7 @@ Composer Installation
 
 Open a console window and execute following commands:
 
-mk dir workspace
+mkdir workspace
 
 cd workspace
 
