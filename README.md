@@ -21,24 +21,36 @@ php composer.phar update
 
 # Configuration
 
-Edit app/config/parameters.yml and app/config/parameters_dev.yml for custom database options.
+For custom database and other options edit files:
 
-Execute following commands:
+/app/config/parameters.yml
+/app/config/parameters_dev.yml
 
-php app/console assets:install web   (forces copy bundles assets in web/bundles/)
+Create database, executing following command:
 
-php app/console doctrine:schema:create   (creates database)
+php app/console doctrine:schema:create
 
-php app/console doctrine:schema:update --force   (creates/updates database tables)
+Create/Update tables from entities definitions, executing following command:
 
-php app/console fos:user:create   (add user)
+php app/console doctrine:schema:update --force
 
-php app/console fos:user:promote   (add role to user (recommended add ROLE_SUPER_ADMIN))
+Create an user for access to application, executing following command:
 
-php app/console server:run   (run server in dev mode on http://127.0.0.1:8000)
+php app/console fos:user:create
 
+Add ROLE permission to created user (recommended ROLE_SUPER_ADMIN), executing following command:
 
-Access to:
+php app/console fos:user:promote
+
+Force bundles to copy all assets in web/bundles/, executing following command:
+
+php app/console assets:install web
+
+Run server in development mode, executing following command:
+
+php app/console server:run
+
+Access to application:
 
 Frontend area: http://127.0.0.1:8000
 
