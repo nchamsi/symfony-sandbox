@@ -25,6 +25,7 @@ php composer.phar update
 For custom database and other options edit files:
 
 /app/config/parameters.yml
+
 /app/config/parameters_dev.yml
 
 Create database, executing following command:
