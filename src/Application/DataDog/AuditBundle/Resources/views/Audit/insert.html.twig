@@ -1,5 +1,5 @@
 {{ admin.trans('log.new_action', {}, admin.translationDomain) }} <strong>{{ admin.trans(log.source.typLabel, {}, 'AppBundle') }}</strong> 
-[<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal_{{log.id}}">{{log.source.label}}</a>] {{ admin.trans('log.new_action_label', {}, admin.translationDomain) }}.
+[<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal_{{log.id}}">{{log.source.label | truncate(50)}}</a>] {{ admin.trans('log.new_action_label', {}, admin.translationDomain) }}.
 <div class="modal fade" id="myModal_{{log.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

@@ -1,0 +1,64 @@
+{% extends "NelmioApiDocBundle::layout.html.twig" %}
+
+{% block content %}
+    <li class="resource">
+        <div id="summary">
+            <ul>
+                {% for section, sections in resources %}
+                    <li><a href="#section-{{ section }}">{{ section }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+    </li>
+    {% for section, sections in resources %}
+        {% if section != '_others' %}
+            <li class="section{{ defaultSectionsOpened? ' active':'' }}">
+            <div class="actions">
+                <a class="action-show-hide">Show/hide</a>
+                <a class="action-list">List Operations</a>
+                <a class="action-expand">Expand Operations</a>
+            </div>
+            <h1>{{ section }}</h1>
+            <ul class="section-list" {% if not defaultSectionsOpened %}style="display: none"{% endif %}>
+        {% endif %}
+
+        {% set last_resource_name = '' %}
+        {% for resource, methods in sections %}
+            {% set current_resource_name = (((resource~'///') | split('/'))[2]) %}
+            {% if current_resource_name == '_login_check' or  current_resource_name == '_token' %}
+                {% set current_resource_name = 'security' %}
+            {% endif %}
+            {% set current_resource_name = current_resource_name | replace ('-',' ') | replace ('_',' ') | capitalize %}
+            <a id="section-{{ section }}"></a>
+            <li class="resource" style="border-bottom: none;">
+
+                {% if last_resource_name != current_resource_name %}
+                    {% set last_resource_name = current_resource_name %}
+                    <div class="heading" style="border-bottom: 1px solid #dddddd; margin-bottom: 10px;">
+                        {% if section == '_others' and resource != 'others' %}
+                            <h2 style="padding-bottom: 5px;">{{ current_resource_name }}</h2>
+                        {% elseif resource != 'others' %}
+                            <h2>{{ resource }}</h2>
+                        {% endif %}
+                    </div>
+                {% else %}
+                {% endif %}
+
+                <ul class="endpoints">
+                    <li class="endpoint">
+                        <ul class="operations">
+                            {% for data in methods %}
+                                {% include 'NelmioApiDocBundle::method.html.twig' %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        {% endfor %}
+        {% if section != '_others' %}
+            </ul>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

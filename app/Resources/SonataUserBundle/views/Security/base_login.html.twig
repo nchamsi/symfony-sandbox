@@ -27,7 +27,12 @@ file that was distributed with this source code.
 
                         {% block sonata_user_login_error %}
                             {% if error %}
-                                <div class="alert alert-danger alert-error">{{ error|trans({}, 'FOSUserBundle') }}</div>
+                                <div class="alert alert-danger">{{ error.message|trans({}, 'FOSUserBundle') }}</div>
+                            {% else  %}
+                                {%  set error = app.session.flashbag.get('error') %}
+                                {% if error %}
+                                    <div class="alert alert-danger">{{ error[0]|trans({}, 'FOSUserBundle') }}</div>
+                                {% endif %}
                             {% endif %}
                         {% endblock %}
 
@@ -58,7 +63,7 @@ file that was distributed with this source code.
                                 <hr>
                                 <div class="form-group control-group">
                                     <div class="controls col-sm-offset-2 col-sm-9">
-                                        <a href="{{ path('fos_user_resetting_request') }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a> / 
+                                        <a href="{{ path('fos_user_resetting_request') }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a> /
                                         <a href="{{ path('fos_user_registration_register') }}">{{ 'title_user_registration'|trans({}, 'SonataUserBundle') }}</a>
                                     </div>
                                 </div>

@@ -23,4 +23,4 @@ parameters:
     sonata_media.cdn.host:     %webapp_url%/uploads/media # http://127.0.0.1:8000/uploads/media
 
     # lexik jwt
-    jwt_token_ttl: 600
+    jwt_token_ttl: 86400

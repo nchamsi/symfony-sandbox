@@ -3,11 +3,11 @@
     <file source-language="es" datatype="plaintext" original="AppBundle.en.xliff">
         <body>
             <trans-unit id="admin.dashboard.menu.admin.label">
-                <source>Configuration</source>
+                <source>admin.dashboard.menu.admin.label</source>
                 <target>Configuração</target>
             </trans-unit>
             <trans-unit id="admin.dashboard.menu.user.label">
-                <source>Proccess</source>
+                <source>admin.dashboard.menu.user.label</source>
                 <target>Proccesos</target>
             </trans-unit>
             <!--

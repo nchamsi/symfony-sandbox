@@ -206,3 +206,9 @@ sonata_page:
                      B: content_bottom
                      F: footer
 
+sonata_admin:
+    assets:
+        stylesheets:
+            - bundles/sonatapage/sonata-page.back.min.css
+        javascripts:
+            - bundles/sonatapage/sonata-page.back.min.js

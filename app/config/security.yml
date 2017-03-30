@@ -3,7 +3,7 @@ parameters:
 
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+        #Symfony\Component\Security\Core\User\User: plaintext
         Application\Sonata\UserBundle\Entity\User\User:
             algorithm: bcrypt
             encode_as_base64: false
@@ -98,14 +98,16 @@ security:
         # This firewall is used to handle the admin login area
         # This part is handled by the Sonata User Bundle
         admin:
-            pattern:            /admin(.*)
-            context:            user
+            pattern:             /admin(.*)
+            context:             user
             form_login:
-                provider:       fos_userbundle
-                login_path:     /admin/login
-                use_forward:    false
-                check_path:     /admin/login_check
-                failure_path:   null
+                provider:        fos_userbundle
+                login_path:      /admin/login
+                use_forward:     false
+                check_path:      /admin/login_check
+                failure_path:    null
+                #success_handler: authentication_handler
+                #failure_handler: authentication_handler
             logout:
                 path:           /admin/logout
             anonymous:    true
@@ -119,15 +121,17 @@ security:
         #    stateless: true
 
         api_docs:
-            pattern: ^/api/doc
+            pattern: ^/api/_doc
             anonymous: true
             
+        # login and api firewalls paths (/api/login_check and /api) must be configured to allow CORS requests.
+
         api_login:
-            pattern:  ^/api/login_check
+            pattern:  ^/api/_login_check
             stateless: true
             anonymous: true
             form_login:
-                check_path:               /api/login_check
+                check_path:               /api/_login_check
                 require_previous_session: false
                 username_parameter:       username
                 password_parameter:       password
@@ -135,7 +139,7 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
         api_token_refresh:
-            pattern:  ^/api/token/refresh
+            pattern:  ^/api/_token/refresh
             stateless: true
             anonymous: true
 
@@ -180,25 +184,26 @@ security:
         - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/login-check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: [ROLE_DASHBOARD_USER, IS_AUTHENTICATED_FULLY] }
-        #- { path: ^/admin/, role: [ROLE_ADMIN, IS_AUTHENTICATED_FULLY] }
+        #- { path: ^/admin/, role: [ROLE_DASHBOARD_USER, IS_AUTHENTICATED_FULLY] }
+        - { path: ^/admin/, role: [ROLE_ADMIN, IS_AUTHENTICATED_FULLY] }
 
         # User Profile access
 
         - { path: ^/user/profile/, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/user/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # Api access
    
-        - { path: ^/api/doc,   role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/token/refresh, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api.*,   role: ROLE_API }
+        - { path: ^/api/_doc,   role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/_login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/_token/refresh, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api.*,   roles: [IS_AUTHENTICATED_FULLY, ROLE_API] }
         
         # App access
 
         #- { path: ^/app/$, role: IS_AUTHENTICATED_ANONYMOUSLY }       
-        #- { path: ^/app/, role: IS_AUTHENTICATED_FULLY }       
-        - { path: ^/app/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/app/, role: IS_AUTHENTICATED_FULLY }
+        #- { path: ^/app/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # Public access
 

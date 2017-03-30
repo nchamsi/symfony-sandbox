@@ -19,9 +19,9 @@
 
         <!-- Custom Fonts -->
         <link href="{{asset('assets/themes/startbootstrap-modern-business/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+        <!-- <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"> -->
 
-        <link href="{{asset('bundles/applicationsonataadmin/vendor/iCheck/skins/flat/blue.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{asset('bundles/sonataadmin/vendor/iCheck/skins/square/blue.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('bundles/sonatacore/vendor/select2/select2.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css')}}" rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@
         <link href="{{asset('assets/vendor/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('assets/vendor/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" type="text/css">
 
-        <link href="{{asset('assets/vendor/angular/angular-material.min.css')}}" rel="stylesheet" type="text/css">
+        <!--link href="{{asset('assets/vendor/angular/angular-material.min.css')}}" rel="stylesheet" type="text/css"> -->
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -129,21 +129,22 @@
         <script src="{{asset('assets/vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-        <script src="{{asset('assets/vendor/angular/angular.min.js')}}"></script>
+        <!--
+	<script src="{{asset('assets/vendor/angular/angular.min.js')}}"></script>
         <script src="{{asset('assets/vendor/angular/angular-aria.min.js')}}"></script>
         <script src="{{asset('assets/vendor/angular/angular-animate.min.js')}}"></script>
         <script src="{{asset('assets/vendor/angular/angular-material.min.js')}}"></script>
         <script src="{{asset('assets/vendor/angular/angular-route.min.js')}}"></script>
-
+	-->
         <script>
             $(document).ready(function () {
                 $('textarea.html').wysihtml5();
 
                 $('select').select2();
 
-                $('input[type="checkbox"]').iCheck({
-                    checkboxClass: 'icheckbox_flat-blue',
-                    radioClass: 'iradio_flat-blue'
+                $('input[type="checkbox"],input[type="radio"]').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue'
                 });
 
                 $('input[type="date"], input.date').datetimepicker({

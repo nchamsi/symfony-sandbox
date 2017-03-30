@@ -1,7 +1,7 @@
 <li class="page_user_block user user-menu">
     <!-- Menu Toggle Button -->
     {% if (not app.user)%}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;">
+        <a href="#/login" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;">
             {#<a href="{{path('fos_user_security_login')}}" style="padding: 10px;">#}
             <img src="{{asset('assets/img/user.png')}}" width="30px" height="30px" class="img-circle" style="opacity: 0.5; ">
             <span style="margin-left: 5px;">{{ "link_login" | trans({}, 'SonataUserBundle')}}</span>
@@ -15,7 +15,7 @@
         </ul>
 
     {% else %}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;">
+        <a href="#/user-actions" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;">
             <span><i class="fa fa-envelope-o"></i> <label class="label label-info">4</label></span>
             <span><i class="fa fa-bell-o"></i> <label class="label label-warning">10</label></span>
             <span><i class="fa fa-flag-o"></i> <label class="label label-danger">9</label></span>
@@ -28,7 +28,7 @@
         </a>
         <ul class="dropdown-menu">
 
-            <li><a href="#">
+            <li><a href="#/user">
                     {% if (app.user.media)%}
                         {% media app.user.media, 'admin' with {'width':'45px','height':'45px','class':'img-rounded', } %}
                     {% else%}

@@ -60,5 +60,3 @@ sonata_admin:
                 roles: [ ROLE_USER ]
                 items:
                 #    - app.admin.entity
-
-

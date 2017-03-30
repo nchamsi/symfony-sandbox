@@ -13,7 +13,7 @@
                         {% if (app.user.media)%}
                             {% media app.user.media, 'large' with {'width':'100%','style':'max-height: 200px;','class':'img-rounded', } %}
                         {% else%}
-                            <img src="{{asset('assets/img/user.png')}}" width="200px" style="max-height: 200px;" class="img-rounded">
+                            <img src="{{asset('app/assets/img/user.png')}}" width="200px" style="max-height: 200px;" class="img-rounded">
                         {% endif %}
 
                         <h3 class="profile-username text-center">{{(app.user.firstname?app.user.fullname:app.user.username) | truncate(15) |capitalize}}</h3>

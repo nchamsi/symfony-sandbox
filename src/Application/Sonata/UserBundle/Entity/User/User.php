@@ -29,13 +29,13 @@ class User extends BaseUser {
     protected $id;
 
     /**
-     * @var \Application\Sonata\UserBundle\Entity\User\User
+     * @var \Sonata\UserBundle\Entity\BaseUser
      */
     private $owner;
 
     /**
      *
-     * @var \Application\Sonata\MediaBundle\Entity\Media\Media
+     * @var \Sonata\MediaBundle\Entity\BaseMedia
      */
     protected $media;
 
@@ -51,11 +51,11 @@ class User extends BaseUser {
     /**
      * Set media
      *
-     * @param \Application\Sonata\Bundle\Entity\Media\Media $media
+     * @param \Sonata\MediaBundle\Entity\BaseMedia $media
      *
      * @return User
      */
-    public function setMedia(\Application\Sonata\MediaBundle\Entity\Media\Media $media = null) {
+    public function setMedia(\Sonata\MediaBundle\Entity\BaseMedia $media = null) {
         $this->media = $media;
 
         return $this;
@@ -64,7 +64,7 @@ class User extends BaseUser {
     /**
      * Get media
      *
-     * @return \Application\Sonata\MediaBundle\Entity\Media\Media
+     * @return \Sonata\MediaBundle\Entity\BaseMedia
      */
     public function getMedia() {
         return $this->media;
@@ -74,11 +74,11 @@ class User extends BaseUser {
     /**
      * Set owner
      *
-     * @param \Application\Sonata\UserBundle\Entity\User\User $owner
+     * @param \Sonata\UserBundle\Entity\BaseUser $owner
      *
      * @return User
      */
-    public function setOwner(\Application\Sonata\UserBundle\Entity\User\User $owner = null)
+    public function setOwner(\Sonata\UserBundle\Entity\BaseUser $owner = null)
     {
         $this->owner = $owner;
 
@@ -88,7 +88,7 @@ class User extends BaseUser {
     /**
      * Get owner
      *
-     * @return \Application\Sonata\UserBundle\Entity\User\User
+     * @return \Sonata\UserBundle\Entity\BaseUser
      */
     public function getOwner()
     {

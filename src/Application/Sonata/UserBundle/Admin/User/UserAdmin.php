@@ -146,7 +146,6 @@ class UserAdmin extends BaseAdmin {
             return $query;
         }
 
-
         $token = $this->getSecurityTokenStorage()->getToken();
         if ($token && $token->getUser()) {
             $query->andWhere($query->getRootAlias() . '.id = :token_user_id OR ' . $query->getRootAlias() . '.owner = :token_user_id')
@@ -154,55 +153,7 @@ class UserAdmin extends BaseAdmin {
             ;
         }
 
-
         return $query;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureListFields(ListMapper $listMapper) {
-
-        $listMapper->addIdentifier('media', 'media_preview', array(
-            'label' => 'Image',
-            'width' => '45',
-            'height' => '45',
-            'class' => 'img-polaroid',
-        ));
-
-        parent::configureListFields($listMapper);
-
-        unset($this->listModes['mosaic']);
-
-        $listMapper
-                ->remove('batch')
-                ->remove('impersonating')
-                ->remove('groups')
-                ->remove('enabled')
-                ->remove('locked')
-                ->add('enabled', null, array('editable' => true,
-                    'row_align' => 'center',
-                    'header_style' => 'width: 100px',
-                ))
-        ;
-
-        if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
-            $listMapper
-                    ->add('owner.username', null, array('label' => 'Owner'));
-        }
-
-        $listMapper
-                ->add('_action', 'actions', array(
-                    'label' => 'Actions',
-                    'row_align' => 'right',
-                    'header_style' => 'width: 115px',
-                    'actions' => array(
-                        'show' => array(),
-                        'history' => array(),
-                        'edit' => array(),
-                        'delete' => array(),
-                    )
-        ));
     }
 
     /**
@@ -218,6 +169,56 @@ class UserAdmin extends BaseAdmin {
                 ->add('enabled')
                 ->add('locked')
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureListFields(ListMapper $listMapper) {
+
+        $listMapper->addIdentifier('media', 'media_thumbnail', array(
+            'label' => 'Image',
+            'width' => '30',
+            'height' => '30',
+            'class' => 'img-polaroid',
+        ));
+
+        parent::configureListFields($listMapper);
+
+        unset($this->listModes['mosaic']);
+
+        $listMapper
+                ->remove('batch')
+                ->remove('impersonating')
+                ->remove('groups')
+                ->remove('enabled')
+                ->remove('locked')
+                ->remove('createdAt')
+                ->add('groups', null, array('route' => array('name' => '_')))
+                ->add('createdAt', null, array('pattern' => 'Y-MM-dd H:mm:ss'))
+                ->add('enabled', null, array('editable' => true,
+                    'row_align' => 'center',
+                    'header_style' => 'width: 100px',
+                ))
+        ;
+
+        //if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
+        //    $listMapper
+        //            ->add('owner.username', null, array('label' => 'Owner'));
+        //}
+
+        $listMapper
+                ->add('_action', 'actions', array(
+                    'label' => 'Actions',
+                    'row_align' => 'right',
+                    'header_style' => 'width: 115px',
+                    'actions' => array(
+                        'show' => array(),
+                        'history' => array(),
+                        'edit' => array(),
+                        'delete' => array(),
+                    )
+        ));
     }
 
     /**
@@ -306,17 +307,6 @@ class UserAdmin extends BaseAdmin {
                 ->add('media', 'sonata_media_type', array('label' => false, 'required' => false, 'provider' => 'sonata.media.provider.image', 'context' => $this->getUserMediaContextId()))
                 ->end()->end()
         ;
-        /*
-          $formMapper->tab($this->trans('User'))->with($this->trans('Image'))
-          ->add('media', 'sonata_type_model_list', array('label' => false,
-          'required' => false,
-          'help' => '<br>' . $this->getConfigurationPool()->getContainer()->get("templating")->render('ApplicationSonataAdminBundle:CRUD:help_media_thumbnail.html.twig', array(
-          'value' => $this->getSubject()->getMedia(), 'width' => 250, 'height' => 250, 'class' => 'img-rounded', //  img-polaroid,img-rounded, img-circle
-          ))), array('link_parameters' => array('context' => 'users', 'category' => 'users'))
-          )
-          ->end()->end()
-          ;
-         */
 
         if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_ADMIN')) {
             $formMapper
@@ -454,10 +444,10 @@ class UserAdmin extends BaseAdmin {
     public function prePersist($object) { /* @var $object \Symfony\Component\Security\Core\User\UserInterface */
         parent::prePersist($object);
 
-        $token = $this->getSecurityTokenStorage()->getToken();
-        if (!is_null($token->getUser()) && !is_null($token->getUser()->getId())) {
-            $object->setOwner($token->getUser());
-        }
+        //$token = $this->getSecurityTokenStorage()->getToken();
+        //if (!is_null($token->getUser()) && !is_null($token->getUser()->getId())) {
+        //    $object->setOwner($token->getUser());
+        //}
     }
 
 }

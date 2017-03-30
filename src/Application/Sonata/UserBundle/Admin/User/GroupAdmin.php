@@ -105,6 +105,11 @@ class GroupAdmin extends BaseAdmin {
         return $query;
     }
 
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper) {
+        parent::configureDatagridFilters($datagridMapper);
+        $datagridMapper->add('roles');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -115,11 +120,10 @@ class GroupAdmin extends BaseAdmin {
         unset($this->listModes['mosaic']);
 
         $listMapper->remove('batch');
-        $listMapper->remove('roles');
-
-        if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
-            $listMapper->add('owner.username', null, array('label' => 'Owner'));
-        }
+        //$listMapper->remove('roles');
+        //if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
+        //    $listMapper->add('owner.username', null, array('label' => 'Owner'));
+        //}
 
         $listMapper->add('_action', 'actions', array(
             'label' => 'Actions',
@@ -134,15 +138,6 @@ class GroupAdmin extends BaseAdmin {
         ));
     }
 
-    public function prePersist($object) { /* @var $object \Symfony\Component\Security\Core\User\UserInterface */
-        parent::prePersist($object);
-
-        $token = $this->getSecurityTokenStorage()->getToken();
-        if (!is_null($token) && !is_null($token->getUser())) {
-            $object->setOwner($token->getUser());
-        }
-    }
-
     public function validate(\Sonata\CoreBundle\Validator\ErrorElement $errorElement, $object) {
 
         $errorElement
@@ -154,6 +149,15 @@ class GroupAdmin extends BaseAdmin {
                 ->assertLength(array('min' => 5))
                 ->end()
         ;
+    }
+
+    public function prePersist($object) { /* @var $object \Symfony\Component\Security\Core\User\UserInterface */
+        parent::prePersist($object);
+
+        //$token = $this->getSecurityTokenStorage()->getToken();
+        //if (!is_null($token) && !is_null($token->getUser())) {
+        //    $object->setOwner($token->getUser());
+        //}
     }
 
 }

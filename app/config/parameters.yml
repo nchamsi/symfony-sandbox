@@ -9,41 +9,25 @@ parameters:
     mailer_host: localhost
     mailer_user: null
     mailer_password: null
-    locale: en
+    locale: es
     secret: ThisTokenIsNotSoSecretChangeIt
     webapp_host: 127.0.0.1
-    webapp_url:  http://%webapp_host%   # http://%webapp_host%/symfony/web or http://127.0.0.1/symfony/web
-        
-    webapp.logo:              /logo.png
-    webapp.short_title:       Symfony
-    webapp.title:             Symfony
-    
-    # Sonata Admin Options
-    sonata_admin.title:             Symfony
-    sonata_admin.short_title:       Symfony
-    sonata_admin.logo_title:        /logo.png
-    # Skin Color [black, blue, green, purple, red, yellow]
-    sonata_admin.skin:              skin-blue
-
-    # Sonata Admin Options
-    sonata_admin.title:             Sonata Project
-    sonata_admin.logo_title:        /bundles/sonataadmin/logo_title.png
-
-    # Sonata News Options
-    
-    sonata_news.blog_title:         My Awesome Blog
-    sonata_news.blog_link:          http://awesome-blog.ltd
-    sonata_news.blog_description:   My Awesome blog description
-    sonata_news.salt:               ThisTokenIsNotSoSecretChangeIt
-    sonata_news.comment.emails:     [mail@example.org]
+    webapp_url: 'http://%webapp_host%'
+    webapp.logo: /logo.png
+    webapp.short_title: Symfony
+    webapp.title: Symfony
+    sonata_admin.title: Symfony
+    sonata_admin.short_title: Symfony
+    sonata_admin.logo_title: /logo.png
+    sonata_admin.skin: skin-blue
+    sonata_news.blog_title: 'My Awesome Blog'
+    sonata_news.blog_link: 'http://awesome-blog.ltd'
+    sonata_news.blog_description: 'My Awesome blog description'
+    sonata_news.salt: ThisTokenIsNotSoSecretChangeIt
+    sonata_news.comment.emails:
+        - mail@example.org
     sonata_news.comment.email_from: no-reply@example.org
-
-    # Sonata Media options
-    
-    sonata_media.cdn.host:     %webapp_url%/uploads/media # http://127.0.0.1:8000/uploads/media
-
-    # Sonata User Options
-    
+    sonata_media.cdn.host: '%webapp_url%/uploads/media'
     security_user_class: Application\Sonata\UserBundle\Entity\User\User
     security_group_class: Application\Sonata\UserBundle\Entity\User\Group
     security_user_group_table: user__user_group

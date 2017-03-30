@@ -32,6 +32,7 @@ class AppKernel extends Kernel {
             // DOCTRINE
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             // KNP HELPER BUNDLES
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
@@ -51,6 +52,7 @@ class AppKernel extends Kernel {
             new FOS\RestBundle\FOSRestBundle(),
             new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
             // SONATA E-COMMERCE
             //new Sonata\BasketBundle\SonataBasketBundle(),
             //new Sonata\CustomerBundle\SonataCustomerBundle(),
@@ -94,7 +96,7 @@ class AppKernel extends Kernel {
             new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
             // Liip Image Bundle
             new Liip\ImagineBundle\LiipImagineBundle(),
-            new Liip\DoctrineCacheBundle\LiipDoctrineCacheBundle(),
+            //new Liip\DoctrineCacheBundle\LiipDoctrineCacheBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             // Anothers util bundles
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
@@ -113,7 +115,7 @@ class AppKernel extends Kernel {
             new Application\Sonata\UserBundle\ApplicationSonataUserBundle('SonataUserBundle'),
             new Application\Sonata\ClassificationBundle\ApplicationSonataClassificationBundle('SonataClassificationBundle'),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle('SonataMediaBundle'),
-            new Application\Sonata\NotificationBundle\ApplicationSonataNotificationBundle('SonataNotificationBundle'),
+            //new Application\Sonata\NotificationBundle\ApplicationSonataNotificationBundle('SonataNotificationBundle'),
             //new Application\Sonata\PageBundle\ApplicationSonataPageBundle('SonataPageBundle'),
             new Application\DataDog\AuditBundle\ApplicationDataDogAuditBundle('DataDogAuditBundle'),
             //-------------------------------------------------------------------

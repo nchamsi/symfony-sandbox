@@ -23,3 +23,4 @@ security:
         ROLE_APP_ADMIN:
             - ROLE_USER
             - ROLE_ADMIN
+

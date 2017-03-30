@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="es" datatype="plaintext" original="messages.en.xliff">
+        <body>
+            <!-- Valores de los Tipos de Configuraciones -->
+            <trans-unit id="text">
+                <source>text</source>
+                <target>Texto Simple</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple text">
+                <source>multiple text</source>
+                <target>Texto Simple Múltiple</target>
+            </trans-unit>
+            
+            <trans-unit id="textarea">
+                <source>textarea</source>
+                <target>Texto Multi-líneas</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple textarea">
+                <source>multiple textarea</source>
+                <target>Textos Multi-líneas</target>
+            </trans-unit>
+            
+            <trans-unit id="html">
+                <source>html</source>
+                <target>Texto Html</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple html">
+                <source>multiple html</source>
+                <target>Textos Html</target>
+            </trans-unit>
+            
+            <trans-unit id="email">
+                <source>email</source>
+                <target>E-mail</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple email">
+                <source>multiple email</source>
+                <target>E-mails</target>
+            </trans-unit>
+            
+            <trans-unit id="integer">
+                <source>integer</source>
+                <target>Número Entero</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple integer">
+                <source>multiple integer</source>
+                <target>Números Enteros</target>
+            </trans-unit>
+            
+            <trans-unit id="number">
+                <source>number</source>
+                <target>Número Real</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple number">
+                <source>multiple number</source>
+                <target>Números Reales</target>
+            </trans-unit>
+            
+            <trans-unit id="boolean">
+                <source>boolean</source>
+                <target>Boolean</target>
+            </trans-unit>
+            
+            <trans-unit id="url">
+                <source>url</source>
+                <target>Url</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple url">
+                <source>multiple url</source>
+                <target>Urls</target>
+            </trans-unit>
+            
+            <trans-unit id="color">
+                <source>color</source>
+                <target>Color</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple color">
+                <source>multiple color</source>
+                <target>Colores</target>
+            </trans-unit>
+            
+            <trans-unit id="date">
+                <source>date</source>
+                <target>Fecha</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple date">
+                <source>multiple date</source>
+                <target>Fechas</target>
+            </trans-unit>
+            
+            <trans-unit id="datetime">
+                <source>datetime</source>
+                <target>Fecha-Tiempo</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple datetime">
+                <source>multiple datetime</source>
+                <target>Fechas-Tiempos</target>
+            </trans-unit>
+            
+            <trans-unit id="time">
+                <source>time</source>
+                <target>Tiempo</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple time">
+                <source>multiple time</source>
+                <target>Tiempos</target>
+            </trans-unit>
+            
+            <trans-unit id="country">
+                <source>country</source>
+                <target>País</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple country">
+                <source>multiple country</source>
+                <target>Países</target>
+            </trans-unit>
+            
+            <trans-unit id="language">
+                <source>language</source>
+                <target>Idioma</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple language">
+                <source>multiple language</source>
+                <target>Idiomas</target>
+            </trans-unit>
+            
+            <trans-unit id="locale">
+                <source>locale</source>
+                <target>Locale</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple locale">
+                <source>multiple locale</source>
+                <target>Locales</target>
+            </trans-unit>
+            
+            <trans-unit id="timezone">
+                <source>timezone</source>
+                <target>Zona Horaria</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple timezone">
+                <source>multiple timezone</source>
+                <target>Zonas Horarias</target>
+            </trans-unit>
+            
+            <trans-unit id="multiple key-value">
+                <source>multiple key-value</source>
+                <target>Clavees-Valores</target>
+            </trans-unit>
+            
+            <trans-unit id="image">
+                <source>image</source>
+                <target>Imagen</target>
+            </trans-unit>
+            
+            <trans-unit id="choice select same key-value">
+                <source>choice select same key-value</source>
+                <target>Opciones Select de Valores</target>
+            </trans-unit>
+            
+            <trans-unit id="choice select different key-value">
+                <source>choice select different key-value</source>
+                <target>Opciones Select de Clave - Valor</target>
+            </trans-unit>
+            
+            <trans-unit id="choice radio same key-value">
+                <source>choice radio same key-value</source>
+                <target>Opciones RadioButton de Valores</target>
+            </trans-unit>
+            
+            <trans-unit id="choice radio different key-value">
+                <source>choice radio different key-value</source>
+                <target>Opciones RadioButton de Clave - Valor</target>
+            </trans-unit>
+            
+            <trans-unit id="choice checkbox same key-value">
+                <source>choice checkbox same key-value</source>
+                <target>Opciones Checkbox de Valores</target>
+            </trans-unit>
+            
+            <trans-unit id="choice checkbox different key-value">
+                <source>choice checkbox different key-value</source>
+                <target>Opciones Checkbox de Clave - Valor</target>
+            </trans-unit>
+            
+            <!--
+            <trans-unit id="breadcrumb.link_entity_list">
+                <source>breadcrumb.link_entity_list</source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_entity_create">
+                <source>breadcrumb.link_entity_create</source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            <trans-unit id="list.label_">
+                <source>list.label_</source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            <trans-unit id="filter.label_">
+                <source>filter.label_</source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            <trans-unit id="form.label_">
+                <source>form.label_</source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            <trans-unit id="">
+                <source></source>
+                <target><![CDATA[]]></target>
+            </trans-unit>
+            -->
+        </body>
+    </file>
+</xliff>

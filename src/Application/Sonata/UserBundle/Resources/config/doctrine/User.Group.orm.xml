@@ -10,7 +10,7 @@
             <generator strategy="UUID" />
         </id>
         
-        <many-to-one field="owner" target-entity="Application\Sonata\UserBundle\Entity\User\User">
+        <many-to-one field="owner" target-entity="Sonata\UserBundle\Entity\BaseUser">
             <join-column name="owner_user_id" referenced-column-name="id" nullable="true"/>
         </many-to-one>
                 

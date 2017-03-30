@@ -12,14 +12,14 @@ doctrine:
         resolve_target_entities:
             Sonata\MediaBundle\Entity\BaseMedia: Application\Sonata\MediaBundle\Entity\Media\Media
 
-liip_doctrine_cache:
-    namespaces:
-        thumbnail_settings:
-            type: file_system
+#liip_doctrine_cache:
+#    namespaces:
+#        thumbnail_settings:
+#            type: file_system
 
 liip_imagine:
     #driver:               gd
-    #web_root:             %kernel.root_dir%/../web
+    #web_root:             "%kernel.root_dir%/../web"
     #cache_mkdir_mode:     0777
     #cache_prefix:         /uploads/media/images/cache
     cache:                web_path
@@ -135,7 +135,7 @@ sonata_media:
     filesystem:
         # define where the uploaded file will be stored
         local:
-            directory:  %kernel.root_dir%/../web/uploads/media
+            directory:  "%kernel.root_dir%/../web/uploads/media"
             create:     true
 
     providers:

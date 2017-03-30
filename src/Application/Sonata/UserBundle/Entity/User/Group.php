@@ -29,7 +29,7 @@ class Group extends BaseGroup {
     protected $id;
 
     /**
-     * @var \Application\Sonata\UserBundle\Entity\User\User
+     * @var \Sonata\UserBundle\Entity\BaseUser
      */
     private $owner;    
     
@@ -46,11 +46,11 @@ class Group extends BaseGroup {
     /**
      * Set owner
      *
-     * @param \Application\Sonata\UserBundle\Entity\User\User $owner
+     * @param \Sonata\UserBundle\Entity\BaseUser $owner
      *
      * @return Group
      */
-    public function setOwner(\Application\Sonata\UserBundle\Entity\User\User $owner = null)
+    public function setOwner(\Sonata\UserBundle\Entity\BaseUser $owner = null)
     {
         $this->owner = $owner;
 
@@ -60,7 +60,7 @@ class Group extends BaseGroup {
     /**
      * Get owner
      *
-     * @return \Application\Sonata\UserBundle\Entity\User\User
+     * @return \Sonata\UserBundle\Entity\BaseUser
      */
     public function getOwner()
     {

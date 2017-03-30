@@ -2,7 +2,7 @@
 
 namespace Application\DataDog\AuditBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin as Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -19,7 +19,7 @@ class AuditLogAdmin extends Admin {
     );
 
     protected function configureRoutes(RouteCollection $collection) {
-        $collection->clearExcept(array('list', 'show', /*'export','delete'*/));
+        $collection->clearExcept(array('list', 'show', /* 'export','delete' */));
     }
 
     public function getExportFormats() {
@@ -36,9 +36,9 @@ class AuditLogAdmin extends Admin {
         $qb = $em->createQueryBuilder();
         $qb = $qb->select('u')
                 ->from($this->getClass(), 'u')
-                //->innerJoin('u.blame','p')
-                //->groupBy('u.ip')
-                ;
+        //->innerJoin('u.blame','p')
+        //->groupBy('u.ip')
+        ;
 
         /* $qb = $qb->add('select', 'u')
           ->add('from', 'YourBundleFile\YourBundleFileBundle\Entity\YourEntity u');
@@ -76,16 +76,16 @@ class AuditLogAdmin extends Admin {
                         'class' => 'Application\Sonata\UserBundle\Entity\User\User'),
                     'callback' => array($this, 'filterByUser')
                 ))
-                /*
-                ->add('ip', 'doctrine_orm_callback', array(
-                    'label' => 'IP',
-                    'field_type' => 'choice',
-                    'field_options' => array(
-                        'choices' => $ips
-                    ),
-                    'callback' => array($this, 'filterByIp')
-                ))
-                 */
+        /*
+          ->add('ip', 'doctrine_orm_callback', array(
+          'label' => 'IP',
+          'field_type' => 'choice',
+          'field_options' => array(
+          'choices' => $ips
+          ),
+          'callback' => array($this, 'filterByIp')
+          ))
+         */
 
         ;
     }
@@ -100,14 +100,14 @@ class AuditLogAdmin extends Admin {
     }
 
     /*
-    public function filterByIp($queryBuilder, $alias, $field, $value) {
-        if (!$value['value']) {
-            return;
-        }
-        //dump($value);
-        //exit;
-        $queryBuilder->andWhere($alias . '.ip = \'' . $value['value'] . '\'');
-    }
+      public function filterByIp($queryBuilder, $alias, $field, $value) {
+      if (!$value['value']) {
+      return;
+      }
+      //dump($value);
+      //exit;
+      $queryBuilder->andWhere($alias . '.ip = \'' . $value['value'] . '\'');
+      }
      */
 
     public function filterByDateStart($queryBuilder, $alias, $field, $value) {
@@ -156,12 +156,12 @@ class AuditLogAdmin extends Admin {
                     )
                 ))
                 ->add('loggedAt', null, array(
-                    //'pattern' => 'Y-m-d H:i:s',
+                    'pattern' => 'Y-MM-dd H:mm:ss',
                     'attr' => array(
                         'width' => '120px'
                     )
                 ))
-                //->add('ip')
+        //->add('ip')
         //->add('id')
         /* ->add('_action', 'actions', array(
           'actions' => array(

@@ -78,3 +78,40 @@ sonata_user:
             controller:     SonataAdminBundle:CRUD
             translation:    SonataUserBundle
 
+
+sonata_admin:
+    dashboard:
+        blocks:
+            #-
+            #    type:     sonata.admin.block.stats   # block id
+            #    position: top                        # zone in the dashboard
+            #    class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+            #    settings:
+            #        code:  sonata.user.admin.user
+            #        icon:  fa-user                  # font awesome icon
+            #        text:  Users
+            #        color: bg-green                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+            #        filters:                         # filter values
+            #            #enabled: {value: true}
+            #-
+            #    type:     sonata.admin.block.stats   # block id
+            #    position: top                        # zone in the dashboard
+            #    class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+            #    settings:
+            #        code:  sonata.user.admin.user
+            #        icon:  fa-user                  # font awesome icon
+            #        text:  Enabled Users
+            #        color: bg-aqua                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+            #        filters:                         # filter values
+            #            enabled: {value: true}
+            #-
+            #    type:     sonata.admin.block.stats   # block id
+            #    position: top                        # zone in the dashboard
+            #    class:    col-lg-2 col-xs-4          # twitter bootstrap responsive code
+            #    settings:
+            #        code:  sonata.user.admin.user
+            #        icon:  fa-user                  # font awesome icon
+            #        text:  Disabled Users
+            #        color: bg-red                 # colors: bg-yellow, bg-green, bg-red and bg-aqua
+            #        filters:                         # filter values
+            #            enabled: { type: '',value: 2}
