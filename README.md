@@ -1,4 +1,4 @@
-# Symfony2 Sandbox with Sonata Bundles integrated
+# Symfony2 Sandbox with multiples integrated bundles
 ===================================================
 
 # Instalation
