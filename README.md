@@ -1,5 +1,5 @@
 # Symfony2 Sandbox with multiples integrated bundles
-===================================================
+====================================================
 
 # Instalation
 
