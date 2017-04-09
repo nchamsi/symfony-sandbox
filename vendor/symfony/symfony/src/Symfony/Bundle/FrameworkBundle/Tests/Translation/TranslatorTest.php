@@ -95,13 +95,14 @@ class TranslatorTest extends TestCase
         $this->assertEquals('foobarbax (sr@latin)', $translator->trans('foobarbax'));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testTransWithCachingWithInvalidLocale()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')->getMock();
         $translator = $this->getTranslator($loader, array('cache_dir' => $this->tmpDir), 'loader', '\Symfony\Bundle\FrameworkBundle\Tests\Translation\TranslatorWithInvalidLocale');
-        $translator->setLocale('invalid locale');
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('\InvalidArgumentException');
         $translator->trans('foo');
     }
 
@@ -133,6 +134,17 @@ class TranslatorTest extends TestCase
         $translator = new Translator($container, new MessageSelector());
 
         $this->assertSame('en', $translator->getLocale());
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The Translator does not support the following options: 'foo'
+     */
+    public function testInvalidOptions()
+    {
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+
+        (new Translator($container, new MessageSelector(), array(), array('foo' => 'bar')));
     }
 
     protected function getCatalogue($locale, $messages, $resources = array())
@@ -276,8 +288,8 @@ class TranslatorWithInvalidLocale extends Translator
     /**
      * {@inheritdoc}
      */
-    public function setLocale($locale)
+    public function getLocale()
     {
-        $this->locale = $locale;
+        return 'invalid locale';
     }
 }

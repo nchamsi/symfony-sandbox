@@ -25,6 +25,9 @@ namespace SimpleThings\EntityAudit\Tests;
 
 use Doctrine\ORM\Mapping as ORM;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\CheeseProduct;
+use SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataContainerEntity;
+use SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataLegalEntity;
+use SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataPrivateEntity;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\FoodCategory;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\OneToOneAuditedEntity;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\OneToOneMasterEntity;
@@ -34,6 +37,7 @@ use SimpleThings\EntityAudit\Tests\Fixtures\Relation\OwnedEntity2;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\OwnedEntity3;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\OwnerEntity;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\Page;
+use SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageAlias;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageLocalization;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationFoobarEntity;
 use SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationOneToOneEntity;
@@ -55,10 +59,15 @@ class RelationTest extends BaseTest
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\WineProduct',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\CheeseProduct',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\Page',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageAlias',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageLocalization',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationOneToOneEntity',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationFoobarEntity',
-        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationReferencedEntity'
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationReferencedEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\AbstractDataEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataLegalEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataPrivateEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataContainerEntity',
     );
 
     protected $auditedEntities = array(
@@ -72,10 +81,15 @@ class RelationTest extends BaseTest
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\WineProduct',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\CheeseProduct',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\Page',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageAlias',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\PageLocalization',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationOneToOneEntity',
         'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationFoobarEntity',
-        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationReferencedEntity'
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\RelationReferencedEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\AbstractDataEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataLegalEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataPrivateEntity',
+        'SimpleThings\EntityAudit\Tests\Fixtures\Relation\DataContainerEntity',
     );
 
     public function testUndefinedIndexesInUOWForRelations()
@@ -778,5 +792,55 @@ class RelationTest extends BaseTest
 
         $this->assertEquals('foobar', $auditedBase->getReferencedEntity()->getFoobarField());
         $this->assertEquals('referenced', $auditedBase->getReferencedEntity()->getReferencedField());
+    }
+
+    /**
+     * Specific test for the case where a join condition is via an ORM/Id and where the column is also an object.
+     * Used to result in an 'aray to string conversion' error
+     */
+    public function testJoinOnObject()
+    {
+        $page = new Page();
+        $this->em->persist($page);
+        $this->em->flush();
+
+        $pageAlias = new PageAlias($page, 'This is the alias');
+        $this->em->persist($pageAlias);
+        $this->em->flush();
+    }
+
+    public function testOneToOneBidirectional()
+    {
+        $private1  = new DataPrivateEntity();
+        $private1->setName('private1');
+
+        $legal1 = new DataLegalEntity();
+        $legal1->setCompany('legal1');
+
+        $legal2 = new DataLegalEntity();
+        $legal2->setCompany('legal2');
+
+        $container1 = new DataContainerEntity();
+        $container1->setData($private1);
+        $container1->setName('container1');
+
+        $container2 = new DataContainerEntity();
+        $container2->setData($legal1);
+        $container2->setName('container2');
+
+        $container3 = new DataContainerEntity();
+        $container3->setData($legal2);
+        $container3->setName('container3');
+
+        $this->em->persist($container1);
+        $this->em->persist($container2);
+        $this->em->persist($container3);
+        $this->em->flush();
+
+        $reader = $this->auditManager->createAuditReader($this->em);
+
+        $legal2Base = $reader->find(get_class($legal2), $legal2->getId(), 1);
+
+        $this->assertEquals('container3', $legal2Base->getDataContainer()->getName());
     }
 }

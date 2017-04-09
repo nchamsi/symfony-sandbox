@@ -18,16 +18,6 @@ class TimeTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\TimeType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
-    {
-        $form = $this->factory->create('time');
-
-        $this->assertSame('time', $form->getConfig()->getType()->getName());
-    }
-
     public function testSubmitDateTime()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -498,7 +488,7 @@ class TimeTypeTest extends BaseTypeTest
     {
         // Throws an exception if "data_class" option is not explicitly set
         // to null in the type
-        $this->factory->create(static::TESTED_TYPE, new \DateTime());
+        $this->assertInstanceOf('Symfony\Component\Form\FormInterface', $this->factory->create(static::TESTED_TYPE, new \DateTime()));
     }
 
     public function testSingleTextWidgetShouldUseTheRightInputType()
@@ -586,25 +576,6 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame('Empty', $view['hour']->vars['placeholder']);
         $this->assertSame('Empty', $view['minute']->vars['placeholder']);
         $this->assertSame('Empty', $view['second']->vars['placeholder']);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testPassEmptyValueBC()
-    {
-        $form = $this->factory->create(static::TESTED_TYPE, null, array(
-            'empty_value' => 'Empty',
-            'with_seconds' => true,
-        ));
-
-        $view = $form->createView();
-        $this->assertSame('Empty', $view['hour']->vars['placeholder']);
-        $this->assertSame('Empty', $view['minute']->vars['placeholder']);
-        $this->assertSame('Empty', $view['second']->vars['placeholder']);
-        $this->assertSame('Empty', $view['hour']->vars['empty_value']);
-        $this->assertSame('Empty', $view['minute']->vars['empty_value']);
-        $this->assertSame('Empty', $view['second']->vars['empty_value']);
     }
 
     public function testPassPlaceholderAsArray()

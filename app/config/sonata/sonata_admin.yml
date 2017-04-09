@@ -4,12 +4,12 @@
 twig:
     base_template_class: Sonata\CacheBundle\Twig\TwigTemplate14
 
-    form:
-        resources:
-            - 'SonataFormatterBundle:Form:formatter.html.twig'
-            - 'SonataMediaBundle:Form:media_widgets.html.twig'
-            - 'SonataCoreBundle:Form:datepicker.html.twig'
-            - 'ShtumiUsefulBundle::fields.html.twig'       
+#    form:
+#        resources:
+#            - 'SonataFormatterBundle:Form:formatter.html.twig'
+#            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+#            - 'SonataCoreBundle:Form:datepicker.html.twig'
+#            - 'ShtumiUsefulBundle::fields.html.twig'       
 
     globals:
         sonata_admin_short_title: "%sonata_admin.short_title%"

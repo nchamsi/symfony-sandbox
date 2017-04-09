@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\AutowirePass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Tests\Fixtures\includes\FooVariadic;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
@@ -34,6 +35,23 @@ class AutowirePassTest extends TestCase
 
         $this->assertCount(1, $container->getDefinition('bar')->getArguments());
         $this->assertEquals('foo', (string) $container->getDefinition('bar')->getArgument(0));
+    }
+
+    /**
+     * @requires PHP 5.6
+     */
+    public function testProcessVariadic()
+    {
+        $container = new ContainerBuilder();
+        $container->register('foo', Foo::class);
+        $definition = $container->register('fooVariadic', FooVariadic::class);
+        $definition->setAutowired(true);
+
+        $pass = new AutowirePass();
+        $pass->process($container);
+
+        $this->assertCount(1, $container->getDefinition('fooVariadic')->getArguments());
+        $this->assertEquals('foo', (string) $container->getDefinition('fooVariadic')->getArgument(0));
     }
 
     public function testProcessAutowireParent()
@@ -422,12 +440,41 @@ class AutowirePassTest extends TestCase
             array(
                 new Reference('a'),
                 new Reference('lille'),
-                // third arg shouldn't *need* to be passed
-                // but that's hard to "pull of" with autowiring, so
-                // this assumes passing the default val is ok
-                'some_val',
             ),
             $definition->getArguments()
+        );
+    }
+
+    /**
+     * @dataProvider getCreateResourceTests
+     */
+    public function testCreateResourceForClass($className, $isEqual)
+    {
+        $startingResource = AutowirePass::createResourceForClass(
+            new \ReflectionClass(__NAMESPACE__.'\ClassForResource')
+        );
+        $newResource = AutowirePass::createResourceForClass(
+            new \ReflectionClass(__NAMESPACE__.'\\'.$className)
+        );
+
+        // hack so the objects don't differ by the class name
+        $startingReflObject = new \ReflectionObject($startingResource);
+        $reflProp = $startingReflObject->getProperty('class');
+        $reflProp->setAccessible(true);
+        $reflProp->setValue($startingResource, __NAMESPACE__.'\\'.$className);
+
+        if ($isEqual) {
+            $this->assertEquals($startingResource, $newResource);
+        } else {
+            $this->assertNotEquals($startingResource, $newResource);
+        }
+    }
+
+    public function getCreateResourceTests()
+    {
+        return array(
+            array('IdenticalClassResource', true),
+            array('ClassChangedConstructorArgs', false),
         );
     }
 
@@ -462,29 +509,28 @@ class AutowirePassTest extends TestCase
         $this->assertEquals(array(new Reference('a'), '', new Reference('lille')), $container->getDefinition('foo')->getArguments());
     }
 
-    /**
-     * @dataProvider provideAutodiscoveredAutowiringOrder
-     *
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMEssage Unable to autowire argument of type "Symfony\Component\DependencyInjection\Tests\Compiler\CollisionInterface" for the service "a". Multiple services exist for this interface (autowired.Symfony\Component\DependencyInjection\Tests\Compiler\CollisionA, autowired.Symfony\Component\DependencyInjection\Tests\Compiler\CollisionB).
-     */
-    public function testAutodiscoveredAutowiringOrder($class)
-    {
-        $container = new ContainerBuilder();
-
-        $container->register('a', __NAMESPACE__.'\\'.$class)
-            ->setAutowired(true);
-
-        $pass = new AutowirePass();
-        $pass->process($container);
-    }
-
     public function provideAutodiscoveredAutowiringOrder()
     {
         return array(
             array('CannotBeAutowiredForwardOrder'),
             array('CannotBeAutowiredReverseOrder'),
         );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
+     * @expectedExceptionMessage Service "a" can use either autowiring or a factory, not both.
+     */
+    public function testWithFactory()
+    {
+        $container = new ContainerBuilder();
+
+        $container->register('a', __NAMESPACE__.'\A')
+            ->setFactory('foo')
+            ->setAutowired(true);
+
+        $pass = new AutowirePass();
+        $pass->process($container);
     }
 }
 
@@ -652,6 +698,29 @@ class MultipleArgumentsOptionalScalarLast
 class MultipleArgumentsOptionalScalarNotReallyOptional
 {
     public function __construct(A $a, $foo = 'default_val', Lille $lille)
+    {
+    }
+}
+
+/*
+ * Classes used for testing createResourceForClass
+ */
+class ClassForResource
+{
+    public function __construct($foo, Bar $bar = null)
+    {
+    }
+
+    public function setBar(Bar $bar)
+    {
+    }
+}
+class IdenticalClassResource extends ClassForResource
+{
+}
+class ClassChangedConstructorArgs extends ClassForResource
+{
+    public function __construct($foo, Bar $bar, $baz)
     {
     }
 }

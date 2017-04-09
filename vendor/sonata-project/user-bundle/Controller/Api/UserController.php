@@ -71,7 +71,6 @@ class UserController
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page for users list pagination (1-indexed)")
      * @QueryParam(name="count", requirements="\d+", default="10", description="Number of users by page")
      * @QueryParam(name="enabled", requirements="0|1", nullable=true, strict=true, description="Enabled/disabled users only?")
-     * @QueryParam(name="locked", requirements="0|1", nullable=true, strict=true, description="Locked/Non-locked users only?")
      *
      * @View(serializerGroups={"sonata_api_read"}, serializerEnableMaxDepthChecks=true)
      *
@@ -97,7 +96,6 @@ class UserController
 
         $supporedCriteria = array(
             'enabled' => '',
-            'locked' => '',
         );
 
         $page = $paramFetcher->get('page');
@@ -159,9 +157,9 @@ class UserController
      *
      * @param Request $request A Symfony request
      *
-     * @return UserInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return UserInterface
      */
     public function postUserAction(Request $request)
     {
@@ -187,9 +185,9 @@ class UserController
      * @param int     $id      User id
      * @param Request $request A Symfony request
      *
-     * @return UserInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return UserInterface
      */
     public function putUserAction($id, Request $request)
     {
@@ -212,9 +210,9 @@ class UserController
      *
      * @param int $id An User identifier
      *
-     * @return \FOS\RestBundle\View\View
-     *
      * @throws NotFoundHttpException
+     *
+     * @return \FOS\RestBundle\View\View
      */
     public function deleteUserAction($id)
     {
@@ -244,10 +242,10 @@ class UserController
      * @param int $userId  A User identifier
      * @param int $groupId A Group identifier
      *
-     * @return UserInterface
-     *
      * @throws NotFoundHttpException
      * @throws \RuntimeException
+     *
+     * @return UserInterface
      */
     public function postUserGroupAction($userId, $groupId)
     {
@@ -285,10 +283,10 @@ class UserController
      * @param int $userId  A User identifier
      * @param int $groupId A Group identifier
      *
-     * @return UserInterface
-     *
      * @throws NotFoundHttpException
      * @throws \RuntimeException
+     *
+     * @return UserInterface
      */
     public function deleteUserGroupAction($userId, $groupId)
     {
@@ -312,9 +310,9 @@ class UserController
      *
      * @param $id
      *
-     * @return UserInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return UserInterface
      */
     protected function getUser($id)
     {
@@ -332,9 +330,9 @@ class UserController
      *
      * @param $id
      *
-     * @return GroupInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return GroupInterface
      */
     protected function getGroup($id)
     {

@@ -1,4 +1,4 @@
-﻿UPGRADE FROM 2.0 to 2.1
+UPGRADE FROM 2.0 to 2.1
 =======================
 
 ### General

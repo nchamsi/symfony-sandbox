@@ -167,7 +167,7 @@ class UserAdmin extends BaseAdmin {
                 ->remove('id')
                 ->remove('locked')
                 ->add('enabled')
-                ->add('locked')
+                //->add('locked')
         ;
     }
 
@@ -192,7 +192,7 @@ class UserAdmin extends BaseAdmin {
                 ->remove('impersonating')
                 ->remove('groups')
                 ->remove('enabled')
-                ->remove('locked')
+                //->remove('locked')
                 ->remove('createdAt')
                 ->add('groups', null, array('route' => array('name' => '_')))
                 ->add('createdAt', null, array('pattern' => 'Y-MM-dd H:mm:ss'))
@@ -272,7 +272,7 @@ class UserAdmin extends BaseAdmin {
                 ->add('lastname', null, array('required' => true))
                 ->add('phone', null, array('required' => false))
                 ->add('dateOfBirth', 'sonata_type_date_picker', array(
-                    'read_only' => true,
+                    //'read_only' => true,
                     'dp_min_date' => '01/01/1900',
                     'format' => 'dd/MM/yyyy',
                     'dp_default_date' => (new \DateTime())->format('d/m/Y'),
@@ -312,10 +312,10 @@ class UserAdmin extends BaseAdmin {
             $formMapper
                     ->tab('Security')
                     ->with('Status')
-                    ->add('locked', null, array('required' => false))
-                    ->add('expired', null, array('required' => false))
+                    //->add('locked', null, array('required' => false))
+                    //->add('expired', null, array('required' => false))
                     ->add('enabled', null, array('required' => false))
-                    ->add('credentialsExpired', null, array('required' => false))
+                    //->add('credentialsExpired', null, array('required' => false))
                     ->end()
                     ->with('Groups')
                     ->add('groups', 'sonata_type_model', array(
@@ -388,10 +388,10 @@ class UserAdmin extends BaseAdmin {
         if ($this->getSecurityAuthorizationChecker()->isGranted('ROLE_ADMIN')) {
             $showMapper
                     ->with('Security Status')
-                    ->add('locked')
-                    ->add('expired')
+                    //->add('locked')
+                    //->add('expired')
                     ->add('enabled')
-                    ->add('credentialsExpired')
+                    //->add('credentialsExpired')
                     ->end()
                     ->with('Security Groups')
                     ->add('groups')

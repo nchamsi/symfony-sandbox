@@ -1,0 +1,50 @@
+# related to app/config/config.yml
+twig:
+    globals:
+        app_kernel_root_dir: "%kernel.root_dir%"
+        app_kernel_web_dir: "%kernel.root_dir%/../web"
+        webapp_logo: "%webapp.logo%"
+        webapp_short_title: "%webapp.short_title%"
+        webapp_title: "%webapp.title%"
+
+fos_user:
+    from_email:
+        address:        no-reply@symfony.com
+        sender_name:    webmaster
+    registration:
+        confirmation:
+            #template:   FOSUserBundle:Registration:email.txt.twig
+            from_email:
+                address:        no-reply@symfony.com
+                sender_name:    webmaster
+    resetting:
+        email:
+            #template:   FOSUserBundle:Resetting:email.txt.twig
+            from_email:
+                address:        no-reply@symfony.com
+                sender_name:    webmaster
+        
+sonata_admin:
+
+    dashboard:
+        blocks:
+            #- { position: left, type: sonata.admin.block.admin_list, settings: { groups: [admin] } }
+            #- { position: right, type: sonata.admin.block.admin_list, settings: { groups: [user] } }
+
+        groups:
+
+            admin:
+                label: admin.dashboard.menu.admin.label
+                label_catalogue: AppBundle
+                icon: '<i class="fa fa-list"></i>'
+                roles: [ ROLE_ADMIN ]
+                items:
+                #    - app.admin.entity
+
+            user:
+                label: admin.dashboard.menu.user.label
+                label_catalogue: AppBundle
+                icon: '<i class="fa fa-list-alt"></i>'
+                roles: [ ROLE_USER ]
+                items:
+                #    - app.admin.entity

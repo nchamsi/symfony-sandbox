@@ -68,9 +68,20 @@ class PhpDocExtractorTest extends TestCase
             array('d', array(new Type(Type::BUILTIN_TYPE_BOOL)), null, null),
             array('e', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_RESOURCE))), null, null),
             array('f', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime'))), null, null),
+            array('g', array(new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true)), 'Nullable array.', null),
             array('donotexist', null, null, null),
             array('staticGetter', null, null, null),
             array('staticSetter', null, null, null),
         );
     }
+
+    public function testReturnNullOnEmptyDocBlock()
+    {
+        $this->assertNull($this->extractor->getShortDescription(EmptyDocBlock::class, 'foo'));
+    }
+}
+
+class EmptyDocBlock
+{
+    public $foo;
 }

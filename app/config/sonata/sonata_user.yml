@@ -18,19 +18,19 @@ doctrine:
 # if you change the class configuration, please also alter the fos_user.yml file
 sonata_user:
     class:
-        user:  %security_user_class%
-        group: %security_group_class%
+        user:  '%security_user_class%'
+        group: '%security_group_class%'
 
     security_acl:             false
     table:
-        user_group:     %security_user_group_table%
+        user_group:     '%security_user_group_table%'
 
     impersonating:
         route:                page_slug
         parameters:           { path: / }
 
     google_authenticator:
-        server:               %sonata_user.google_authenticator.server%
+        server:               '%sonata_user.google_authenticator.server%'
         enabled:              false
 
     manager_type:             orm
@@ -49,32 +49,21 @@ sonata_user:
 
         form:
             type:                 application_sonata_user_profile
-            handler:              application_sonata_user.profile.form.handler
+            #handler:              application_sonata_user.profile.form.handler
             name:                 application_sonata_user_profile_form
             validation_groups:
                 #- Default
                 - Profile
                 - Default
 
-        register:
-            # You may customize the registration forms over here
-            form:
-                type:                 application_sonata_user_registration
-                handler:              application_sonata_user.registration.form.handler
-                name:                 application_sonata_user_registration_form
-                validation_groups:
-                    # Defaults:
-                    - Registration
-                    - Default
-
     admin:                  # Admin Classes
         user:
-            class:          %security_user_admin_class%
+            class:          '%security_user_admin_class%'
             controller:     SonataAdminBundle:CRUD
             translation:    SonataUserBundle
 
         group:
-            class:          %security_group_admin_class%
+            class:          '%security_group_admin_class%'
             controller:     SonataAdminBundle:CRUD
             translation:    SonataUserBundle
 

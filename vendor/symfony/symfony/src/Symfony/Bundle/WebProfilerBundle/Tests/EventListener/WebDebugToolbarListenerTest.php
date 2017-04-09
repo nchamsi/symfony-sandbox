@@ -13,6 +13,7 @@ namespace Symfony\Bundle\WebProfilerBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -32,7 +33,7 @@ class WebDebugToolbarListenerTest extends TestCase
 
         $response = new Response($content);
 
-        $m->invoke($listener, $response, Request::create('/'));
+        $m->invoke($listener, $response, Request::create('/'), array('csp_script_nonce' => 'scripto', 'csp_style_nonce' => 'stylo'));
         $this->assertEquals($expected, $response->getContent());
     }
 
@@ -245,6 +246,27 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('Exception: foo', $response->headers->get('X-Debug-Error'));
     }
 
+    public function testThrowingErrorCleanup()
+    {
+        $response = new Response();
+        $response->headers->set('X-Debug-Token', 'xxxxxxxx');
+
+        $urlGenerator = $this->getUrlGeneratorMock();
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('_profiler', array('token' => 'xxxxxxxx'))
+            ->will($this->throwException(new \Exception("This\nmultiline\r\ntabbed text should\tcome out\r on\n \ta single plain\r\nline")))
+        ;
+
+        $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(), HttpKernelInterface::MASTER_REQUEST, $response);
+
+        $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, 'bottom', $urlGenerator);
+        $listener->onKernelResponse($event);
+
+        $this->assertEquals('Exception: This multiline tabbed text should come out on a single plain line', $response->headers->get('X-Debug-Error'));
+    }
+
     protected function getRequestMock($isXmlHttpRequest = false, $requestFormat = 'html', $hasSession = true)
     {
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->setMethods(array('getSession', 'isXmlHttpRequest', 'getRequestFormat'))->disableOriginalConstructor()->getMock();
@@ -254,6 +276,8 @@ class WebDebugToolbarListenerTest extends TestCase
         $request->expects($this->any())
             ->method('getRequestFormat')
             ->will($this->returnValue($requestFormat));
+
+        $request->headers = new HeaderBag();
 
         if ($hasSession) {
             $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')->disableOriginalConstructor()->getMock();

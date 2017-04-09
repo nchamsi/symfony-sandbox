@@ -1,6 +1,5 @@
 # NAMSHI | JOSE
 
-[![StyleCI](https://styleci.io/repos/10456191/shield?style=flat)](https://styleci.io/repos/10456191)
 [![Build Status](https://travis-ci.org/namshi/jose.svg)](https://travis-ci.org/namshi/jose)
 [![Latest Stable Version](https://poser.pugx.org/namshi/jose/v/stable)](https://packagist.org/packages/namshi/jose)
 [![Total Downloads](https://poser.pugx.org/namshi/jose/downloads)](https://packagist.org/packages/namshi/jose)
@@ -23,7 +22,7 @@ You can install the library directly from
 composer / [packagist](https://packagist.org/packages/namshi/jose):
 
 ```
-"namshi/jose": "6.1.*"
+"namshi/jose": "7.0.*"
 ```
 
 ## Usage
@@ -81,7 +80,7 @@ $public_key = openssl_pkey_get_public("/path/to/public.key");
 if ($jws->isValid($public_key, 'RS256')) {
 	$payload = $jws->getPayload();
 
-	echo sprintf("Hey, my JS app just did an action authenticated as user #%s", $payload['id']);
+	echo sprintf("Hey, my JS app just did an action authenticated as user #%s", $payload['uid']);
 }
 ```
 
@@ -183,6 +182,20 @@ Added the ability to set custom properties in the header. Moved automatic inclus
 - Dropped support for PHP 5.3
 - Don't escape slashes when generating signin input.
   This may render tokens generated with earlier versions of Jose incompatible.
+
+### 7.x.x
+
+#### 7.0.x
+
+Moved phpseclib and the openssl extension as suggested dependencies.
+
+## Tests
+
+Tests are written using PHPUnit for this library. After doing composer install you can execute the following command to run tests:
+
+```
+./vendor/bin/phpunit
+```
 
 ## Credits
 

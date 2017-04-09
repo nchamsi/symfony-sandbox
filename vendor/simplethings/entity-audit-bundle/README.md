@@ -1,6 +1,9 @@
 # EntityAudit Extension for Doctrine2
 
-[![Build Status](https://travis-ci.org/simplethings/EntityAudit.svg?branch=master)](https://travis-ci.org/simplethings/EntityAudit)
+| Master | 1.0 Branch |
+|:----------------:|:----------:|
+| [![Build Status](https://travis-ci.org/simplethings/EntityAudit.svg?branch=master)](https://travis-ci.org/simplethings/EntityAudit) | [![Build Status](https://travis-ci.org/simplethings/EntityAudit.svg?branch=1.0)](https://travis-ci.org/simplethings/EntityAudit) |
+
 
 This extension for Doctrine 2 is inspired by [Hibernate Envers](http://www.jboss.org/envers) and
 allows full versioning of entities and their associations.
@@ -206,18 +209,27 @@ $revision = $auditReader->getCurrentRevision(
 
 ## Setting the Current Username
 
-Each revision automatically saves the username that changes it. For this to work you have to set the username.
-In the Symfony2 web context the username is automatically set to the one in the current security token.
+Each revision automatically saves the username that changes it. For this to work, the username must be resolved.
 
-In a standalone app or Symfony command you have to set the username to a specific value using the `AuditConfiguration`:
+In the Symfony2 web context the username is resolved from the one in the current security context token.
+
+You can override this with your own behaviour by configuring the `username_callable` service in the bundle configuration. Your custom service must be a `callable` and should return a `string` or `null`.
+
+#####app/config/config.yml
+```yml
+simple_things_entity_audit:
+    service:
+        username_callable: acme.username_callable
+```
+
+In a standalone app or Symfony command you can username callable to a specific value using the `AuditConfiguration`.
 
 ```php
-// Symfony2 context
-$container->get('simplethings_entityaudit.config')->setCurrentUsername('beberlei');
-
-// Standalone app
 $auditConfig = new \SimpleThings\EntityAudit\AuditConfiguration();
-$auditConfig->setCurrentUsername('beberlei');
+$auditConfig->setUsernameCallable(function () {
+	$username = //your customer logic
+    return username;
+});
 ```
 
 ## Viewing auditing
@@ -248,3 +260,9 @@ This provides you with a few different routes:
 * Proper metadata mapping is necessary, allow to disable versioning for fields and associations.
 * It does NOT work with Joined-Table-Inheritance (Single Table Inheritance should work, but not tested)
 * Many-To-Many associations are NOT versioned
+
+## Contributing
+
+Please before commiting, run this command `./vendor/bin/php-cs-fixer fix --verbose` to normalize the coding style.
+
+If you already have the fixer locally you can run `php-cs-fixer fix .`.

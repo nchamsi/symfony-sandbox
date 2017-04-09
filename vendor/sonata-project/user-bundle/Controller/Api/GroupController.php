@@ -148,9 +148,9 @@ class GroupController
      *
      * @param Request $request A Symfony request
      *
-     * @return GroupInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return GroupInterface
      */
     public function postGroupAction(Request $request)
     {
@@ -176,9 +176,9 @@ class GroupController
      * @param int     $id      Group identifier
      * @param Request $request A Symfony request
      *
-     * @return GroupInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return GroupInterface
      */
     public function putGroupAction($id, Request $request)
     {
@@ -231,7 +231,7 @@ class GroupController
             'csrf_protection' => false,
         ));
 
-        $form->submit($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $group = $form->getData();
@@ -261,9 +261,9 @@ class GroupController
      *
      * @param $id
      *
-     * @return GroupInterface
-     *
      * @throws NotFoundHttpException
+     *
+     * @return GroupInterface
      */
     protected function getGroup($id)
     {

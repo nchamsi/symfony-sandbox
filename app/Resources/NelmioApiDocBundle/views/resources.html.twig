@@ -29,7 +29,7 @@
             {% if current_resource_name == '_login_check' or  current_resource_name == '_token' %}
                 {% set current_resource_name = 'security' %}
             {% endif %}
-            {% set current_resource_name = current_resource_name | replace ('-',' ') | replace ('_',' ') | capitalize %}
+            {% set current_resource_name = current_resource_name | replace ({'-':' '}) | replace ({'_':' '}) | capitalize %}
             <a id="section-{{ section }}"></a>
             <li class="resource" style="border-bottom: none;">
 

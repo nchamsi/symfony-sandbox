@@ -229,14 +229,13 @@ class AuditReader
         $class = $this->em->getClassMetadata($className);
         $tableName = $this->config->getTableName($class);
 
-        if (!is_array($id)) {
-            $id = array($class->identifier[0] => $id);
-        }
-
         $whereSQL  = "e." . $this->config->getRevisionFieldName() ." <= ?";
 
         foreach ($class->identifier AS $idField) {
-            if (isset($class->fieldMappings[$idField])) {
+            if (is_array($id) && count($id) > 0) {
+                $idKeys = array_keys($id);
+                $columnName = $idKeys[0];
+            } else if (isset($class->fieldMappings[$idField])) {
                 $columnName = $class->fieldMappings[$idField]['columnName'];
             } elseif (isset($class->associationMappings[$idField])) {
                 $columnName = $class->associationMappings[$idField]['joinColumns'][0];
@@ -245,6 +244,10 @@ class AuditReader
             }
 
             $whereSQL .= " AND e." . $columnName . " = ?";
+        }
+
+        if (!is_array($id)) {
+            $id = array($class->identifier[0] => $id);
         }
 
         $columnList = array('e.'.$this->config->getRevisionTypeFieldName());
@@ -417,18 +420,21 @@ class AuditReader
                 //print_r($targetClass->discriminatorMap);
                 if ($this->metadataFactory->isAudited($assoc['targetEntity'])) {
                     if ($this->loadAuditedEntities) {
+                        // Primary Key. Used for audit tables queries.
                         $pk = array();
+                        // Primary Field. Used when fallback to Doctrine finder.
+                        $pf = array();
 
                         if ($assoc['isOwningSide']) {
                             foreach ($assoc['targetToSourceKeyColumns'] as $foreign => $local) {
-                                $pk[$foreign] = $data[$columnMap[$local]];
+                                $pk[$foreign] = $pf[$foreign] = $data[$columnMap[$local]];
                             }
                         } else {
                             /** @var ClassMetadataInfo|ClassMetadata $otherEntityMeta */
-                            $otherEntityMeta = $this->em->getClassMetadata($assoc['targetEntity']);
+                            $otherEntityAssoc = $this->em->getClassMetadata($assoc['targetEntity'])->associationMappings[$assoc['mappedBy']];
 
-                            foreach ($otherEntityMeta->associationMappings[$assoc['mappedBy']]['targetToSourceKeyColumns'] as $local => $foreign) {
-                                $pk[$foreign] = $data[$class->getFieldName($local)];
+                            foreach ($otherEntityAssoc['targetToSourceKeyColumns'] as $local => $foreign) {
+                                $pk[$foreign] = $pf[$otherEntityAssoc['fieldName']] = $data[$class->getFieldName($local)];
                             }
                         }
 
@@ -443,6 +449,9 @@ class AuditReader
                                 $value = $this->find($targetClass->name, $pk, $revision, array('threatDeletionsAsExceptions' => true));
                             } catch (DeletedException $e) {
                                 $value = null;
+                            } catch (NoRevisionFoundException $e) {
+                                // The entity does not have any revision yet. So let's get the actual state of it.
+                                $value = $this->em->getRepository($targetClass->name)->findOneBy($pf);
                             }
 
                             $class->reflFields[$field]->setValue($entity, $value);

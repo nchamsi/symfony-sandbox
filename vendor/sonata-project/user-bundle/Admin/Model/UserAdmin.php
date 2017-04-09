@@ -88,14 +88,11 @@ class UserAdmin extends AbstractAdmin
             ->add('email')
             ->add('groups')
             ->add('enabled', null, array('editable' => true))
-            ->add('locked', null, array('editable' => true))
-            ->add('createdAt')
-        ;
+            ->add('createdAt');
 
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
-                ->add('impersonating', 'string', array('template' => 'SonataUserBundle:Admin:Field/impersonating.html.twig'))
-            ;
+                ->add('impersonating', 'string', array('template' => 'SonataUserBundle:Admin:Field/impersonating.html.twig'));
         }
     }
 
@@ -107,10 +104,8 @@ class UserAdmin extends AbstractAdmin
         $filterMapper
             ->add('id')
             ->add('username')
-            ->add('locked')
             ->add('email')
-            ->add('groups')
-        ;
+            ->add('groups');
     }
 
     /**
@@ -148,8 +143,7 @@ class UserAdmin extends AbstractAdmin
             ->with('Security')
                 ->add('token')
                 ->add('twoStepVerificationCode')
-            ->end()
-        ;
+            ->end();
     }
 
     /**
@@ -169,8 +163,7 @@ class UserAdmin extends AbstractAdmin
                 ->with('Groups', array('class' => 'col-md-4'))->end()
                 ->with('Keys', array('class' => 'col-md-4'))->end()
                 ->with('Roles', array('class' => 'col-md-12'))->end()
-            ->end()
-        ;
+            ->end();
 
         $now = new \DateTime();
 
@@ -234,10 +227,7 @@ class UserAdmin extends AbstractAdmin
             ->end()
             ->tab('Security')
                 ->with('Status')
-                    ->add('locked', null, array('required' => false))
-                    ->add('expired', null, array('required' => false))
                     ->add('enabled', null, array('required' => false))
-                    ->add('credentialsExpired', null, array('required' => false))
                 ->end()
                 ->with('Groups')
                     ->add('groups', $modelType, array(
@@ -258,7 +248,6 @@ class UserAdmin extends AbstractAdmin
                     ->add('token', null, array('required' => false))
                     ->add('twoStepVerificationCode', null, array('required' => false))
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

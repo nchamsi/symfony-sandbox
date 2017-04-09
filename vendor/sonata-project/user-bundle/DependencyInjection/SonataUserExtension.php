@@ -84,19 +84,6 @@ class SonataUserExtension extends Extension
             $authorizationCheckerReference = new Reference('security.context');
         }
 
-        // NEXT_MAJOR: Remove following lines
-        $profileFormDefinition = $container->getDefinition('sonata.user.profile.form');
-        $registrationFormDefinition = $container->getDefinition('sonata.user.registration.form');
-        if (method_exists($profileFormDefinition, 'setFactory')) {
-            $profileFormDefinition->setFactory(array(new Reference('form.factory'), 'createNamed'));
-            $registrationFormDefinition->setFactory(array(new Reference('form.factory'), 'createNamed'));
-        } else {
-            $profileFormDefinition->setFactoryClass(new Reference('form.factory'));
-            $profileFormDefinition->setFactoryMethod('createNamed');
-            $registrationFormDefinition->setFactoryClass(new Reference('form.factory'));
-            $registrationFormDefinition->setFactoryMethod('createNamed');
-        }
-
         if ($container->hasDefinition('sonata.user.editable_role_builder')) {
             $container
                 ->getDefinition('sonata.user.editable_role_builder')
@@ -133,7 +120,6 @@ class SonataUserExtension extends Extension
         $container->setParameter('sonata.user.impersonating', $config['impersonating']);
 
         $this->configureGoogleAuthenticator($config, $container);
-        $this->configureShortcut($container);
         $this->configureProfile($config, $container);
         $this->configureRegistration($config, $container);
         $this->configureMenu($config, $container);
@@ -142,9 +128,9 @@ class SonataUserExtension extends Extension
     /**
      * @param array $config
      *
-     * @return array
-     *
      * @throws \RuntimeException
+     *
+     * @return array
      */
     public function fixImpersonating(array $config)
     {
@@ -174,9 +160,9 @@ class SonataUserExtension extends Extension
      * @param array            $config
      * @param ContainerBuilder $container
      *
-     * @return mixed
-     *
      * @throws \RuntimeException
+     *
+     * @return mixed
      */
     public function configureGoogleAuthenticator($config, ContainerBuilder $container)
     {
@@ -307,15 +293,6 @@ class SonataUserExtension extends Extension
     }
 
     /**
-     * @param ContainerBuilder $container
-     */
-    public function configureShortcut(ContainerBuilder $container)
-    {
-        $container->setAlias('sonata.user.authentication.form', 'fos_user.profile.form');
-        $container->setAlias('sonata.user.authentication.form_handler', 'fos_user.profile.form.handler');
-    }
-
-    /**
      * @param array            $config
      * @param ContainerBuilder $container
      */
@@ -355,8 +332,6 @@ class SonataUserExtension extends Extension
         $container->setParameter('sonata.user.registration.form.type', $config['profile']['register']['form']['type']);
         $container->setParameter('sonata.user.registration.form.name', $config['profile']['register']['form']['name']);
         $container->setParameter('sonata.user.registration.form.validation_groups', $config['profile']['register']['form']['validation_groups']);
-
-        $container->setAlias('sonata.user.registration.form.handler', $config['profile']['register']['form']['handler']);
     }
 
     /**

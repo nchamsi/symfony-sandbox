@@ -1,16 +1,16 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_driver: pdo_mysql
     database_host: 127.0.0.1
+    database_port: null
     database_name: symfony
     database_user: root
     database_password: null
     mailer_transport: smtp
-    mailer_host: localhost
+    mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
     locale: es
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: 692cd6b4574faf02145126fe2f31c3fdbf88a5fc
     webapp_host: 127.0.0.1
     webapp_url: 'http://%webapp_host%'
     webapp.logo: /logo.png
@@ -20,13 +20,6 @@ parameters:
     sonata_admin.short_title: Symfony
     sonata_admin.logo_title: /logo.png
     sonata_admin.skin: skin-blue
-    sonata_news.blog_title: 'My Awesome Blog'
-    sonata_news.blog_link: 'http://awesome-blog.ltd'
-    sonata_news.blog_description: 'My Awesome blog description'
-    sonata_news.salt: ThisTokenIsNotSoSecretChangeIt
-    sonata_news.comment.emails:
-        - mail@example.org
-    sonata_news.comment.email_from: no-reply@example.org
     sonata_media.cdn.host: '%webapp_url%/uploads/media'
     security_user_class: Application\Sonata\UserBundle\Entity\User\User
     security_group_class: Application\Sonata\UserBundle\Entity\User\Group
@@ -34,14 +27,7 @@ parameters:
     security_user_admin_class: Application\Sonata\UserBundle\Admin\User\UserAdmin
     security_group_admin_class: Application\Sonata\UserBundle\Admin\User\GroupAdmin
     sonata_user.google_authenticator.server: app.symfony-sonata-project.com
-    sonata_page.varnish.command: 'if [ ! -r "/etc/varnish/secret" ]; then echo "VALID ERROR :/"; else varnishadm -S /etc/varnish/secret -T 127.0.0.1:6082 {{ COMMAND }} "{{ EXPRESSION }}"; fi;'
-    sonata.fixtures.product.fake: 0
-    sonata.fixtures.customer.fake: 10
-    sonata.fixtures.page.create_subsite: false
-    simplethings.entityaudit.table_prefix: sf_audit__
-    simplethings.entityaudit.table_suffix: null
-    simplethings.entityaudit.revision_table_name: sf_audit__alls_revisions
-    jwt_private_key_path: '%kernel.root_dir%/var/jwt/server.key'
-    jwt_public_key_path: '%kernel.root_dir%/var/jwt/server.crt'
+    jwt_private_key_path: '%kernel.root_dir%/../var/jwt/server.key'
+    jwt_public_key_path: '%kernel.root_dir%/../var/jwt/server.crt'
     jwt_key_pass_phrase: '1234'
     jwt_token_ttl: 86400

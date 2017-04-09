@@ -24,6 +24,7 @@
 namespace SimpleThings\EntityAudit\EventListener;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -98,6 +99,13 @@ class LogRevisionsListener implements EventSubscriber
         return array(Events::onFlush, Events::postPersist, Events::postUpdate, Events::postFlush);
     }
 
+    /**
+     * @param PostFlushEventArgs $eventArgs
+     * @throws MappingException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws MappingException
+     * @throws \Exception
+     */
     public function postFlush(PostFlushEventArgs $eventArgs)
     {
         $em = $eventArgs->getEntityManager();
@@ -118,12 +126,20 @@ class LogRevisionsListener implements EventSubscriber
             foreach ($updateData[$meta->table['name']] as $column => $value) {
                 $field = $meta->getFieldName($column);
                 $fieldName = $meta->getFieldForColumn($column);
+                $placeholder = '?';
                 if ($meta->hasField($fieldName)) {
                     $field = $quoteStrategy->getColumnName($field, $meta, $this->platform);
+                    $fieldType = $meta->getTypeOfField($field);
+                    if (null !== $fieldType) {
+                        $type = Type::getType($fieldType);
+                        if ($type->canRequireSQLConversion()) {
+                            $placeholder = $type->convertToDatabaseValueSQL('?', $this->platform);
+                        }
+                    }
                 }
 
                 $sql = 'UPDATE ' . $this->config->getTableName($meta) . ' ' .
-                    'SET ' . $field . ' = ? ' .
+                    'SET ' . $field . ' = ' . $placeholder . ' ' .
                     'WHERE ' . $this->config->getRevisionFieldName() . ' = ? ';
 
                 $params = array($value, $this->getRevisionId());
@@ -164,6 +180,14 @@ class LogRevisionsListener implements EventSubscriber
                         $types[] = $meta->fieldMappings[$idField]['type'];
                     } elseif (isset($meta->associationMappings[$idField])) {
                         $columnName = $meta->associationMappings[$idField]['joinColumns'][0];
+                        if (is_array($columnName)) {
+                            if (isset($columnName['name'])) {
+                                $columnName = $columnName['name'];
+                            } else {
+                                // Not much we can do to recover this - we need a column name...
+                                throw new MappingException('Column name not set within meta');
+                            }
+                        }
                         $types[] = $meta->associationMappings[$idField]['type'];
                     }
 

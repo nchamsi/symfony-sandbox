@@ -42,8 +42,7 @@ class GroupAdmin extends AbstractAdmin
     {
         $listMapper
             ->addIdentifier('name')
-            ->add('roles')
-        ;
+            ->add('roles');
     }
 
     /**
@@ -52,8 +51,7 @@ class GroupAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-        ;
+            ->add('name');
     }
 
     /**
@@ -80,7 +78,6 @@ class GroupAdmin extends AbstractAdmin
                         'required' => false,
                     ))
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }
