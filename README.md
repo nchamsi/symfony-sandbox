@@ -1,4 +1,4 @@
-# Symfony Sandbox: project integrated with multiples util bundles
+# Symfony Sandbox: project integrated with util bundles
 
 This project is a symfony based application with multiples customized elements. It integrates well known projects like Sonata Admin, Sonata User, FOS User, FOS Rest and others dependencies. It provides a custom and extended configuration based on sonata sandbox project.
 
