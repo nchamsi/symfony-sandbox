@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4134e0e08c922974e96c5789f683da0f",
+    "content-hash": "8ce924cb7fa636bb5b3bb18cffaa88eb",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -43,25 +43,29 @@
         },
         {
             "name": "behat/transliterator",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Transliterator.git",
-                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003"
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/868e05be3a9f25ba6424c2dd4849567f50715003",
-                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+            "require-dev": {
+                "chuyskywalker/rolling-curl": "^3.1",
+                "php-yaoi/php-yaoi": "^1.0"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -79,7 +83,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2015-09-28T16:26:35+00:00"
+            "time": "2017-04-04T11:38:05+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -144,6 +148,65 @@
                 "slugify"
             ],
             "time": "2017-03-23T21:52:55+00:00"
+        },
+        {
+            "name": "composer/ca-bundle",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/ca-bundle.git",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "ext-pcre": "*",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5",
+                "psr/log": "^1.0",
+                "symfony/process": "^2.5 || ^3.0"
+            },
+            "suggest": {
+                "symfony/process": "This is necessary to reliably check whether openssl_x509_parse is vulnerable on older php versions, but can be ignored on PHP 5.5.6+"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\CaBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
+            "keywords": [
+                "cabundle",
+                "cacert",
+                "certificate",
+                "ssl",
+                "tls"
+            ],
+            "time": "2017-03-06T11:59:08+00:00"
         },
         {
             "name": "data-dog/audit-bundle",
@@ -2525,34 +2588,37 @@
         },
         {
             "name": "knplabs/gaufrette",
-            "version": "0.2.1",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/Gaufrette.git",
-                "reference": "1696386ca66f2f046dea7892cf1f85fd82b5b68e"
+                "reference": "771ad16f4b2e7f9d35f44b201956e83c6fbf5dde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/Gaufrette/zipball/1696386ca66f2f046dea7892cf1f85fd82b5b68e",
-                "reference": "1696386ca66f2f046dea7892cf1f85fd82b5b68e",
+                "url": "https://api.github.com/repos/KnpLabs/Gaufrette/zipball/771ad16f4b2e7f9d35f44b201956e83c6fbf5dde",
+                "reference": "771ad16f4b2e7f9d35f44b201956e83c6fbf5dde",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.4"
+            },
+            "conflict": {
+                "microsoft/windowsazure": "<0.4.3"
             },
             "require-dev": {
                 "amazonwebservices/aws-sdk-for-php": "1.5.*",
-                "aws/aws-sdk-php": "~2",
+                "aws/aws-sdk-php": "^2.4.12",
                 "doctrine/dbal": ">=2.3",
                 "dropbox-php/dropbox-php": "*",
                 "google/apiclient": "~1.1.3",
                 "herzult/php-ssh": "*",
-                "microsoft/windowsazure": "dev-master",
+                "league/flysystem": "~1.0",
                 "mikey179/vfsstream": "~1.2.0",
                 "phpseclib/phpseclib": "^2.0",
-                "phpspec/phpspec": "2.0.*",
+                "phpspec/phpspec": "~2.4",
                 "phpunit/phpunit": "3.7.*",
-                "rackspace/php-opencloud": "1.9.*"
+                "rackspace/php-opencloud": "^1.9.2"
             },
             "suggest": {
                 "amazonwebservices/aws-sdk-for-php": "to use the legacy Amazon S3 adapters",
@@ -2568,6 +2634,7 @@
                 "google/apiclient": "to use GoogleCloudStorage adapter",
                 "herzult/php-ssh": "to use SFtp adapter",
                 "knplabs/knp-gaufrette-bundle": "to use with Symfony2",
+                "league/flysystem": "to use Flysystem adapters",
                 "microsoft/windowsazure": "to use Microsoft Azure Blob Storage adapter",
                 "phpseclib/phpseclib": "to use PhpseclibSftp adapter",
                 "rackspace/php-opencloud": "to use Opencloud adapter"
@@ -2605,7 +2672,7 @@
                 "filesystem",
                 "media"
             ],
-            "time": "2016-03-03T09:36:22+00:00"
+            "time": "2017-03-20T01:23:34+00:00"
         },
         {
             "name": "knplabs/knp-components",
@@ -3242,55 +3309,6 @@
                 "symfony"
             ],
             "time": "2016-10-11T17:25:28+00:00"
-        },
-        {
-            "name": "liip/doctrine-cache-bundle",
-            "version": "1.0.4",
-            "target-dir": "Liip/DoctrineCacheBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/liip/LiipDoctrineCacheBundle.git",
-                "reference": "fd154ded8a51a60219d1fa864eb668e4cc70ec21"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipDoctrineCacheBundle/zipball/fd154ded8a51a60219d1fa864eb668e4cc70ec21",
-                "reference": "fd154ded8a51a60219d1fa864eb668e4cc70ec21",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": ">=2.2",
-                "php": ">=5.3.0",
-                "symfony/symfony": ">=2.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Liip\\DoctrineCacheBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Liip AG",
-                    "homepage": "http://www.liip.ch/"
-                }
-            ],
-            "description": "This Bundle provides integration into Symfony2 with the Doctrine Common Cache layer.",
-            "keywords": [
-                "Symfony2",
-                "cache"
-            ],
-            "abandoned": "doctrine/doctrine-cache-bundle",
-            "time": "2014-02-17T02:17:48+00:00"
         },
         {
             "name": "liip/imagine-bundle",
@@ -4439,19 +4457,20 @@
         },
         {
             "name": "sensiolabs/security-checker",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/security-checker.git",
-                "reference": "04bb87f5bd28a7d6ce7f4a4d1d6b94b3c1aa8dae"
+                "reference": "9e69eddf3bc49d1ee5c7908564da3141796d4bbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/04bb87f5bd28a7d6ce7f4a4d1d6b94b3c1aa8dae",
-                "reference": "04bb87f5bd28a7d6ce7f4a4d1d6b94b3c1aa8dae",
+                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/9e69eddf3bc49d1ee5c7908564da3141796d4bbc",
+                "reference": "9e69eddf3bc49d1ee5c7908564da3141796d4bbc",
                 "shasum": ""
             },
             "require": {
+                "composer/ca-bundle": "^1.0",
                 "symfony/console": "~2.7|~3.0"
             },
             "bin": [
@@ -4479,7 +4498,7 @@
                 }
             ],
             "description": "A security checker for your composer.lock",
-            "time": "2017-03-29T08:08:00+00:00"
+            "time": "2017-03-31T14:50:32+00:00"
         },
         {
             "name": "shtumi/useful-bundle",
@@ -4584,16 +4603,16 @@
         },
         {
             "name": "sonata-project/admin-bundle",
-            "version": "3.15.1",
+            "version": "3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "4f978ab83b5454ab4e40295ad89eae47ca7591d5"
+                "reference": "9ef795ae04735900280bc1ba96b9ffe93032dec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/4f978ab83b5454ab4e40295ad89eae47ca7591d5",
-                "reference": "4f978ab83b5454ab4e40295ad89eae47ca7591d5",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/9ef795ae04735900280bc1ba96b9ffe93032dec3",
+                "reference": "9ef795ae04735900280bc1ba96b9ffe93032dec3",
                 "shasum": ""
             },
             "require": {
@@ -4679,7 +4698,7 @@
                 "bootstrap",
                 "sonata"
             ],
-            "time": "2017-03-28T15:53:22+00:00"
+            "time": "2017-03-31T09:23:02+00:00"
         },
         {
             "name": "sonata-project/block-bundle",
@@ -5577,22 +5596,22 @@
         },
         {
             "name": "sonata-project/media-bundle",
-            "version": "3.5.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataMediaBundle.git",
-                "reference": "17162cc5b4d5f1324d47fdbd0737f67d7062b236"
+                "reference": "e2900b01768e14afc7c2eeab3ca902705070369f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataMediaBundle/zipball/17162cc5b4d5f1324d47fdbd0737f67d7062b236",
-                "reference": "17162cc5b4d5f1324d47fdbd0737f67d7062b236",
+                "url": "https://api.github.com/repos/sonata-project/SonataMediaBundle/zipball/e2900b01768e14afc7c2eeab3ca902705070369f",
+                "reference": "e2900b01768e14afc7c2eeab3ca902705070369f",
                 "shasum": ""
             },
             "require": {
                 "imagine/imagine": "^0.6",
                 "jms/serializer-bundle": "^0.13 || ^1.0",
-                "knplabs/gaufrette": "^0.1.6 || ^0.2",
+                "knplabs/gaufrette": "^0.1.6 || ^0.2 || ^0.3",
                 "kriswallsmith/buzz": "^0.15",
                 "php": "^5.3 || ^7.0",
                 "sonata-project/core-bundle": "^3.2",
@@ -5688,7 +5707,7 @@
                 "vimeo",
                 "youtube"
             ],
-            "time": "2017-03-08T09:28:41+00:00"
+            "time": "2017-03-31T09:42:40+00:00"
         },
         {
             "name": "sonata-project/notification-bundle",
@@ -5783,23 +5802,23 @@
         },
         {
             "name": "sonata-project/page-bundle",
-            "version": "3.4.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataPageBundle.git",
-                "reference": "72e6f268b0677cad0f3f31c176719fea7a2b9ab8"
+                "reference": "c09070ba1113e85eb2cb7b83dfe43ea6ba816b5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataPageBundle/zipball/72e6f268b0677cad0f3f31c176719fea7a2b9ab8",
-                "reference": "72e6f268b0677cad0f3f31c176719fea7a2b9ab8",
+                "url": "https://api.github.com/repos/sonata-project/SonataPageBundle/zipball/c09070ba1113e85eb2cb7b83dfe43ea6ba816b5c",
+                "reference": "c09070ba1113e85eb2cb7b83dfe43ea6ba816b5c",
                 "shasum": ""
             },
             "require": {
                 "cocur/slugify": "^1.0 || ^2.0",
                 "php": "^5.3 || ^7.0",
                 "sonata-project/admin-bundle": "^3.4",
-                "sonata-project/block-bundle": "^3.1.1",
+                "sonata-project/block-bundle": "^3.2",
                 "sonata-project/cache": "^1.0.2",
                 "sonata-project/cache-bundle": "^2.1.7",
                 "sonata-project/core-bundle": "^3.0",
@@ -5873,7 +5892,7 @@
                 "page",
                 "sonata"
             ],
-            "time": "2017-03-16T09:34:37+00:00"
+            "time": "2017-04-04T09:07:58+00:00"
         },
         {
             "name": "sonata-project/seo-bundle",
@@ -6980,16 +6999,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.18",
+            "version": "v2.8.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "8c28bf706b3bf4250d18535ee46a8a5d7a5825e1"
+                "reference": "da35163ddb6e876bfb6054f84e02947a6e0274e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/8c28bf706b3bf4250d18535ee46a8a5d7a5825e1",
-                "reference": "8c28bf706b3bf4250d18535ee46a8a5d7a5825e1",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/da35163ddb6e876bfb6054f84e02947a6e0274e3",
+                "reference": "da35163ddb6e876bfb6054f84e02947a6e0274e3",
                 "shasum": ""
             },
             "require": {
@@ -7113,7 +7132,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-03-06T03:54:50+00:00"
+            "time": "2017-04-05T04:05:19+00:00"
         },
         {
             "name": "twig/extensions",
@@ -9807,7 +9826,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v2.8.18",
+            "version": "v2.8.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",

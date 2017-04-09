@@ -24,7 +24,6 @@ return array(
     'Mopa\\Bridge\\Composer' => array($vendorDir . '/mopa/composer-bridge/src'),
     'Michelf' => array($vendorDir . '/michelf/php-markdown'),
     'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
-    'Liip\\DoctrineCacheBundle\\' => array($vendorDir . '/liip/doctrine-cache-bundle'),
     'Lexik\\Bundle\\JWTAuthenticationBundle' => array($vendorDir . '/lexik/jwt-authentication-bundle'),
     'Knp\\Component' => array($vendorDir . '/knplabs/knp-components/src'),
     'JsonpCallbackValidator' => array($vendorDir . '/willdurand/jsonp-callback-validator/src'),

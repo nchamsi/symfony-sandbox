@@ -3,7 +3,7 @@
 namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
-use phpseclib\Net\SFTP;
+use phpseclib\Net\SFTP as SecLibSFTP;
 use Gaufrette\Filesystem;
 use Gaufrette\File;
 
@@ -17,16 +17,12 @@ class PhpseclibSftp implements Adapter,
     protected $initialized = false;
 
     /**
-     * Constructor.
-     *
-     * @param SFTP        $sftp      An Sftp instance
+     * @param SecLibSFTP  $sftp      An Sftp instance
      * @param string      $directory The distant directory
      * @param bool        $create    Whether to create the remote directory if it
      *                               does not exist
-     * @param string|null $username  SFTP user name
-     * @param string|null $password  SFTP user password
      */
-    public function __construct(SFTP $sftp, $directory = null, $create = false, $username = null, $password = null)
+    public function __construct(SecLibSFTP $sftp, $directory = null, $create = false)
     {
         $this->sftp = $sftp;
         $this->directory = $directory;
@@ -51,7 +47,7 @@ class PhpseclibSftp implements Adapter,
         $sourcePath = $this->computePath($sourceKey);
         $targetPath = $this->computePath($targetKey);
 
-        $this->ensureDirectoryExists(dirname($targetPath), true);
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath), true);
 
         return $this->sftp->rename($sourcePath, $targetPath);
     }
@@ -64,7 +60,7 @@ class PhpseclibSftp implements Adapter,
         $this->initialize();
 
         $path = $this->computePath($key);
-        $this->ensureDirectoryExists(dirname($path), true);
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($path), true);
         if ($this->sftp->put($path, $content)) {
             return $this->sftp->size($path);
         }

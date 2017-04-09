@@ -14,8 +14,8 @@ class ComposerStaticInit03497fea2784f61e1738d908a1add5e2
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
@@ -169,6 +169,7 @@ class ComposerStaticInit03497fea2784f61e1738d908a1add5e2
         ),
         'C' => 
         array (
+            'Composer\\CaBundle\\' => 18,
             'Cocur\\Slugify\\' => 14,
         ),
         'B' => 
@@ -562,6 +563,10 @@ class ComposerStaticInit03497fea2784f61e1738d908a1add5e2
         array (
             0 => __DIR__ . '/..' . '/data-dog/audit-bundle/src/DataDog/AuditBundle',
         ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
         'Cocur\\Slugify\\' => 
         array (
             0 => __DIR__ . '/..' . '/cocur/slugify/src',
@@ -682,10 +687,6 @@ class ComposerStaticInit03497fea2784f61e1738d908a1add5e2
         ),
         'L' => 
         array (
-            'Liip\\DoctrineCacheBundle\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/liip/doctrine-cache-bundle',
-            ),
             'Lexik\\Bundle\\JWTAuthenticationBundle' => 
             array (
                 0 => __DIR__ . '/..' . '/lexik/jwt-authentication-bundle',

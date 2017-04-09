@@ -42,7 +42,6 @@
         "friendsofsymfony/user-bundle" : "1.3.x-dev",
         "lexik/form-filter-bundle": "^5.0",
         "liip/imagine-bundle": "^1.6",
-        "liip/doctrine-cache-bundle": "^1.0",
         "sonata-project/page-bundle": "^3.1",
         "ideup/simple-paginator-bundle": "dev-master",
         "knplabs/knp-gaufrette-bundle": "^0.3.0",

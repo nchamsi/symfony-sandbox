@@ -101,6 +101,7 @@ return array(
     'Doctrine\\Bundle\\DoctrineCacheBundle\\' => array($vendorDir . '/doctrine/doctrine-cache-bundle'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
     'DataDog\\AuditBundle\\' => array($vendorDir . '/data-dog/audit-bundle/src/DataDog/AuditBundle'),
+    'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
     'Behatch\\' => array($vendorDir . '/behatch/contexts/src'),
     'Behat\\Mink\\Driver\\' => array($vendorDir . '/behat/mink-browserkit-driver/src', $vendorDir . '/behat/mink-goutte-driver/src', $vendorDir . '/behat/mink-selenium2-driver/src'),

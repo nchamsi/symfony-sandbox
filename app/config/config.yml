@@ -21,7 +21,7 @@ imports:
     - { resource: sonata/sonata_block.yml }
     - { resource: sonata/sonata_formatter.yml }
     - { resource: sonata/sonata_cache.yml }
-    - { resource: sonata/sonata_seo.yml }
+    #- { resource: sonata/sonata_seo.yml }
     #- { resource: sonata/sonata_timeline.yml }
     - { resource: sonata/sonata_intl.yml }
     - { resource: sonata/sonata_core.yml }

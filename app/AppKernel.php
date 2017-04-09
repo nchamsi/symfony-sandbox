@@ -72,14 +72,14 @@ class AppKernel extends Kernel {
             new Sonata\FormatterBundle\SonataFormatterBundle(),
             new Sonata\CacheBundle\SonataCacheBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
-            new Sonata\SeoBundle\SonataSeoBundle(),
+            //new Sonata\SeoBundle\SonataSeoBundle(),
             new Sonata\ClassificationBundle\SonataClassificationBundle(),
             new Sonata\NotificationBundle\SonataNotificationBundle(),
             new Sonata\DatagridBundle\SonataDatagridBundle(),
             // Search Integration
             //new FOS\ElasticaBundle\FOSElasticaBundle(),
             // CMF Integration
-            new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+            //new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
             // DEMO and QA - Can be deleted
             //new Sonata\Bundle\DemoBundle\SonataDemoBundle(),
             //new Sonata\Bundle\QABundle\SonataQABundle(),
