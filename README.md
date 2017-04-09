@@ -1,4 +1,4 @@
-# Symfony Sandbox with multiples integrated bundles
+# Symfony Sandbox: project integrated with multiples util bundles
 
 This project is a symfony based application with multiples customized elements. It integrates well known projects like Sonata Admin, Sonata User, FOS User, FOS Rest and others dependencies. It provides a custom and extended configuration based on sonata sandbox project.
 
@@ -13,54 +13,54 @@ Composer Installation
 
 Open a console window and execute following commands:
 
-mkdir workspace
+    mkdir workspace
 
-cd workspace
+    cd workspace
 
-php composer.phar create-project frnklnrd/symfony2-sandbox sf2-project
+    php composer.phar create-project frnklnrd/symfony-sandbox sf-project
 
-cd sf2-project
+    cd sf-project
 
-php composer.phar update
+    php composer.phar update
 
 
 # Configuration
 
 For custom database and other options edit files:
 
-/app/config/parameters.yml
+    /app/config/parameters.yml
 
-/app/config/parameters_dev.yml
+    /app/config/parameters_dev.yml
 
 Create database, executing following command:
 
-php app/console doctrine:schema:create
+    php app/console doctrine:schema:create
 
 Create/Update tables from entities definitions, executing following command:
 
-php app/console doctrine:schema:update --force
+    php app/console doctrine:schema:update --force
 
 Create an user for access to application, executing following command:
 
-php app/console fos:user:create
+    php app/console fos:user:create
 
 Add ROLE permission to created user (recommended ROLE_SUPER_ADMIN), executing following command:
 
-php app/console fos:user:promote
+    php app/console fos:user:promote
 
 Force bundles to copy all assets in web/bundles/, executing following command:
 
-php app/console assets:install web
+    php app/console assets:install web
 
 Run server in development mode, executing following command:
 
-php app/console server:run
+    php app/console server:run
 
 Access to application:
 
-Frontend area: http://127.0.0.1:8000
+    Frontend area: http://127.0.0.1:8000
 
-Backend area: http://127.0.0.1:8000/admin
+    Backend area: http://127.0.0.1:8000/admin
 
 
 
