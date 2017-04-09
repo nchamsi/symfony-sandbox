@@ -1,6 +1,6 @@
-# Symfony2 Sandbox with multiples integrated bundles
+# Symfony Sandbox with multiples integrated bundles
 
-This project is a symfony 2 based application with multiples customized elements. It integrates well known projects like Sonata Admin, Sonata User, FOS User, FOS Rest and others dependencies. It provides a custom and extended configuration based on sonata sandbox project.
+This project is a symfony based application with multiples customized elements. It integrates well known projects like Sonata Admin, Sonata User, FOS User, FOS Rest and others dependencies. It provides a custom and extended configuration based on sonata sandbox project.
 
 You only need download it and use it with a little effort. 
 
