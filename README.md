@@ -34,27 +34,27 @@ For custom database and other options edit files:
 
 Create database, executing following command:
 
-    php app/console doctrine:schema:create
+    php bin/console doctrine:schema:create
 
 Create/Update tables from entities definitions, executing following command:
 
-    php app/console doctrine:schema:update --force
+    php bin/console doctrine:schema:update --force
 
 Create an user for access to application, executing following command:
 
-    php app/console fos:user:create
+    php bin/console fos:user:create
 
 Add ROLE permission to created user (recommended ROLE_SUPER_ADMIN), executing following command:
 
-    php app/console fos:user:promote
+    php bin/console fos:user:promote
 
 Force bundles to copy all assets in web/bundles/, executing following command:
 
-    php app/console assets:install web
+    php bin/console assets:install web
 
 Run server in development mode, executing following command:
 
-    php app/console server:run
+    php bin/console server:run
 
 Access to application:
 
