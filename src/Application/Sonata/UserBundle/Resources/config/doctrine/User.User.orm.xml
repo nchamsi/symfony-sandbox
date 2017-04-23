@@ -14,12 +14,12 @@
             <join-column name="owner_user_id" referenced-column-name="id" nullable="true"/>
         </many-to-one>
 
-        <one-to-one field="media" target-entity="Sonata\MediaBundle\Entity\BaseMedia" nullable="true">
+        <many-to-one field="media" target-entity="Sonata\MediaBundle\Entity\BaseMedia" nullable="true">
             <join-column name="media_id" referenced-column-name="id" nullable="true"/>
             <cascade>
                 <cascade-all/>
             </cascade>
-        </one-to-one>
+        </many-to-one>
 
     </entity>
 
