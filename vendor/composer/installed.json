@@ -1700,62 +1700,6 @@
         ]
     },
     {
-        "name": "swiftmailer/swiftmailer",
-        "version": "v5.4.6",
-        "version_normalized": "5.4.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/swiftmailer/swiftmailer.git",
-            "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
-            "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "mockery/mockery": "~0.9.1",
-            "symfony/phpunit-bridge": "~3.2"
-        },
-        "time": "2017-02-13T07:52:53+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "5.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "lib/swift_required.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Chris Corbyn"
-            },
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            }
-        ],
-        "description": "Swiftmailer, free feature-rich PHP mailer",
-        "homepage": "http://swiftmailer.org",
-        "keywords": [
-            "email",
-            "mail",
-            "mailer"
-        ]
-    },
-    {
         "name": "symfony/swiftmailer-bundle",
         "version": "v2.5.4",
         "version_normalized": "2.5.4.0",
@@ -2406,105 +2350,6 @@
             "json",
             "jwt",
             "token"
-        ]
-    },
-    {
-        "name": "lexik/jwt-authentication-bundle",
-        "version": "v2.2.0",
-        "version_normalized": "2.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
-            "reference": "3bf2107841de2d8ba6df8fd1c3f7cbf25a2256cd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/3bf2107841de2d8ba6df8fd1c3f7cbf25a2256cd",
-            "reference": "3bf2107841de2d8ba6df8fd1c3f7cbf25a2256cd",
-            "shasum": ""
-        },
-        "require": {
-            "namshi/jose": "^7.2",
-            "php": "^5.5|^7.0",
-            "symfony/console": "^2.8|^3.0",
-            "symfony/framework-bundle": "^2.8|^3.0",
-            "symfony/security-bundle": "^2.8|^3.0"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^1.1",
-            "lcobucci/jwt": "~3.2",
-            "phpunit/phpunit": "^4.8|^5.0",
-            "symfony/browser-kit": "^2.8|^3.0",
-            "symfony/dom-crawler": "^2.8|^3.0",
-            "symfony/phpunit-bridge": "^2.8|^3.0",
-            "symfony/yaml": "^2.8|^3.0"
-        },
-        "suggest": {
-            "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
-            "lcobucci/jwt": "For using the LcobucciJWTEncoder",
-            "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
-        },
-        "time": "2017-03-09T22:32:04+00:00",
-        "type": "symfony-bundle",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Lexik\\Bundle\\JWTAuthenticationBundle\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Robin Chalas",
-                "email": "robin.chalas@gmail.com",
-                "homepage": "https://github.com/chalasr"
-            },
-            {
-                "name": "Jeremy Barthe",
-                "email": "j.barthe@lexik.fr",
-                "homepage": "https://github.com/jeremyb"
-            },
-            {
-                "name": "Nicolas Cabot",
-                "email": "n.cabot@lexik.fr",
-                "homepage": "https://github.com/slashfan"
-            },
-            {
-                "name": "Cedric Girard",
-                "email": "c.girard@lexik.fr",
-                "homepage": "https://github.com/cedric-g"
-            },
-            {
-                "name": "Lexik Community",
-                "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle/graphs/contributors"
-            },
-            {
-                "name": "Dev Lexik",
-                "email": "dev@lexik.fr",
-                "homepage": "https://github.com/lexik"
-            }
-        ],
-        "description": "This bundle provides JWT authentication for your Symfony REST API",
-        "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle",
-        "keywords": [
-            "Authentication",
-            "JWS",
-            "api",
-            "bundle",
-            "jwt",
-            "rest",
-            "symfony"
         ]
     },
     {
@@ -3869,58 +3714,6 @@
         ]
     },
     {
-        "name": "sonata-project/google-authenticator",
-        "version": "1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/sonata-project/GoogleAuthenticator.git",
-            "reference": "72f47caddd09d09c0d3c3e046f6b435e0c004cd4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sonata-project/GoogleAuthenticator/zipball/72f47caddd09d09c0d3c3e046f6b435e0c004cd4",
-            "reference": "72f47caddd09d09c0d3c3e046f6b435e0c004cd4",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2014-03-31T09:18:53+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Google\\Authenticator\\": "lib/",
-                "Google\\Authenticator\\Tests\\": "tests/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Thomas Rabaix",
-                "email": "thomas.rabaix@gmail.com",
-                "homepage": "http://sonata-project.org/"
-            },
-            {
-                "name": "Christian Stocker",
-                "email": "me@chregu.tv"
-            },
-            {
-                "name": "Andre DeMarre",
-                "homepage": "http://www.devnetwork.net/viewtopic.php?f=50&t=94989"
-            }
-        ],
-        "description": "Library to integrate Google Authenticator into a PHP project",
-        "homepage": "https://github.com/sonata-project/GoogleAuthenticator",
-        "keywords": [
-            "google authenticator"
-        ]
-    },
-    {
         "name": "sonata-project/easy-extends-bundle",
         "version": "2.1.10",
         "version_normalized": "2.1.10.0",
@@ -4315,161 +4108,6 @@
             "metadata",
             "xml",
             "yaml"
-        ]
-    },
-    {
-        "name": "jms/serializer",
-        "version": "1.6.0",
-        "version_normalized": "1.6.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/schmittjoh/serializer.git",
-            "reference": "5e9008cbb0bac2986979d905a87ae48efcf578c4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/schmittjoh/serializer/zipball/5e9008cbb0bac2986979d905a87ae48efcf578c4",
-            "reference": "5e9008cbb0bac2986979d905a87ae48efcf578c4",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/annotations": "^1.0",
-            "doctrine/instantiator": "^1.0.3",
-            "jms/metadata": "~1.1",
-            "jms/parser-lib": "1.*",
-            "php": ">=5.5.0",
-            "phpcollection/phpcollection": "~0.1",
-            "phpoption/phpoption": "^1.1"
-        },
-        "conflict": {
-            "jms/serializer-bundle": "<1.2.1",
-            "twig/twig": "<1.12"
-        },
-        "require-dev": {
-            "doctrine/orm": "~2.1",
-            "doctrine/phpcr-odm": "^1.3|^2.0",
-            "ext-pdo_sqlite": "*",
-            "jackalope/jackalope-doctrine-dbal": "^1.1.5",
-            "phpunit/phpunit": "^4.8|^5.0",
-            "propel/propel1": "~1.7",
-            "symfony/expression-language": "^2.6|^3.0",
-            "symfony/filesystem": "^2.1",
-            "symfony/form": "~2.1|^3.0",
-            "symfony/translation": "^2.1|^3.0",
-            "symfony/validator": "^2.2|^3.0",
-            "symfony/yaml": "^2.1|^3.0",
-            "twig/twig": "~1.12|~2.0"
-        },
-        "suggest": {
-            "doctrine/cache": "Required if you like to use cache functionality.",
-            "doctrine/collections": "Required if you like to use doctrine collection types as ArrayCollection.",
-            "symfony/yaml": "Required if you'd like to serialize data to YAML format."
-        },
-        "time": "2017-03-24T13:11:23+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.6-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "JMS\\Serializer": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache2"
-        ],
-        "authors": [
-            {
-                "name": "Johannes M. Schmitt",
-                "email": "schmittjoh@gmail.com"
-            }
-        ],
-        "description": "Library for (de-)serializing data of any complexity; supports XML, JSON, and YAML.",
-        "homepage": "http://jmsyst.com/libs/serializer",
-        "keywords": [
-            "deserialization",
-            "jaxb",
-            "json",
-            "serialization",
-            "xml"
-        ]
-    },
-    {
-        "name": "jms/serializer-bundle",
-        "version": "1.3.1",
-        "version_normalized": "1.3.1.0",
-        "target-dir": "JMS/SerializerBundle",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
-            "reference": "c52ee408dea913c8abb1684ac6a9bb9c52c30564"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/c52ee408dea913c8abb1684ac6a9bb9c52c30564",
-            "reference": "c52ee408dea913c8abb1684ac6a9bb9c52c30564",
-            "shasum": ""
-        },
-        "require": {
-            "jms/serializer": "^1.6",
-            "php": ">=5.4.0",
-            "phpoption/phpoption": "^1.1.0",
-            "symfony/framework-bundle": "~2.3|~3.0"
-        },
-        "require-dev": {
-            "doctrine/doctrine-bundle": "*",
-            "doctrine/orm": "*",
-            "phpunit/phpunit": "^4.2|^5.0",
-            "symfony/browser-kit": "*",
-            "symfony/class-loader": "*",
-            "symfony/css-selector": "*",
-            "symfony/expression-language": "~2.6|~3.0",
-            "symfony/finder": "*",
-            "symfony/form": "*",
-            "symfony/process": "*",
-            "symfony/stopwatch": "*",
-            "symfony/twig-bundle": "*",
-            "symfony/validator": "*",
-            "symfony/yaml": "*"
-        },
-        "suggest": {
-            "jms/di-extra-bundle": "Required to get lazy loading (de)serialization visitors, ~1.3"
-        },
-        "time": "2017-03-29T10:10:19+00:00",
-        "type": "symfony-bundle",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "JMS\\SerializerBundle": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache2"
-        ],
-        "authors": [
-            {
-                "name": "Johannes M. Schmitt",
-                "email": "schmittjoh@gmail.com"
-            }
-        ],
-        "description": "Allows you to easily serialize, and deserialize data of any complexity",
-        "homepage": "http://jmsyst.com/bundles/JMSSerializerBundle",
-        "keywords": [
-            "deserialization",
-            "jaxb",
-            "json",
-            "serialization",
-            "xml"
         ]
     },
     {
@@ -5161,56 +4799,6 @@
         "homepage": "http://friendsofsymfony.github.com",
         "keywords": [
             "rest"
-        ]
-    },
-    {
-        "name": "gregwar/captcha",
-        "version": "v1.1.1",
-        "version_normalized": "1.1.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Gregwar/Captcha.git",
-            "reference": "1240ab993ca713680573b2d4166900da5f758623"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/1240ab993ca713680573b2d4166900da5f758623",
-            "reference": "1240ab993ca713680573b2d4166900da5f758623",
-            "shasum": ""
-        },
-        "require": {
-            "ext-gd": "*",
-            "php": ">=5.3.0"
-        },
-        "time": "2015-09-11T15:23:20+00:00",
-        "type": "captcha",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Gregwar\\Captcha\\": "/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Grégoire Passault",
-                "email": "g.passault@gmail.com",
-                "homepage": "http://www.gregwar.com/"
-            },
-            {
-                "name": "Jeremy Livingston",
-                "email": "jeremy.j.livingston@gmail.com"
-            }
-        ],
-        "description": "Captcha generator",
-        "homepage": "https://github.com/Gregwar/Captcha",
-        "keywords": [
-            "bot",
-            "captcha",
-            "spam"
         ]
     },
     {
@@ -6413,64 +6001,6 @@
         "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock."
     },
     {
-        "name": "simplethings/entity-audit-bundle",
-        "version": "v1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/simplethings/EntityAuditBundle.git",
-            "reference": "0e8a43761dee7c56cce649e3184e19ebe6af965a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/simplethings/EntityAuditBundle/zipball/0e8a43761dee7c56cce649e3184e19ebe6af965a",
-            "reference": "0e8a43761dee7c56cce649e3184e19ebe6af965a",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/dbal": "~2.5",
-            "doctrine/orm": "~2.4",
-            "php": "^5.3.9|~7.0"
-        },
-        "conflict": {
-            "doctrine/doctrine-bundle": "<1.4",
-            "gedmo/doctrine-extensions": "<2.3.1",
-            "symfony/framework-bundle": "<2.7"
-        },
-        "require-dev": {
-            "doctrine/doctrine-bundle": "~1.4",
-            "fabpot/php-cs-fixer": "^1.11",
-            "gedmo/doctrine-extensions": "^2.3.1",
-            "matthiasnoback/symfony-dependency-injection-test": "^1.0",
-            "phpunit/phpunit": "^4.8",
-            "symfony/framework-bundle": "~2.7|~3.0",
-            "symfony/var-dumper": "^2.7"
-        },
-        "time": "2017-01-30T16:27:28+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "SimpleThings\\EntityAudit\\": "src/SimpleThings/EntityAudit"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-2.1"
-        ],
-        "description": "Audit for Doctrine Entities",
-        "keywords": [
-            "Audit",
-            "database",
-            "persistence"
-        ]
-    },
-    {
         "name": "knplabs/knp-markdown-bundle",
         "version": "1.5.1",
         "version_normalized": "1.5.1.0",
@@ -7527,71 +7057,6 @@
         "keywords": [
             "page",
             "paging"
-        ]
-    },
-    {
-        "name": "twig/twig",
-        "version": "v2.3.0",
-        "version_normalized": "2.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "9718186a5df85a4f7917e78d3ffcabc204c75d25"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/9718186a5df85a4f7917e78d3ffcabc204c75d25",
-            "reference": "9718186a5df85a4f7917e78d3ffcabc204c75d25",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.0",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "require-dev": {
-            "psr/container": "^1.0",
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~3.3@dev"
-        },
-        "time": "2017-03-22T15:41:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
         ]
     },
     {
@@ -9963,6 +9428,544 @@
         "homepage": "https://github.com/sonata-project/SonataCacheBundle",
         "keywords": [
             "cache block"
+        ]
+    },
+    {
+        "name": "jms/serializer-bundle",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
+        "target-dir": "JMS/SerializerBundle",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
+            "reference": "fdd73dbc8642940084deda2a96fa5db62d0f2384"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/fdd73dbc8642940084deda2a96fa5db62d0f2384",
+            "reference": "fdd73dbc8642940084deda2a96fa5db62d0f2384",
+            "shasum": ""
+        },
+        "require": {
+            "jms/serializer": "^1.6",
+            "php": ">=5.4.0",
+            "phpoption/phpoption": "^1.1.0",
+            "symfony/framework-bundle": "~2.3|~3.0"
+        },
+        "require-dev": {
+            "doctrine/doctrine-bundle": "*",
+            "doctrine/orm": "*",
+            "phpunit/phpunit": "^4.2|^5.0",
+            "symfony/browser-kit": "*",
+            "symfony/class-loader": "*",
+            "symfony/css-selector": "*",
+            "symfony/expression-language": "~2.6|~3.0",
+            "symfony/finder": "*",
+            "symfony/form": "*",
+            "symfony/process": "*",
+            "symfony/stopwatch": "*",
+            "symfony/twig-bundle": "*",
+            "symfony/validator": "*",
+            "symfony/yaml": "*"
+        },
+        "suggest": {
+            "jms/di-extra-bundle": "Required to get lazy loading (de)serialization visitors, ~1.3"
+        },
+        "time": "2017-04-10T12:31:39+00:00",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "JMS\\SerializerBundle": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache2"
+        ],
+        "authors": [
+            {
+                "name": "Johannes M. Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Allows you to easily serialize, and deserialize data of any complexity",
+        "homepage": "http://jmsyst.com/bundles/JMSSerializerBundle",
+        "keywords": [
+            "deserialization",
+            "jaxb",
+            "json",
+            "serialization",
+            "xml"
+        ]
+    },
+    {
+        "name": "lexik/jwt-authentication-bundle",
+        "version": "v2.3.0",
+        "version_normalized": "2.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
+            "reference": "70ee4749145272285e301d4fd137518dcb2b75fb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/70ee4749145272285e301d4fd137518dcb2b75fb",
+            "reference": "70ee4749145272285e301d4fd137518dcb2b75fb",
+            "shasum": ""
+        },
+        "require": {
+            "namshi/jose": "^7.2",
+            "php": "^5.5|^7.0",
+            "symfony/console": "^2.8|^3.0",
+            "symfony/framework-bundle": "^2.8|^3.0",
+            "symfony/security-bundle": "^2.8|^3.0"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^1.1",
+            "lcobucci/jwt": "~3.2",
+            "phpunit/phpunit": "^4.8|^5.0",
+            "symfony/browser-kit": "^2.8|^3.0",
+            "symfony/dom-crawler": "^2.8|^3.0",
+            "symfony/phpunit-bridge": "~3.2",
+            "symfony/yaml": "^2.8|^3.0"
+        },
+        "suggest": {
+            "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
+            "lcobucci/jwt": "For using the LcobucciJWTEncoder",
+            "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
+        },
+        "time": "2017-04-14T14:30:20+00:00",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Lexik\\Bundle\\JWTAuthenticationBundle\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Robin Chalas",
+                "email": "robin.chalas@gmail.com",
+                "homepage": "https://github.com/chalasr"
+            },
+            {
+                "name": "Jeremy Barthe",
+                "email": "j.barthe@lexik.fr",
+                "homepage": "https://github.com/jeremyb"
+            },
+            {
+                "name": "Nicolas Cabot",
+                "email": "n.cabot@lexik.fr",
+                "homepage": "https://github.com/slashfan"
+            },
+            {
+                "name": "Cedric Girard",
+                "email": "c.girard@lexik.fr",
+                "homepage": "https://github.com/cedric-g"
+            },
+            {
+                "name": "Lexik Community",
+                "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle/graphs/contributors"
+            },
+            {
+                "name": "Dev Lexik",
+                "email": "dev@lexik.fr",
+                "homepage": "https://github.com/lexik"
+            }
+        ],
+        "description": "This bundle provides JWT authentication for your Symfony REST API",
+        "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle",
+        "keywords": [
+            "Authentication",
+            "JWS",
+            "api",
+            "bundle",
+            "jwt",
+            "rest",
+            "symfony"
+        ]
+    },
+    {
+        "name": "simplethings/entity-audit-bundle",
+        "version": "v1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/simplethings/EntityAuditBundle.git",
+            "reference": "04528a5fcdfcf8bc1f07fa8a0e0e459e7475502d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/simplethings/EntityAuditBundle/zipball/04528a5fcdfcf8bc1f07fa8a0e0e459e7475502d",
+            "reference": "04528a5fcdfcf8bc1f07fa8a0e0e459e7475502d",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "~2.5",
+            "doctrine/orm": "~2.4",
+            "php": "^5.3.9|~7.0"
+        },
+        "conflict": {
+            "doctrine/doctrine-bundle": "<1.4",
+            "gedmo/doctrine-extensions": "<2.3.1",
+            "symfony/framework-bundle": "<2.7"
+        },
+        "require-dev": {
+            "doctrine/doctrine-bundle": "~1.4",
+            "fabpot/php-cs-fixer": "^1.11",
+            "gedmo/doctrine-extensions": "^2.3.1",
+            "matthiasnoback/symfony-dependency-injection-test": "^1.0",
+            "phpunit/phpunit": "^4.8",
+            "symfony/framework-bundle": "~2.7|~3.0",
+            "symfony/var-dumper": "^2.7"
+        },
+        "time": "2017-04-19T08:38:05+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SimpleThings\\EntityAudit\\": "src/SimpleThings/EntityAudit"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-2.1"
+        ],
+        "description": "Audit for Doctrine Entities",
+        "keywords": [
+            "Audit",
+            "database",
+            "persistence"
+        ]
+    },
+    {
+        "name": "sonata-project/google-authenticator",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sonata-project/GoogleAuthenticator.git",
+            "reference": "ccf7ecb68e875562c70b28a470fe0daf48625b39"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sonata-project/GoogleAuthenticator/zipball/ccf7ecb68e875562c70b28a470fe0daf48625b39",
+            "reference": "ccf7ecb68e875562c70b28a470fe0daf48625b39",
+            "shasum": ""
+        },
+        "require": {
+            "paragonie/random_compat": "^2.0",
+            "php": "^5.3 || ^7.0"
+        },
+        "require-dev": {
+            "sllh/php-cs-fixer-styleci-bridge": "^2.0",
+            "symfony/phpunit-bridge": "~2.7|~3.0"
+        },
+        "time": "2017-04-19T14:00:07+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Google\\Authenticator\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Christian Stocker",
+                "email": "me@chregu.tv"
+            },
+            {
+                "name": "Andre DeMarre",
+                "homepage": "http://www.devnetwork.net/viewtopic.php?f=50&t=94989"
+            },
+            {
+                "name": "Thomas Rabaix",
+                "email": "thomas.rabaix@gmail.com"
+            }
+        ],
+        "description": "Library to integrate Google Authenticator into a PHP project",
+        "homepage": "https://github.com/sonata-project/GoogleAuthenticator",
+        "keywords": [
+            "google authenticator"
+        ]
+    },
+    {
+        "name": "jms/serializer",
+        "version": "1.6.2",
+        "version_normalized": "1.6.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/schmittjoh/serializer.git",
+            "reference": "b8683d206e7297f54034f67a877f966c14dc12ea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/schmittjoh/serializer/zipball/b8683d206e7297f54034f67a877f966c14dc12ea",
+            "reference": "b8683d206e7297f54034f67a877f966c14dc12ea",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/annotations": "^1.0",
+            "doctrine/instantiator": "^1.0.3",
+            "jms/metadata": "~1.1",
+            "jms/parser-lib": "1.*",
+            "php": ">=5.5.0",
+            "phpcollection/phpcollection": "~0.1",
+            "phpoption/phpoption": "^1.1"
+        },
+        "conflict": {
+            "jms/serializer-bundle": "<1.2.1",
+            "twig/twig": "<1.12"
+        },
+        "require-dev": {
+            "doctrine/orm": "~2.1",
+            "doctrine/phpcr-odm": "^1.3|^2.0",
+            "ext-pdo_sqlite": "*",
+            "jackalope/jackalope-doctrine-dbal": "^1.1.5",
+            "phpunit/phpunit": "^4.8|^5.0",
+            "propel/propel1": "~1.7",
+            "symfony/expression-language": "^2.6|^3.0",
+            "symfony/filesystem": "^2.1",
+            "symfony/form": "~2.1|^3.0",
+            "symfony/translation": "^2.1|^3.0",
+            "symfony/validator": "^2.2|^3.0",
+            "symfony/yaml": "^2.1|^3.0",
+            "twig/twig": "~1.12|~2.0"
+        },
+        "suggest": {
+            "doctrine/cache": "Required if you like to use cache functionality.",
+            "doctrine/collections": "Required if you like to use doctrine collection types as ArrayCollection.",
+            "symfony/yaml": "Required if you'd like to serialize data to YAML format."
+        },
+        "time": "2017-04-17T15:27:46+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.6-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "JMS\\Serializer": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache2"
+        ],
+        "authors": [
+            {
+                "name": "Johannes M. Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Library for (de-)serializing data of any complexity; supports XML, JSON, and YAML.",
+        "homepage": "http://jmsyst.com/libs/serializer",
+        "keywords": [
+            "deserialization",
+            "jaxb",
+            "json",
+            "serialization",
+            "xml"
+        ]
+    },
+    {
+        "name": "gregwar/captcha",
+        "version": "v1.1.2",
+        "version_normalized": "1.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Gregwar/Captcha.git",
+            "reference": "2f704c8bc3f1bb5f58994af2729e77ac4e3172e6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/2f704c8bc3f1bb5f58994af2729e77ac4e3172e6",
+            "reference": "2f704c8bc3f1bb5f58994af2729e77ac4e3172e6",
+            "shasum": ""
+        },
+        "require": {
+            "ext-gd": "*",
+            "php": ">=5.3.0"
+        },
+        "time": "2017-04-19T08:10:55+00:00",
+        "type": "captcha",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Gregwar\\Captcha\\": "/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Grégoire Passault",
+                "email": "g.passault@gmail.com",
+                "homepage": "http://www.gregwar.com/"
+            },
+            {
+                "name": "Jeremy Livingston",
+                "email": "jeremy.j.livingston@gmail.com"
+            }
+        ],
+        "description": "Captcha generator",
+        "homepage": "https://github.com/Gregwar/Captcha",
+        "keywords": [
+            "bot",
+            "captcha",
+            "spam"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "v2.3.2",
+        "version_normalized": "2.3.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "85e8372c451510165c04bf781295f9d922fa524b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/85e8372c451510165c04bf781295f9d922fa524b",
+            "reference": "85e8372c451510165c04bf781295f9d922fa524b",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.0",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "require-dev": {
+            "psr/container": "^1.0",
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~3.3@dev"
+        },
+        "time": "2017-04-21T00:13:02+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "swiftmailer/swiftmailer",
+        "version": "v5.4.7",
+        "version_normalized": "5.4.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/swiftmailer/swiftmailer.git",
+            "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+            "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9.1",
+            "symfony/phpunit-bridge": "~3.2"
+        },
+        "time": "2017-04-20T17:32:18+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "lib/swift_required.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Chris Corbyn"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Swiftmailer, free feature-rich PHP mailer",
+        "homepage": "http://swiftmailer.org",
+        "keywords": [
+            "email",
+            "mail",
+            "mailer"
         ]
     }
 ]
