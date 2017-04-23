@@ -1,15 +1,21 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.2.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
-## [2.2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2017-01-23)
+## [2.3.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.3.0) (2017-04-14)
+
+* bug [\#325](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/325) Move ttl `is_numeric` check from build time to runtime to allow use of %env()% ([DrBenton](https://github.com/DrBenton))
+* feature [\#320](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/320) Allow for Response Body without JWT Token ([Batch1211](https://github.com/Batch1211))
+* feature [\#317](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/317) Use symfony/phpunit-bridge for testing ([chalasr](https://github.com/chalasr))
+
+## [2.2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.2.0) (2017-03-09)
 
 * feature [\#312](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/312) Ease sharing keys between parties ([chalasr](https://github.com/chalasr))
 * bug [\#311](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/311) Handle empty or null authorization header prefix ([chteuchteu](https://github.com/chteuchteu))
-* feature [\#303](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/311) Throw less missleading exception if SSL keys could not be loaded ([phansys](https://github.com/phansys))
+* feature [\#303](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/303) Throw less missleading exception if SSL keys could not be loaded ([phansys](https://github.com/phansys))
 
-## [2.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2017-01-23)
+## [2.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.1) (2017-01-23)
 
 * bug [\#302](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/302) Return user object from User Provider refresh ([MisterGlass](https://github.com/MisterGlass))
 

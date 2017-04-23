@@ -1,30 +1,39 @@
 <?php
 
-include_once(__DIR__."/../lib/Google/Authenticator/FixedBitNotation.php");
-include_once(__DIR__."/../lib/Google/Authenticator/GoogleAuthenticator.php");
+/*
+ * This file is part of the Sonata Project package.
+ *
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+include_once __DIR__.'/../src/Google/Authenticator/FixedBitNotation.php';
+include_once __DIR__.'/../src/Google/Authenticator/GoogleAuthenticator.php';
 
 $secret = 'XVQ2UIGO75XRUKJO';
 $time = floor(time() / 30);
-$code = "846474";
+$code = '846474';
 
 $g = new \Google\Authenticator\GoogleAuthenticator();
 
-print "Current Code is: ";
-print $g->getCode($secret);
+echo 'Current Code is: ';
+echo $g->getCode($secret);
 
-print "\n";
+echo "\n";
 
-print "Check if $code is valid: ";
+echo "Check if $code is valid: ";
 
 if ($g->checkCode($secret, $code)) {
-    print "YES \n";
+    echo "YES \n";
 } else {
-    print "NO \n";
+    echo "NO \n";
 }
 
 $secret = $g->generateSecret();
-print "Get a new Secret: $secret \n";
-print "The QR Code for this secret (to scan with the Google Authenticator App: \n";
+echo "Get a new Secret: $secret \n";
+echo "The QR Code for this secret (to scan with the Google Authenticator App: \n";
 
-print $g->getURL('chregu', 'example.org', $secret);
-print "\n";
+echo $g->getURL('chregu', 'example.org', $secret);
+echo "\n";
