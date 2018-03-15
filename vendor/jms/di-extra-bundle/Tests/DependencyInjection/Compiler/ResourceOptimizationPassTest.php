@@ -18,11 +18,12 @@
 
 namespace JMS\DiExtraBundle\Tests\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use JMS\DiExtraBundle\DependencyInjection\Compiler\ResourceOptimizationPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ResourceOptimizationPassTest extends \PHPUnit_Framework_TestCase
+class ResourceOptimizationPassTest extends TestCase
 {
     public function testProcess()
     {
@@ -38,7 +39,7 @@ class ResourceOptimizationPassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('JMS\DiExtraBundle\Config\FastDirectoriesResource', $resources[0]);
         $this->assertEquals(array(
             __DIR__.'/Fixtures/a',
-            __DIR__.'/Fixtures/c'
+            __DIR__.'/Fixtures/c',
         ), $resources[0]->getResource());
         $this->assertAttributeEquals('*', 'filePattern', $resources[0]);
     }

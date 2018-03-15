@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Resource;
 
 /**
@@ -41,6 +43,6 @@ final class ResourceNameCollection implements \IteratorAggregate, \Countable
      */
     public function count()
     {
-        return count($this->classes);
+        return \count($this->classes);
     }
 }

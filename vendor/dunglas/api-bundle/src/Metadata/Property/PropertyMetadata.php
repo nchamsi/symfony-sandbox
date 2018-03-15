@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Property;
 
 use Symfony\Component\PropertyInfo\Type;
@@ -31,8 +33,9 @@ final class PropertyMetadata
     private $identifier;
     private $childInherited;
     private $attributes;
+    private $subresource;
 
-    public function __construct(Type $type = null, string $description = null, bool $readable = null, bool $writable = null, bool $readableLink = null, bool $writableLink = null, bool $required = null, bool $identifier = null, string $iri = null, $childInherited = null, array $attributes = null)
+    public function __construct(Type $type = null, string $description = null, bool $readable = null, bool $writable = null, bool $readableLink = null, bool $writableLink = null, bool $required = null, bool $identifier = null, string $iri = null, $childInherited = null, array $attributes = null, SubresourceMetadata $subresource = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -45,6 +48,7 @@ final class PropertyMetadata
         $this->iri = $iri;
         $this->childInherited = $childInherited;
         $this->attributes = $attributes;
+        $this->subresource = $subresource;
     }
 
     /**
@@ -287,6 +291,23 @@ final class PropertyMetadata
     }
 
     /**
+     * Gets an attribute.
+     *
+     * @param string $key
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
+    public function getAttribute(string $key, $defaultValue = null)
+    {
+        if (isset($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    /**
      * Returns a new instance with the given attribute.
      *
      * @param array $attributes
@@ -322,6 +343,41 @@ final class PropertyMetadata
     {
         $metadata = clone $this;
         $metadata->childInherited = $childInherited;
+
+        return $metadata;
+    }
+
+    /**
+     * Represents whether the property has a subresource.
+     *
+     * @return bool
+     */
+    public function hasSubresource(): bool
+    {
+        return null !== $this->subresource;
+    }
+
+    /**
+     * Gets the subresource metadata.
+     *
+     * @return SubresourceMetadata|null
+     */
+    public function getSubresource()
+    {
+        return $this->subresource;
+    }
+
+    /**
+     * Returns a new instance with the given subresource.
+     *
+     * @param SubresourceMetadata $subresource
+     *
+     * @return self
+     */
+    public function withSubresource(SubresourceMetadata $subresource = null): self
+    {
+        $metadata = clone $this;
+        $metadata->subresource = $subresource;
 
         return $metadata;
     }

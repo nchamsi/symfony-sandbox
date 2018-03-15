@@ -11,7 +11,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
 final class LoadedJWS
 {
     const VERIFIED = 'verified';
+
     const EXPIRED  = 'expired';
+
     const INVALID  = 'invalid';
 
     /**
@@ -25,12 +27,18 @@ final class LoadedJWS
     private $state;
 
     /**
+     * @var bool
+     */
+    private $hasLifetime;
+
+    /**
      * @param array $payload
      * @param bool  $isVerified
      */
-    public function __construct(array $payload, $isVerified)
+    public function __construct(array $payload, $isVerified, $hasLifetime = true)
     {
-        $this->payload = $payload;
+        $this->payload     = $payload;
+        $this->hasLifetime = $hasLifetime;
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
@@ -79,6 +87,10 @@ final class LoadedJWS
      */
     private function checkExpiration()
     {
+        if (!$this->hasLifetime) {
+            return;
+        }
+
         if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
             return $this->state = self::INVALID;
         }

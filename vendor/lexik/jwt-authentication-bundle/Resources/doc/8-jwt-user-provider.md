@@ -21,8 +21,19 @@ To work, the provider just needs a few lines of configuration:
 # app/config/security.yml
 security:
     providers:
-        jwt: 
+        jwt:
             lexik_jwt: ~
+```
+
+Then, use it on your JWT protected firewall:
+
+```yaml
+security:
+    firewalls:
+        api:
+            provider: jwt
+            guard:
+                # ...
 ```
 
 What does it change?
@@ -59,8 +70,8 @@ final class User implements JWTUserInterface
     {
         return new self(
             $username,
-            $payload['roles'] // Added by default
-            $payload['email'] // Custom
+            $payload['roles'], // Added by default
+            $payload['email']  // Custom
         );
     }
 }

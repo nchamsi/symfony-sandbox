@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileConfigDummy
 {
+    const HYDRA_TITLE = 'File config Dummy';
+
     /**
      * @var int The id
      *

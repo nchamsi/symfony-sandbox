@@ -43,13 +43,14 @@ class XmlSourceIterator extends AbstractXmlSourceIterator
     /**
      * {@inheritdoc}
      */
-    public function tagStart($parser, $name, $attributes = array())
+    public function tagStart($parser, $name, $attributes = [])
     {
         switch ($name) {
             case $this->mainTag:
                 break;
             case $this->dataTag:
-                $this->bufferedRow['i_'.$this->currentRowIndex] = array();
+                $this->bufferedRow['i_'.$this->currentRowIndex] = [];
+
                 break;
             default:
                 if (!isset($this->columns[$this->currentColumnIndex])) {
@@ -57,6 +58,7 @@ class XmlSourceIterator extends AbstractXmlSourceIterator
                 }
                 // set empty values when opening Cell tag
                 $this->bufferedRow['i_'.$this->currentRowIndex][$this->currentColumnIndex] = '';
+
                 break;
         }
     }
@@ -73,9 +75,11 @@ class XmlSourceIterator extends AbstractXmlSourceIterator
                 $this->currentRowIndex++;
                 $this->currentColumnIndex = 0;
                 $this->currentRowEnded = true;
+
                 break;
             default:
                 $this->currentColumnIndex++;
+
                 break;
         }
     }
@@ -99,7 +103,7 @@ class XmlSourceIterator extends AbstractXmlSourceIterator
     {
         $this->currentRow = array_shift($this->bufferedRow);
         if (is_array($this->currentRow)) {
-            $datas = array();
+            $datas = [];
             foreach ($this->currentRow as $key => $value) {
                 $datas[$this->columns[$key]] = $value;
             }

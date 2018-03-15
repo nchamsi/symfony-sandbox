@@ -13,6 +13,7 @@ namespace Symfony\Bundle\FrameworkBundle\Tests\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DependencyInjection\Config\ContainerParametersResource;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -217,14 +218,26 @@ class RouterTest extends TestCase
         $this->assertSame($value, $route->getDefault('foo'));
     }
 
+    public function testGetRouteCollectionAddsContainerParametersResource()
+    {
+        $routeCollection = $this->getMockBuilder(RouteCollection::class)->getMock();
+        $routeCollection->method('getIterator')->willReturn(new \ArrayIterator(array(new Route('/%locale%'))));
+        $routeCollection->expects($this->once())->method('addResource')->with(new ContainerParametersResource(array('locale' => 'en')));
+
+        $sc = $this->getServiceContainer($routeCollection);
+        $sc->setParameter('locale', 'en');
+
+        $router = new Router($sc, 'foo');
+
+        $router->getRouteCollection();
+    }
+
     public function getNonStringValues()
     {
         return array(array(null), array(false), array(true), array(new \stdClass()), array(array('foo', 'bar')), array(array(array())));
     }
 
     /**
-     * @param RouteCollection $routes
-     *
      * @return \Symfony\Component\DependencyInjection\Container
      */
     private function getServiceContainer(RouteCollection $routes)

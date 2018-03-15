@@ -20,6 +20,7 @@ use Symfony\Bridge\Twig\Tests\Extension\Fixtures\StubFilesystemLoader;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Tests\AbstractDivLayoutTest;
+use Twig\Environment;
 
 class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
 {
@@ -36,7 +37,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
             __DIR__.'/Fixtures/templates/form',
         ));
 
-        $environment = new \Twig_Environment($loader, array('strict_variables' => true));
+        $environment = new Environment($loader, array('strict_variables' => true));
         $environment->addExtension(new TranslationExtension(new StubTranslator()));
         $environment->addGlobal('global', '');
         // the value can be any template that exists
@@ -145,6 +146,22 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
         $this->assertSame('<form name="form" method="get" action="0">', $html);
     }
 
+    public function isRootFormProvider()
+    {
+        return array(
+            array(true, new FormView()),
+            array(false, new FormView(new FormView())),
+        );
+    }
+
+    /**
+     * @dataProvider isRootFormProvider
+     */
+    public function testIsRootForm($expected, FormView $formView)
+    {
+        $this->assertSame($expected, \Symfony\Bridge\Twig\Extension\twig_is_root_form($formView));
+    }
+
     protected function renderForm(FormView $view, array $vars = array())
     {
         return (string) $this->renderer->renderBlock($view, 'form', $vars);
@@ -152,7 +169,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
 
     protected function renderLabel(FormView $view, $label = null, array $vars = array())
     {
-        if ($label !== null) {
+        if (null !== $label) {
             $vars += array('label' => $label);
         }
 

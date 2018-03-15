@@ -4,6 +4,7 @@ namespace Gaufrette\Functional\Adapter;
 
 use Gaufrette\Filesystem;
 use Gaufrette\Adapter\Local;
+use Gaufrette\Functional\LocalDirectoryDeletor;
 
 class LocalTest extends FunctionalTestCase
 {
@@ -24,23 +25,7 @@ class LocalTest extends FunctionalTestCase
     {
         $this->filesystem = null;
 
-        if (file_exists($this->directory)) {
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $this->directory,
-                    \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-
-            foreach ($iterator as $item) {
-                if ($item->isDir()) {
-                    rmdir(strval($item));
-                } else {
-                    unlink(strval($item));
-                }
-            }
-        }
+        LocalDirectoryDeletor::deleteDirectory($this->directory);
     }
 
     /**
@@ -49,6 +34,10 @@ class LocalTest extends FunctionalTestCase
      */
     public function shouldWorkWithSyslink()
     {
+        if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
+            $this->markTestSkipped('Symlinks are not supported on Windows.');
+        }
+
         $dirname = sprintf(
             '%s/adapters/aaa',
             dirname(__DIR__)
@@ -171,7 +160,7 @@ class LocalTest extends FunctionalTestCase
         $this->filesystem->clearFileRegister();
         $fsRegister = $fsReflection->getProperty('fileRegister');
         $fsRegister->setAccessible(true);
-        $this->assertEquals(0, count($fsRegister->getValue($this->filesystem)));
+        $this->assertCount(0, $fsRegister->getValue($this->filesystem));
 
         $this->filesystem->delete('test.txt');
         $this->filesystem->delete('test2.txt');

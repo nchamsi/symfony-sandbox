@@ -1,3 +1,10 @@
+parameters:
+    security_user_class: AppBundle\Entity\User\User
+    security_group_class: AppBundle\Entity\User\Group
+    security_user_group_table: security__user_group
+    security_user_admin_class: AppBundle\Admin\User\UserAdmin
+    security_group_admin_class: AppBundle\Admin\User\GroupAdmin
+
 #
 # more information can be found here https://sonata-project.org/bundles/user
 #
@@ -9,11 +16,10 @@ doctrine:
                 mappings:
                     FOSUserBundle: ~
                     SonataUserBundle: ~
-                    ApplicationSonataUserBundle: ~
 
         resolve_target_entities:
-            Sonata\UserBundle\Entity\BaseUser: Application\Sonata\UserBundle\Entity\User\User
-            Sonata\UserBundle\Entity\BaseGroup: Application\Sonata\UserBundle\Entity\User\Group
+            Sonata\UserBundle\Entity\BaseUser: AppBundle\Entity\Security\User
+            Sonata\UserBundle\Entity\BaseGroup: AppBundle\Entity\Security\Group
 
 # if you change the class configuration, please also alter the fos_user.yml file
 sonata_user:

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Property\Factory;
 
 use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
@@ -35,7 +37,7 @@ final class InheritedPropertyMetadataFactory implements PropertyMetadataFactoryI
      */
     public function create(string $resourceClass, string $property, array $options = []): PropertyMetadata
     {
-        $propertyMetadata = $this->decorated->create($resourceClass, $property, $options);
+        $propertyMetadata = $this->decorated ? $this->decorated->create($resourceClass, $property, $options) : new PropertyMetadata();
 
         foreach ($this->resourceNameCollection->create() as $knownResourceClass) {
             if ($resourceClass === $knownResourceClass) {

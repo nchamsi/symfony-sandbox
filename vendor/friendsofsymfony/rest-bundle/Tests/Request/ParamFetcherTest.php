@@ -15,6 +15,7 @@ use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @author Alexander <iam.asm89@gmail.com>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcherTest extends \PHPUnit_Framework_TestCase
+class ParamFetcherTest extends TestCase
 {
     /**
      * @var callable
@@ -335,7 +336,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */
     public function testEmptyControllerExceptionWhenInitParams()
@@ -380,7 +381,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('getParams')
             ->willReturn(array('foo' => $this->createMockedParam('foo')));
 
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+        // Incompatible with foobar & fos when bar value not null
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
 
         $reflection = new \ReflectionClass($fetcher);
         $method = $reflection->getMethod('checkNotIncompatibleParams');
@@ -390,7 +392,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @expectedExceptionMessage 'bar' param is incompatible with fos param.
      */
     public function testIncompatibleParam()
@@ -406,7 +408,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 'fos' => $this->createMockedParam('fos', null, array(), false, 'value'),
             ));
 
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+        // Incompatible with foobar & fos when bar value not null
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
 
         $reflection = new \ReflectionClass($fetcher);
         $method = $reflection->getMethod('checkNotIncompatibleParams');
@@ -462,7 +465,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getValue')
             ->with($this->request, $default)
-            ->will($value !== null ? $this->returnValue($value) : $this->returnArgument(1));
+            ->will(null !== $value ? $this->returnValue($value) : $this->returnArgument(1));
 
         return $param;
     }

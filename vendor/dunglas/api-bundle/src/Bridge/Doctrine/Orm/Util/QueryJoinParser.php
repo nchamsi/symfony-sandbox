@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
@@ -57,10 +59,12 @@ final class QueryJoinParser
 
                 $pos = strpos($relationship, '.');
 
-                $aliasMap[$alias] = [
-                    'parentAlias' => substr($relationship, 0, $pos),
-                    'association' => substr($relationship, $pos + 1),
-                ];
+                if (false !== $pos) {
+                    $aliasMap[$alias] = [
+                        'parentAlias' => substr($relationship, 0, $pos),
+                        'association' => substr($relationship, $pos + 1),
+                    ];
+                }
             }
         }
 
@@ -78,7 +82,7 @@ final class QueryJoinParser
             }
         }
 
-        $rootEntity = $rootEntities[array_search($rootAlias, $rootAliases)];
+        $rootEntity = $rootEntities[array_search($rootAlias, $rootAliases, true)];
 
         $rootMetadata = $managerRegistry
             ->getManagerForClass($rootEntity)

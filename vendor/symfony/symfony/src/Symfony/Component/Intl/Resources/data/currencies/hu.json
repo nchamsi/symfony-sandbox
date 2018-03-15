@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.28.79",
+    "Version": "2.1.37.5",
     "Names": {
         "ADP": [
             "ADP",
@@ -224,6 +224,10 @@
         "CLP": [
             "CLP",
             "chilei peso"
+        ],
+        "CNH": [
+            "CNH",
+            "kínai jüan (offshore)"
         ],
         "CNY": [
             "CNY",
@@ -703,15 +707,15 @@
         ],
         "PEI": [
             "PEI",
-            "Perui inti"
+            "perui inti"
         ],
         "PEN": [
             "PEN",
-            "perui sol nuevo"
+            "perui sol"
         ],
         "PES": [
             "PES",
-            "Perui sol"
+            "perui sol (1863–1965)"
         ],
         "PGK": [
             "PGK",

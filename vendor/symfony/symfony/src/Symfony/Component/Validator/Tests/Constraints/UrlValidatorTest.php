@@ -116,6 +116,9 @@ class UrlValidatorTest extends ConstraintValidatorTestCase
             array('http://xn--d1abbgf6aiiy.xn--p1ai/'),
             array('http://☎.com/'),
             array('http://username:password@symfony.com'),
+            array('http://user.name:password@symfony.com'),
+            array('http://username:pass.word@symfony.com'),
+            array('http://user.name:pass.word@symfony.com'),
             array('http://user-name@symfony.com'),
             array('http://symfony.com?'),
             array('http://symfony.com?query=1'),
@@ -167,6 +170,7 @@ class UrlValidatorTest extends ConstraintValidatorTestCase
             array('http://example.com/exploit.html?<script>alert(1);</script>'),
             array('http://example.com/exploit.html?hel lo'),
             array('http://example.com/exploit.html?not_a%hex'),
+            array('http://'),
         );
     }
 

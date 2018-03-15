@@ -1,5 +1,0 @@
-# related to app/config/parameter.yml
-imports:
-    - { resource: 'parameters.yml'}
-    - { resource: 'security.yml'}
-

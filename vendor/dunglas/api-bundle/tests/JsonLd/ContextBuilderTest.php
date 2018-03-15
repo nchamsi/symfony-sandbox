@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\JsonLd;
 
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
@@ -20,12 +22,14 @@ use ApiPlatform\Core\Metadata\Property\PropertyNameCollection;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
+use ApiPlatform\Core\Metadata\Resource\ResourceNameCollection;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @author Markus Mächler <markus.maechler@bithost.ch>
  */
-class ContextBuilderTest extends \PHPUnit_Framework_TestCase
+class ContextBuilderTest extends TestCase
 {
     private $entityClass;
     private $resourceNameCollectionFactoryProphecy;
@@ -55,7 +59,7 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = [
             '@vocab' => '#',
             'hydra' => 'http://www.w3.org/ns/hydra/core#',
-            'dummyPropertyA' => '#DummyEntity/dummyPropertyA',
+            'dummyPropertyA' => 'DummyEntity/dummyPropertyA',
         ];
 
         $this->assertEquals($expected, $contextBuilder->getResourceContext($this->entityClass));
@@ -82,6 +86,27 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $contextBuilder->getResourceContext($this->entityClass));
     }
 
+    public function testGetEntryPointContext()
+    {
+        $this->resourceMetadataFactoryProphecy->create('dummyPropertyA')->willReturn(new ResourceMetadata('DummyEntity'));
+        $this->propertyNameCollectionFactoryProphecy->create($this->entityClass)->willReturn(new PropertyNameCollection(['dummyPropertyA']));
+        $this->resourceNameCollectionFactoryProphecy->create()->willReturn(new ResourceNameCollection(['dummyPropertyA']));
+        $this->propertyMetadataFactoryProphecy->create($this->entityClass, 'dummyPropertyA')->willReturn(new PropertyMetadata(new Type(Type::BUILTIN_TYPE_STRING), 'Dummy property A', true, true, true, true, false, false, null, null, ['jsonld_context' => ['@type' => '@id', '@id' => 'customId', 'foo' => 'bar']]));
+
+        $contextBuilder = new ContextBuilder($this->resourceNameCollectionFactoryProphecy->reveal(), $this->resourceMetadataFactoryProphecy->reveal(), $this->propertyNameCollectionFactoryProphecy->reveal(), $this->propertyMetadataFactoryProphecy->reveal(), $this->urlGeneratorProphecy->reveal());
+
+        $expected = [
+            '@vocab' => '#',
+            'hydra' => 'http://www.w3.org/ns/hydra/core#',
+            'dummyEntity' => [
+                '@type' => '@id',
+                '@id' => 'Entrypoint/dummyEntity',
+            ],
+        ];
+
+        $this->assertEquals($expected, $contextBuilder->getEntrypointContext());
+    }
+
     public function testResourceContextWithReverse()
     {
         $this->resourceMetadataFactoryProphecy->create($this->entityClass)->willReturn(new ResourceMetadata('DummyEntity'));
@@ -94,7 +119,7 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
             '@vocab' => '#',
             'hydra' => 'http://www.w3.org/ns/hydra/core#',
             'dummyPropertyA' => [
-                '@id' => '#DummyEntity/dummyPropertyA',
+                '@id' => 'DummyEntity/dummyPropertyA',
                 '@reverse' => 'parent',
             ],
         ];

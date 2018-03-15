@@ -12,12 +12,13 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * SerializerConfigurationPassTest test.
  */
-class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
+class SerializerConfigurationPassTest extends TestCase
 {
     /**
      * @var ContainerBuilder
@@ -62,16 +63,16 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldConfigureCoreSerializer()
     {
         $this->container->register('serializer', 'Symfony\Component\Serializer\Serializer');
-        $this->container->register('fos_rest.serializer.exception_wrapper_serialize_handler');
+        $this->container->register('fos_rest.serializer.exception_normalizer.jms');
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
 
         $this->assertSame('fos_rest.serializer.symfony', (string) $this->container->getAlias('fos_rest.serializer'));
-        $this->assertTrue(!$this->container->has('fos_rest.serializer.exception_wrapper_serialize_handler'));
+        $this->assertFalse($this->container->has('fos_rest.serializer.exception_normalizer.jms'));
     }
 
-    public function testSerializerServiceSupersedesJmsSerializerService()
+    public function testJmsSerializerServiceSupersedesSerializerService()
     {
         $this->container->register('jms_serializer.serializer', 'JMS\Serializer\Serializer');
         $this->container->register('serializer', 'Symfony\Component\Serializer\Serializer');
@@ -79,7 +80,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
 
-        $this->assertSame('fos_rest.serializer.symfony', (string) $this->container->getAlias('fos_rest.serializer'));
+        $this->assertSame('fos_rest.serializer.jms', (string) $this->container->getAlias('fos_rest.serializer'));
     }
 
     public function testSerializerServiceCanBeJmsSerializer()

@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Api;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Core\Exception\ItemNotFoundException;
 use ApiPlatform\Core\Exception\RuntimeException;
 
 /**
@@ -28,6 +31,7 @@ interface IriConverterInterface
      * @param array  $context
      *
      * @throws InvalidArgumentException
+     * @throws ItemNotFoundException
      *
      * @return object
      */
@@ -57,4 +61,30 @@ interface IriConverterInterface
      * @return string
      */
     public function getIriFromResourceClass(string $resourceClass, int $referenceType = UrlGeneratorInterface::ABS_PATH): string;
+
+    /**
+     * Gets the item IRI associated with the given resource.
+     *
+     * @param string $resourceClass
+     * @param array  $identifiers
+     * @param int    $referenceType
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return string
+     */
+    public function getItemIriFromResourceClass(string $resourceClass, array $identifiers, int $referenceType = UrlGeneratorInterface::ABS_PATH): string;
+
+    /**
+     * Gets the IRI associated with the given resource subresource.
+     *
+     * @param string $resourceClass
+     * @param array  $identifiers
+     * @param int    $referenceType
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return string
+     */
+    public function getSubresourceIriFromResourceClass(string $resourceClass, array $identifiers, int $referenceType = UrlGeneratorInterface::ABS_PATH): string;
 }

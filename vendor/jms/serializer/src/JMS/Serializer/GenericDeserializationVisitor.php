@@ -19,8 +19,10 @@
 namespace JMS\Serializer;
 
 use JMS\Serializer\Exception\RuntimeException;
-use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\ClassMetadata;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Naming\AdvancedNamingStrategyInterface;
+use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
 
 /**
  * Generic Deserialization Visitor.
@@ -58,7 +60,7 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitString($data, array $type, Context $context)
     {
-        $data = (string) $data;
+        $data = (string)$data;
 
         if (null === $this->result) {
             $this->result = $data;
@@ -69,7 +71,7 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitBoolean($data, array $type, Context $context)
     {
-        $data = (Boolean) $data;
+        $data = (Boolean)$data;
 
         if (null === $this->result) {
             $this->result = $data;
@@ -80,7 +82,7 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitInteger($data, array $type, Context $context)
     {
-        $data = (integer) $data;
+        $data = (integer)$data;
 
         if (null === $this->result) {
             $this->result = $data;
@@ -91,7 +93,7 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitDouble($data, array $type, Context $context)
     {
-        $data = (double) $data;
+        $data = (double)$data;
 
         if (null === $this->result) {
             $this->result = $data;
@@ -102,12 +104,12 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitArray($data, array $type, Context $context)
     {
-        if ( ! is_array($data)) {
+        if (!is_array($data)) {
             throw new RuntimeException(sprintf('Expected array, but got %s: %s', gettype($data), json_encode($data)));
         }
 
         // If no further parameters were given, keys/values are just passed as is.
-        if ( ! $type['params']) {
+        if (!$type['params']) {
             if (null === $this->result) {
                 $this->result = $data;
             }
@@ -160,21 +162,25 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
 
     public function visitProperty(PropertyMetadata $metadata, $data, Context $context)
     {
-        $name = $this->namingStrategy->translateName($metadata);
+        if ($this->namingStrategy instanceof AdvancedNamingStrategyInterface) {
+            $name = $this->namingStrategy->getPropertyName($metadata, $context);
+        } else {
+            $name = $this->namingStrategy->translateName($metadata);
+        }
 
         if (null === $data) {
             return;
         }
 
-        if ( ! is_array($data)) {
+        if (!is_array($data)) {
             throw new RuntimeException(sprintf('Invalid data "%s"(%s), expected "%s".', $data, $metadata->type['name'], $metadata->reflection->class));
         }
 
-        if ( ! array_key_exists($name, $data)) {
+        if (!array_key_exists($name, $data)) {
             return;
         }
 
-        if ( ! $metadata->type) {
+        if (!$metadata->type) {
             throw new RuntimeException(sprintf('You must define a type for %s::$%s.', $metadata->reflection->class, $metadata->name));
         }
 

@@ -9,17 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace ApiPlatform\Core\tests\Action;
+declare(strict_types=1);
+
+namespace ApiPlatform\Core\Tests\Action;
 
 use ApiPlatform\Core\Action\EntrypointAction;
 use ApiPlatform\Core\Api\Entrypoint;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\ResourceNameCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Amrouche Hamza <hamza.simperfit@gmail.com>
  */
-class EntrypointActionTest extends \PHPUnit_Framework_TestCase
+class EntrypointActionTest extends TestCase
 {
     public function testGetEntrypoint()
     {

@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ApiPlatform\Core\tests\Metadata\Resource;
+declare(strict_types=1);
+
+namespace ApiPlatform\Core\Tests\Metadata\Resource;
 
 use ApiPlatform\Core\Metadata\Resource\ResourceNameCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class ResourceNameCollectionTest extends \PHPUnit_Framework_TestCase
+class ResourceNameCollectionTest extends TestCase
 {
     public function testValueObject()
     {

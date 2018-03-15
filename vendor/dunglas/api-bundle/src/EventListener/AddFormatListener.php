@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\EventListener;
 
 use Negotiation\Negotiator;
@@ -45,7 +47,7 @@ final class AddFormatListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if (!$request->attributes->has('_api_resource_class') && !$request->attributes->has('_api_respond')) {
+        if (!$request->attributes->has('_api_resource_class') && !$request->attributes->has('_api_respond') && !$request->attributes->has('_graphql')) {
             return;
         }
 
@@ -56,7 +58,7 @@ final class AddFormatListener
         if (null === $routeFormat = $request->attributes->get('_format') ?: null) {
             $mimeTypes = array_keys($this->mimeTypes);
         } elseif (!isset($this->formats[$routeFormat])) {
-            throw new NotFoundHttpException('Not Found');
+            throw new NotFoundHttpException(sprintf('Format "%s" is not supported', $routeFormat));
         } else {
             $mimeTypes = Request::getMimeTypes($routeFormat);
         }
@@ -74,7 +76,7 @@ final class AddFormatListener
         }
 
         // Then use the Symfony request format if available and applicable
-        $requestFormat = $request->getRequestFormat(null) ?: null;
+        $requestFormat = $request->getRequestFormat('') ?: null;
         if (null !== $requestFormat) {
             $mimeType = $request->getMimeType($requestFormat);
 

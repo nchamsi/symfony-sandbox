@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Resource\Factory;
 
 use ApiPlatform\Core\Exception\ResourceClassNotFoundException;
@@ -82,7 +84,7 @@ final class ExtractorResourceMetadataFactory implements ResourceMetadataFactoryI
      */
     private function update(ResourceMetadata $resourceMetadata, array $metadata): ResourceMetadata
     {
-        foreach (['shortName', 'description', 'iri', 'itemOperations', 'collectionOperations', 'attributes'] as $property) {
+        foreach (['shortName', 'description', 'iri', 'itemOperations', 'collectionOperations', 'subresourceOperations', 'graphql', 'attributes'] as $property) {
             if (null === $metadata[$property] || null !== $resourceMetadata->{'get'.ucfirst($property)}()) {
                 continue;
             }

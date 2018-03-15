@@ -12,21 +12,21 @@
 namespace Symfony\Bridge\Twig\Extension;
 
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Twig extension relate to PHP code and used by the profiler and the default exception templates.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class CodeExtension extends \Twig_Extension
+class CodeExtension extends AbstractExtension
 {
     private $fileLinkFormat;
     private $rootDir;
     private $charset;
 
     /**
-     * Constructor.
-     *
      * @param string|FileLinkFormatter $fileLinkFormat The format for links to source files
      * @param string                   $rootDir        The project root directory
      * @param string                   $charset        The charset
@@ -44,15 +44,15 @@ class CodeExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('abbr_class', array($this, 'abbrClass'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('abbr_method', array($this, 'abbrMethod'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('format_args', array($this, 'formatArgs'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('format_args_as_text', array($this, 'formatArgsAsText')),
-            new \Twig_SimpleFilter('file_excerpt', array($this, 'fileExcerpt'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('format_file', array($this, 'formatFile'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('format_file_from_text', array($this, 'formatFileFromText'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('format_log_message', array($this, 'formatLogMessage'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('file_link', array($this, 'getFileLink')),
+            new TwigFilter('abbr_class', array($this, 'abbrClass'), array('is_safe' => array('html'))),
+            new TwigFilter('abbr_method', array($this, 'abbrMethod'), array('is_safe' => array('html'))),
+            new TwigFilter('format_args', array($this, 'formatArgs'), array('is_safe' => array('html'))),
+            new TwigFilter('format_args_as_text', array($this, 'formatArgsAsText')),
+            new TwigFilter('file_excerpt', array($this, 'fileExcerpt'), array('is_safe' => array('html'))),
+            new TwigFilter('format_file', array($this, 'formatFile'), array('is_safe' => array('html'))),
+            new TwigFilter('format_file_from_text', array($this, 'formatFileFromText'), array('is_safe' => array('html'))),
+            new TwigFilter('format_log_message', array($this, 'formatLogMessage'), array('is_safe' => array('html'))),
+            new TwigFilter('file_link', array($this, 'getFileLink')),
         );
     }
 
@@ -70,9 +70,9 @@ class CodeExtension extends \Twig_Extension
             list($class, $method) = explode('::', $method, 2);
             $result = sprintf('%s::%s()', $this->abbrClass($class), $method);
         } elseif ('Closure' === $method) {
-            $result = sprintf('<abbr title="%s">%s</abbr>', $method, $method);
+            $result = sprintf('<abbr title="%s">%1$s</abbr>', $method);
         } else {
-            $result = sprintf('<abbr title="%s">%s</abbr>()', $method, $method);
+            $result = sprintf('<abbr title="%s">%1$s</abbr>()', $method);
         }
 
         return $result;
@@ -196,7 +196,7 @@ class CodeExtension extends \Twig_Extension
      * @param string $file An absolute file path
      * @param int    $line The line number
      *
-     * @return string A link of false
+     * @return string|false A link or false
      */
     public function getFileLink($file, $line)
     {

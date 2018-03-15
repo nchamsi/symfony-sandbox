@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Action;
 
 use ApiPlatform\Core\Action\PlaceholderAction;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class PlaceholderActionTest extends \PHPUnit_Framework_TestCase
+class PlaceholderActionTest extends TestCase
 {
     public function testAction()
     {

@@ -252,7 +252,7 @@ function setupModuleLoader(window) {
            * @name angular.Module#factory
            * @module ng
            * @param {string} name service name
-           * @param {Function} providerFunction Function for creating new instance of the service.
+           * @param {Function} providerFunction FieldFunction for creating new instance of the service.
            * @description
            * See {@link auto.$provide#factory $provide.factory()}.
            */

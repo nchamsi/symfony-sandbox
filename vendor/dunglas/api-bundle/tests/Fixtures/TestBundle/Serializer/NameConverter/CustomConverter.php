@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Serializer\NameConverter;
 
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -26,6 +28,6 @@ class CustomConverter extends CamelCaseToSnakeCaseNameConverter
 
     public function denormalize($propertyName)
     {
-        return 'nameConverted' === $propertyName ? parent::denormalize($propertyName) : $propertyName;
+        return 'name_converted' === $propertyName ? parent::denormalize($propertyName) : $propertyName;
     }
 }

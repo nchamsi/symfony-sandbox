@@ -1,14 +1,15 @@
 # This file is a "template" of what your parameters.yml file should look like
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
-# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+# https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
+    database_driver: pdo_mysql
     database_host: 127.0.0.1
     database_port: ~
     database_name: symfony
     database_user: root
     database_password: ~
     # You should uncomment this if you want to use pdo_sqlite
-    #database_path: '%kernel.root_dir%/../var/data/data.sqlite'
+    #database_path: '%kernel.project_dir%/var/data/data.sqlite'
 
     mailer_transport: smtp
     mailer_host: 127.0.0.1
@@ -25,14 +26,14 @@ parameters:
     webapp_host: 127.0.0.1
     webapp_url:  http://%webapp_host%   # http://%webapp_host%/symfony/web or http://127.0.0.1/symfony/web
         
-    webapp.logo:              /logo.png
+    webapp.logo:              logo.png
     webapp.short_title:       Symfony
     webapp.title:             Symfony
     
     # Sonata Admin Options
     sonata_admin.title:             Symfony
     sonata_admin.short_title:       Symfony
-    sonata_admin.logo_title:        /logo.png
+    sonata_admin.logo_title:        logo.png
     # Skin Color [black, blue, green, purple, red, yellow]
     sonata_admin.skin:              skin-blue
 
@@ -46,14 +47,6 @@ parameters:
 
     # Sonata User Options
     
-    security_user_class: Application\Sonata\UserBundle\Entity\User\User
-    security_group_class: Application\Sonata\UserBundle\Entity\User\Group
-
-    security_user_group_table: user__user_group
-
-    security_user_admin_class: Application\Sonata\UserBundle\Admin\User\UserAdmin
-    security_group_admin_class: Application\Sonata\UserBundle\Admin\User\GroupAdmin
-
     sonata_user.google_authenticator.server:  app.symfony-sonata-project.com
     
     # lexik jwt

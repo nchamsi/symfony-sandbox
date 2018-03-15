@@ -13,6 +13,7 @@ namespace Symfony\Bundle\FrameworkBundle\Console;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,8 +22,6 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Application.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Application extends BaseApplication
@@ -30,19 +29,15 @@ class Application extends BaseApplication
     private $kernel;
     private $commandsRegistered = false;
 
-    /**
-     * Constructor.
-     *
-     * @param KernelInterface $kernel A KernelInterface instance
-     */
     public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
 
         parent::__construct('Symfony', Kernel::VERSION);
 
-        $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The environment name', $kernel->getEnvironment()));
-        $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode'));
+        $inputDefinition = $this->getDefinition();
+        $inputDefinition->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
+        $inputDefinition->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
     }
 
     /**
@@ -57,9 +52,6 @@ class Application extends BaseApplication
 
     /**
      * Runs the current application.
-     *
-     * @param InputInterface  $input  An Input instance
-     * @param OutputInterface $output An Output instance
      *
      * @return int 0 if everything went fine, or an error code
      */
@@ -116,6 +108,13 @@ class Application extends BaseApplication
     public function getLongVersion()
     {
         return parent::getLongVersion().sprintf(' (kernel: <comment>%s</>, env: <comment>%s</>, debug: <comment>%s</>)', $this->kernel->getName(), $this->kernel->getEnvironment(), $this->kernel->isDebug() ? 'true' : 'false');
+    }
+
+    public function add(Command $command)
+    {
+        $this->registerCommands();
+
+        return parent::add($command);
     }
 
     protected function registerCommands()

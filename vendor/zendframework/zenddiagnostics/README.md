@@ -22,6 +22,7 @@ It currently ships with the following Diagnostic Checks:
  * [GuzzleHttpService](#guzzlehttpservice) - check if given http host is responding using Guzzle,
  * [HttpService](#httpservice) - check if given http host is responding,
  * [Memcache](#memcache) - check if memcache extension is loaded and given server is reachable,
+ * [Mongo](#mongodb) - check if connection to MongoDb is possible,
  * [OpCacheMemory](#opcachememory) - check if the OpCache memory usage is below warning/critical thresholds,
  * [PDOCheck](#pdocheck) - check if connection is possible,
  * [PhpVersion](#phpversion) - make sure that PHP version matches constraint,
@@ -70,6 +71,7 @@ Install the [rstgroup/diagnostics-middleware](https://github.com/rstgroup/diagno
 For example:
 
 ````php
+<?php
 // run_diagnostics.php
 
 use ZendDiagnostics\Check;
@@ -84,7 +86,7 @@ $runner = new Runner();
 
 // Add checks
 $runner->addCheck(new Check\DirWritable('/tmp'));
-$runner->addCheck(new Check\DiskFree('/tmp', 100000000));
+$runner->addCheck(new Check\DiskFree(100000000, '/tmp'));
 
 // Add console reporter
 $runner->addReporter(new BasicConsole(80, true));
@@ -114,8 +116,9 @@ attached Reporter). This collection contains results for all tests and failure c
 Simple example:
 
 ````php
+<?php
 $runner = new Runner();
-$checkSpace = new Check\DiskFree('/tmp', 100000000);
+$checkSpace = new Check\DiskFree(100000000, '/tmp');
 $checkTemp  = new Check\DirWritable('/tmp');
 $runner->addCheck($checkSpace);
 $runner->addCheck($checkTemp);
@@ -167,6 +170,7 @@ applications and libraries.
 A Check class has to implement [Check](src/ZendDiagnostics/Check/CheckInterface.php) and provide the following methods:
 
 ````php
+<?php
 interface CheckInterface
 {
     /**
@@ -190,6 +194,7 @@ compatibility with Runner and other checks.
 Here is an example trivial class, that will check if PHP default timezone is set to UTC.
 
 ````php
+<?php
 namespace MyApp\Diagnostics\Check;
 
 use ZendDiagnostics\Check\CheckInterface;
@@ -221,6 +226,7 @@ class TimezoneSetToUTC implements CheckInterface
 A Reporter is a class implementing [ReporterInterface](src/ZendDiagnostics/Runner/Reporter/ReporterInterface.php).
 
 ````php
+<?php
 interface ReporterInterface
 {
     public function onStart(ArrayObject $checks, $runnerConfig);
@@ -480,6 +486,18 @@ use ZendDiagnostics\Check\Memcache;
 
 $checkLocal  = new Memcache('127.0.0.1'); // default port
 $checkBackup = new Memcache('10.0.30.40', 11212);
+````
+
+### MongoDb
+Check if connection to MongoDb is possible
+
+````php
+<?php
+use ZendDiagnostics\Check\Mongo;
+
+$mongoCheck = new Mongo('mongodb://127.0.0.1:27017');
+// and with user/password
+$mongoCheck = new Mongo('mongodb://user:password@127.0.0.1:27017');
 ````
 
 ### PhpVersion

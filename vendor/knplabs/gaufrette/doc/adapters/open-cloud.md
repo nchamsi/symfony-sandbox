@@ -4,6 +4,13 @@ currentMenu: open-cloud
 
 # OpenCloud & LazyOpenCloud
 
+**Warning: LazyOpenCloud adapter has been deprecated since v0.4.0 and will be removed in v1.0.0.**
+
+First, you will need to install the adapter:
+```bash
+composer require gaufrette/opencloud-adapter
+```
+
 To use the OpenCloud adapter you will need to create a connection using the [OpenCloud SDK](https://github.com/rackspace/php-opencloud).
 You can then fetch the ObjectStore which is required for the OpenCloud adapter.
 

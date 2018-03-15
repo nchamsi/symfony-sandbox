@@ -27,7 +27,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 class DateType extends AbstractType
 {
     const DEFAULT_FORMAT = \IntlDateFormatter::MEDIUM;
-
     const HTML5_FORMAT = 'yyyy-MM-dd';
 
     private static $acceptedFormats = array(
@@ -82,7 +81,8 @@ class DateType extends AbstractType
                 \Locale::getDefault(),
                 $dateFormat,
                 $timeFormat,
-                null,
+                // see https://bugs.php.net/bug.php?id=66323
+                class_exists('IntlTimeZone', false) ? \IntlTimeZone::createDefault() : null,
                 $calendar,
                 $pattern
             );
@@ -285,7 +285,7 @@ class DateType extends AbstractType
     private function formatTimestamps(\IntlDateFormatter $formatter, $regex, array $timestamps)
     {
         $pattern = $formatter->getPattern();
-        $timezone = $formatter->getTimezoneId();
+        $timezone = $formatter->getTimeZoneId();
         $formattedTimestamps = array();
 
         $formatter->setTimeZone('UTC');

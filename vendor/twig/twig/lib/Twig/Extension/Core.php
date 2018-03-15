@@ -579,7 +579,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
         if ($start >= 0 && $length >= 0 && $item instanceof Iterator) {
             try {
-                return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
+                return iterator_to_array(new LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
             } catch (OutOfBoundsException $exception) {
                 return array();
             }
@@ -913,30 +913,22 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the
             // top of the function slow downs other escaping strategies.
-            static $htmlspecialcharsCharsets;
-
-            if (null === $htmlspecialcharsCharsets) {
-                if (defined('HHVM_VERSION')) {
-                    $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
-                } else {
-                    $htmlspecialcharsCharsets = array(
-                        'ISO-8859-1' => true, 'ISO8859-1' => true,
-                        'ISO-8859-15' => true, 'ISO8859-15' => true,
-                        'utf-8' => true, 'UTF-8' => true,
-                        'CP866' => true, 'IBM866' => true, '866' => true,
-                        'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
-                        '1251' => true,
-                        'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
-                        'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
-                        'BIG5' => true, '950' => true,
-                        'GB2312' => true, '936' => true,
-                        'BIG5-HKSCS' => true,
-                        'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
-                        'EUC-JP' => true, 'EUCJP' => true,
-                        'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
-                    );
-                }
-            }
+            static $htmlspecialcharsCharsets = array(
+                'ISO-8859-1' => true, 'ISO8859-1' => true,
+                'ISO-8859-15' => true, 'ISO8859-15' => true,
+                'utf-8' => true, 'UTF-8' => true,
+                'CP866' => true, 'IBM866' => true, '866' => true,
+                'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
+                '1251' => true,
+                'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
+                'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
+                'BIG5' => true, '950' => true,
+                'GB2312' => true, '936' => true,
+                'BIG5-HKSCS' => true,
+                'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
+                'EUC-JP' => true, 'EUCJP' => true,
+                'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
+            );
 
             if (isset($htmlspecialcharsCharsets[$charset])) {
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
@@ -1060,7 +1052,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                  * The following replaces characters undefined in HTML with the
                  * hex entity for the Unicode replacement character.
                  */
-                if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
+                if (($ord <= 0x1f && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
                     return '&#xFFFD;';
                 }
 
@@ -1068,7 +1060,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                  * Check if the current character to escape has a name entity we should
                  * replace it with while grabbing the hex value of the character.
                  */
-                if (strlen($chr) == 1) {
+                if (1 == strlen($chr)) {
                     $hex = strtoupper(substr('00'.bin2hex($chr), -2));
                 } else {
                     $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
@@ -1144,6 +1136,10 @@ function twig_convert_encoding($string, $to, $from)
  */
 function twig_length_filter(Twig_Environment $env, $thing)
 {
+    if (null === $thing) {
+        return 0;
+    }
+
     if (is_scalar($thing)) {
         return mb_strlen($thing, $env->getCharset());
     }
@@ -1152,7 +1148,15 @@ function twig_length_filter(Twig_Environment $env, $thing)
         return mb_strlen((string) $thing, $env->getCharset());
     }
 
-    return count($thing);
+    if ($thing instanceof \Countable || is_array($thing)) {
+        return count($thing);
+    }
+
+    if ($thing instanceof \IteratorAggregate) {
+        return iterator_count($thing);
+    }
+
+    return 1;
 }
 
 /**
@@ -1257,7 +1261,7 @@ function twig_test_empty($value)
  *
  * <pre>
  * {# evaluates to true if the foo variable is an array or a traversable object #}
- * {% if foo is traversable %}
+ * {% if foo is iterable %}
  *     {# ... #}
  * {% endif %}
  * </pre>
@@ -1428,12 +1432,10 @@ function twig_array_batch($items, $size, $fill = null)
  *
  * @internal
  */
-function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = /* Twig_Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
 {
-    static $cache = array();
-
     // array
-    if (Twig_Template::METHOD_CALL !== $type) {
+    if (/* Twig_Template::METHOD_CALL */ 'method' !== $type) {
         $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
         if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
@@ -1446,7 +1448,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
             return $object[$arrayItem];
         }
 
-        if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+        if (/* Twig_Template::ARRAY_CALL */ 'array' === $type || !is_object($object)) {
             if ($isDefinedTest) {
                 return false;
             }
@@ -1465,7 +1467,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 } else {
                     $message = sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
                 }
-            } elseif (Twig_Template::ARRAY_CALL === $type) {
+            } elseif (/* Twig_Template::ARRAY_CALL */ 'array' === $type) {
                 if (null === $object) {
                     $message = sprintf('Impossible to access a key ("%s") on a null variable.', $item);
                 } else {
@@ -1492,6 +1494,8 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
 
         if (null === $object) {
             $message = sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
+        } elseif (is_array($object)) {
+            $message = sprintf('Impossible to invoke a method ("%s") on an array.', $item);
         } else {
             $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
         }
@@ -1504,19 +1508,21 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
     }
 
     // object property
-    if (Twig_Template::METHOD_CALL !== $type) {
+    if (/* Twig_Template::METHOD_CALL */ 'method' !== $type) {
         if (isset($object->$item) || array_key_exists((string) $item, $object)) {
             if ($isDefinedTest) {
                 return true;
             }
 
-            if ($env->hasExtension('Twig_Extension_Sandbox')) {
+            if ($sandboxed) {
                 $env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
             }
 
             return $object->$item;
         }
     }
+
+    static $cache = array();
 
     $class = get_class($object);
 
@@ -1585,7 +1591,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         return true;
     }
 
-    if ($env->hasExtension('Twig_Extension_Sandbox')) {
+    if ($sandboxed) {
         $env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
     }
 
@@ -1602,3 +1608,5 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
 
     return $ret;
 }
+
+class_alias('Twig_Extension_Core', 'Twig\Extension\CoreExtension', false);

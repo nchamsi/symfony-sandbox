@@ -105,7 +105,7 @@ This listener attemps to determine the current api version from different parame
 
 * the uri ``/{version}/users``
 * a query parameter ``/users?version=v1``
-* an ``Accept`` header ``Accept: appication/json; version=1.0``
+* an ``Accept`` header ``Accept: application/json; version=1.0``
 * a custom header ``X-Accept-Version: v1``
 
 For details see :doc:`Versioning <versioning>`.
@@ -196,7 +196,7 @@ You need to enable this listener as follows, as it is disabled by default:
 Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>`. or the `twig exception controller`_).
 
 Zone Listener
-=============
+-------------
 
 As you can see, FOSRestBundle provides multiple event listeners to enable REST-related features.
 By default, these listeners will be registered to all requests and may conflict with other parts of your application.

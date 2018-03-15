@@ -1,5 +1,15 @@
 # CHANGELOG
 
+### 5.0.3 (2017-06-05)
+
+ * 1515ca4 - Symfony Flex compatibility (namespaced syntax)
+ * 7de0c4a - [Travis] Rely on trusty dist to make hhvm installable
+
+### 5.0.2 (2017-05-20)
+
+ * 88445d2 - Only strip assets version when the path is a directory
+ * af9c05f - [Doc] Improve config documentation
+ 
 ### 5.0.1 (2017-03-01)
 
  * ec4b1e7 - [CKEditor] Don't alter sources

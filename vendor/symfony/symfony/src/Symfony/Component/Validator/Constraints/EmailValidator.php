@@ -23,11 +23,11 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class EmailValidator extends ConstraintValidator
 {
-    /**
-     * @var bool
-     */
     private $isStrict;
 
+    /**
+     * @param bool $strict
+     */
     public function __construct($strict = false)
     {
         $this->isStrict = $strict;
@@ -87,7 +87,7 @@ class EmailValidator extends ConstraintValidator
             return;
         }
 
-        $host = substr($value, strrpos($value, '@') + 1);
+        $host = (string) substr($value, strrpos($value, '@') + 1);
 
         // Check for host DNS resource records
         if ($constraint->checkMX) {
@@ -118,7 +118,7 @@ class EmailValidator extends ConstraintValidator
      */
     private function checkMX($host)
     {
-        return checkdnsrr($host, 'MX');
+        return '' !== $host && checkdnsrr($host, 'MX');
     }
 
     /**
@@ -130,6 +130,6 @@ class EmailValidator extends ConstraintValidator
      */
     private function checkHost($host)
     {
-        return $this->checkMX($host) || (checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA'));
+        return '' !== $host && ($this->checkMX($host) || (checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA')));
     }
 }

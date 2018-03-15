@@ -9,14 +9,18 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Annotation;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class ApiResourceTest extends \PHPUnit_Framework_TestCase
+class ApiResourceTest extends TestCase
 {
     public function testAssignation()
     {
@@ -26,12 +30,27 @@ class ApiResourceTest extends \PHPUnit_Framework_TestCase
         $resource->iri = 'http://example.com/res';
         $resource->itemOperations = ['foo' => ['bar']];
         $resource->collectionOperations = ['bar' => ['foo']];
+        $resource->graphql = ['query' => ['normalization_context' => ['groups' => ['foo', 'bar']]]];
         $resource->attributes = ['foo' => 'bar'];
 
-        $this->assertEquals('shortName', $resource->shortName);
-        $this->assertEquals('description', $resource->description);
-        $this->assertEquals('http://example.com/res', $resource->iri);
-        $this->assertEquals(['bar' => ['foo']], $resource->collectionOperations);
-        $this->assertEquals(['foo' => 'bar'], $resource->attributes);
+        $this->assertSame('shortName', $resource->shortName);
+        $this->assertSame('description', $resource->description);
+        $this->assertSame('http://example.com/res', $resource->iri);
+        $this->assertSame(['bar' => ['foo']], $resource->collectionOperations);
+        $this->assertSame(['query' => ['normalization_context' => ['groups' => ['foo', 'bar']]]], $resource->graphql);
+        $this->assertSame(['foo' => 'bar'], $resource->attributes);
+    }
+
+    public function testApiResourceAnnotation()
+    {
+        $reader = new AnnotationReader();
+        $resource = $reader->getClassAnnotation(new \ReflectionClass(AnnotatedClass::class), ApiResource::class);
+
+        $this->assertSame('shortName', $resource->shortName);
+        $this->assertSame('description', $resource->description);
+        $this->assertSame('http://example.com/res', $resource->iri);
+        $this->assertSame(['bar' => ['foo']], $resource->collectionOperations);
+        $this->assertSame(['query' => ['normalization_context' => ['groups' => ['foo', 'bar']]]], $resource->graphql);
+        $this->assertSame(['foo' => 'bar'], $resource->attributes);
     }
 }

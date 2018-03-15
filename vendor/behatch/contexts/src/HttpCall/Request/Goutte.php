@@ -14,22 +14,10 @@ class Goutte extends BrowserKit
 
     public function send($method, $url, $parameters = [], $files = [], $content = null, $headers = [])
     {
-        $page = parent::send($method, $url, $parameters, $files, $content, $this->requestHeaders);
+        $page = parent::send($method, $url, $parameters, $files, $content, array_merge($headers, $this->requestHeaders));
         $this->resetHttpHeaders();
 
         return $page;
-    }
-
-    public function getServer()
-    {
-        return $this->getRequest()
-            ->server->all();
-    }
-
-    public function getParameters()
-    {
-        return $this->getRequest()
-            ->query->all();
     }
 
     public function setHttpHeader($name, $value)
@@ -38,7 +26,7 @@ class Goutte extends BrowserKit
         $this->requestHeaders[$name] = $value;
     }
 
-    private function resetHttpHeaders()
+    protected function resetHttpHeaders()
     {
         $this->requestHeaders = [];
     }

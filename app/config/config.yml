@@ -28,7 +28,7 @@ imports:
     - { resource: sonata/sonata_classification.yml }
 
     # Assetic
-    - { resource: assetic/assetic.yml }
+    #- { resource: assetic/assetic.yml }
 
     # Nelmio
     - { resource: nelmio/nelmio_api_doc.yml }
@@ -53,7 +53,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
     router:
-        resource: '%kernel.root_dir%/config/routing.yml'
+        resource: '%kernel.project_dir%/app/config/routing.yml'
         strict_requirements: ~
     form: ~
     csrf_protection: ~
@@ -61,14 +61,15 @@ framework:
     #serializer: { enable_annotations: true }
     templating:
         engines: ['twig']
-        hinclude_default_template: hinclude.html.twig  
+        hinclude_default_template: hinclude.html.twig
+
     default_locale: '%locale%'
     trusted_hosts: ~
     trusted_proxies: ~
     session:
-        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-        handler_id:  session.handler.native_file
-        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
     fragments: ~
     http_method_override: true
     assets: ~
@@ -78,13 +79,12 @@ framework:
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
-
     strict_variables: '%kernel.debug%'
 
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 
-# Doctrine Configuration
+# Doctrine Variable
 doctrine:
     dbal:
         default_connection: default
@@ -121,7 +121,6 @@ doctrine:
                 auto_mapping: true
                 mappings: ~
                 naming_strategy: doctrine.orm.naming_strategy.underscore
-
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -4,13 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
+class ComposerStaticInit3fd21fac427d03795682a3726ec16667
 {
     public static $files = array (
         '92c8763cd6170fce6fcfe7e26b4e8c10' => __DIR__ . '/..' . '/symfony/phpunit-bridge/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -18,9 +18,9 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
-        '8ac9dba77d5c65db2811440ee8265f5d' => __DIR__ . '/..' . '/sonata-project/block-bundle/Resources/stubs/symfony2.php',
+        'd11dcc0191a380951885e568af488540' => __DIR__ . '/..' . '/sonata-project/block-bundle/src/Resources/stubs/symfony2.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
-        'cad196362175adcc8124ec47611f5306' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php',
+        'ea499cad8830ec01a037ef53bd65fdd3' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -40,7 +40,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'T' => 
         array (
+            'Twig\\Extensions\\' => 16,
+            'Twig\\' => 5,
             'Tests\\' => 6,
+            'TechPromux\\' => 11,
         ),
         'S' => 
         array (
@@ -48,6 +51,7 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'Symfony\\Polyfill\\Php70\\' => 23,
             'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Apcu\\' => 22,
             'Symfony\\Component\\Security\\Acl\\' => 31,
             'Symfony\\Component\\' => 18,
             'Symfony\\Bundle\\SwiftmailerBundle\\' => 33,
@@ -55,7 +59,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'Symfony\\Bundle\\AsseticBundle\\' => 29,
             'Symfony\\Bundle\\' => 15,
             'Symfony\\Bridge\\Twig\\' => 20,
-            'Symfony\\Bridge\\Swiftmailer\\' => 27,
             'Symfony\\Bridge\\ProxyManager\\' => 28,
             'Symfony\\Bridge\\PhpUnit\\' => 23,
             'Symfony\\Bridge\\Monolog\\' => 23,
@@ -73,7 +76,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'Sonata\\DatagridBundle\\' => 22,
             'Sonata\\CoreBundle\\' => 18,
             'Sonata\\ClassificationBundle\\' => 28,
-            'Sonata\\Cache\\Tests\\' => 19,
             'Sonata\\Cache\\' => 13,
             'Sonata\\CacheBundle\\' => 19,
             'Sonata\\BlockBundle\\' => 19,
@@ -86,10 +88,13 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
+            'Psr\\Link\\' => 9,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
+            'PhpAmqpLib\\' => 11,
             'PackageVersions\\' => 16,
         ),
         'N' => 
@@ -101,6 +106,7 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Michelf\\' => 8,
         ),
         'L' => 
         array (
@@ -119,6 +125,7 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'J' => 
         array (
             'JsonSchema\\' => 11,
+            'JMS\\SerializerBundle\\' => 21,
             'JMS\\SecurityExtraBundle\\' => 24,
             'JMS\\DiExtraBundle\\' => 18,
             'JMS\\AopBundle\\' => 14,
@@ -127,7 +134,9 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             'Ivory\\JsonBuilder\\' => 18,
             'Ivory\\CKEditorBundle\\' => 21,
+            'Interop\\Queue\\' => 14,
             'Interop\\Container\\' => 18,
+            'Interop\\Amqp\\' => 13,
             'Incenteev\\ParameterHandler\\' => 27,
         ),
         'G' => 
@@ -135,14 +144,15 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
-            'Gregwar\\Captcha\\' => 16,
             'Gregwar\\CaptchaBundle\\' => 22,
+            'Gregwar\\' => 8,
             'Goutte\\' => 7,
             'Google\\Authenticator\\' => 21,
             'Gesdinet\\JWTRefreshTokenBundle\\' => 31,
         ),
         'F' => 
         array (
+            'Fig\\Link\\' => 9,
             'FOS\\UserBundle\\' => 15,
             'FOS\\RestBundle\\' => 15,
             'FOS\\JsRoutingBundle\\' => 20,
@@ -150,11 +160,17 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'E' => 
         array (
             'Exporter\\' => 9,
+            'Evercode\\DependentSelectBundle\\' => 31,
+            'Enqueue\\AmqpTools\\' => 18,
+            'Enqueue\\AmqpLib\\' => 16,
         ),
         'D' => 
         array (
+            'Doctrine\\ORM\\' => 13,
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\DBAL\\Migrations\\' => 25,
+            'Doctrine\\Common\\Inflector\\' => 26,
+            'Doctrine\\Common\\DataFixtures\\' => 29,
             'Doctrine\\Common\\Cache\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
             'Doctrine\\Common\\' => 16,
@@ -171,12 +187,16 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'B' => 
         array (
+            'Buzz\\' => 5,
             'Behatch\\' => 8,
             'Behat\\Mink\\Driver\\' => 18,
             'Behat\\Mink\\' => 11,
+            'Bazinga\\Bundle\\HateoasBundle\\' => 29,
         ),
         'A' => 
         array (
+            'Application\\' => 12,
+            'AppBundle\\' => 10,
             'ApiPlatform\\Core\\' => 17,
         ),
     );
@@ -184,8 +204,8 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
     public static $prefixDirsPsr4 = array (
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'Zend\\EventManager\\' => 
@@ -204,9 +224,21 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
+        'Twig\\Extensions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/extensions/src',
+        ),
+        'Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
         'Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
+        ),
+        'TechPromux\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/TechPromux',
         ),
         'Symfony\\Polyfill\\Util\\' => 
         array (
@@ -223,6 +255,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Apcu\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-apcu',
         ),
         'Symfony\\Component\\Security\\Acl\\' => 
         array (
@@ -252,10 +288,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Bridge/Twig',
         ),
-        'Symfony\\Bridge\\Swiftmailer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Bridge/Swiftmailer',
-        ),
         'Symfony\\Bridge\\ProxyManager\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Bridge/ProxyManager',
@@ -282,23 +314,23 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'Sonata\\NotificationBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/notification-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/notification-bundle/src',
         ),
         'Sonata\\MediaBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/media-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/media-bundle/src',
         ),
         'Sonata\\IntlBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/intl-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/intl-bundle/src',
         ),
         'Sonata\\FormatterBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/formatter-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/formatter-bundle/src',
         ),
         'Sonata\\EasyExtendsBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/easy-extends-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/easy-extends-bundle/src',
         ),
         'Sonata\\Doctrine\\Tests\\' => 
         array (
@@ -310,39 +342,35 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'Sonata\\DoctrineORMAdminBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/doctrine-orm-admin-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/doctrine-orm-admin-bundle/src',
         ),
         'Sonata\\DatagridBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/datagrid-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/datagrid-bundle/src',
         ),
         'Sonata\\CoreBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/core-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/core-bundle/src',
         ),
         'Sonata\\ClassificationBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/classification-bundle',
-        ),
-        'Sonata\\Cache\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/sonata-project/cache/test',
+            0 => __DIR__ . '/..' . '/sonata-project/classification-bundle/src',
         ),
         'Sonata\\Cache\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/cache/lib',
+            0 => __DIR__ . '/..' . '/sonata-project/cache/src',
         ),
         'Sonata\\CacheBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/cache-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/cache-bundle/src',
         ),
         'Sonata\\BlockBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/block-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/block-bundle/src',
         ),
         'Sonata\\AdminBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/sonata-project/admin-bundle',
+            0 => __DIR__ . '/..' . '/sonata-project/admin-bundle/src',
         ),
         'SimpleThings\\EntityAudit\\' => 
         array (
@@ -364,9 +392,17 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/behatch/contexts/src/class_aliases',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Psr\\Link\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/link/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -379,6 +415,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'PhpAmqpLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
         ),
         'PackageVersions\\' => 
         array (
@@ -399,6 +439,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Michelf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/michelf/php-markdown/Michelf',
         ),
         'Liip\\ImagineBundle\\' => 
         array (
@@ -422,7 +466,7 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'Knp\\Bundle\\MenuBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/knplabs/knp-menu-bundle',
+            0 => __DIR__ . '/..' . '/knplabs/knp-menu-bundle/src',
         ),
         'Knp\\Bundle\\MarkdownBundle\\' => 
         array (
@@ -435,6 +479,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'JsonSchema\\' => 
         array (
             0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
+        'JMS\\SerializerBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jms/serializer-bundle',
         ),
         'JMS\\SecurityExtraBundle\\' => 
         array (
@@ -456,9 +504,17 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/egeloen/ckeditor-bundle',
         ),
+        'Interop\\Queue\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/queue-interop/queue-interop/src',
+        ),
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'Interop\\Amqp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/queue-interop/amqp-interop/src',
         ),
         'Incenteev\\ParameterHandler\\' => 
         array (
@@ -476,13 +532,13 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Gregwar\\Captcha\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/gregwar/captcha',
-        ),
         'Gregwar\\CaptchaBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/gregwar/captcha-bundle',
+        ),
+        'Gregwar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gregwar/captcha/src/Gregwar',
         ),
         'Goutte\\' => 
         array (
@@ -495,6 +551,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Gesdinet\\JWTRefreshTokenBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/gesdinet/jwt-refresh-token-bundle',
+        ),
+        'Fig\\Link\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fig/link-util/src',
         ),
         'FOS\\UserBundle\\' => 
         array (
@@ -512,6 +572,22 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/sonata-project/exporter/src',
         ),
+        'Evercode\\DependentSelectBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/evercodelab/dependent-select-bundle',
+        ),
+        'Enqueue\\AmqpTools\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/enqueue/amqp-tools',
+        ),
+        'Enqueue\\AmqpLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/enqueue/amqp-lib',
+        ),
+        'Doctrine\\ORM\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/orm/lib/Doctrine/ORM',
+        ),
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
@@ -519,6 +595,14 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Doctrine\\DBAL\\Migrations\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/DBAL/Migrations',
+        ),
+        'Doctrine\\Common\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
+        ),
+        'Doctrine\\Common\\DataFixtures\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/data-fixtures/lib/Doctrine/Common/DataFixtures',
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (
@@ -560,29 +644,41 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         array (
             0 => __DIR__ . '/..' . '/cocur/slugify/src',
         ),
+        'Buzz\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kriswallsmith/buzz/lib/Buzz',
+        ),
         'Behatch\\' => 
         array (
             0 => __DIR__ . '/..' . '/behatch/contexts/src',
         ),
         'Behat\\Mink\\Driver\\' => 
         array (
-            0 => __DIR__ . '/..' . '/behat/mink-browserkit-driver/src',
-            1 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
-            2 => __DIR__ . '/..' . '/behat/mink-selenium2-driver/src',
-            3 => __DIR__ . '/..' . '/behat/mink-zombie-driver/src',
+            0 => __DIR__ . '/..' . '/behat/mink-zombie-driver/src',
+            1 => __DIR__ . '/..' . '/behat/mink-browserkit-driver/src',
+            2 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
+            3 => __DIR__ . '/..' . '/behat/mink-selenium2-driver/src',
         ),
         'Behat\\Mink\\' => 
         array (
             0 => __DIR__ . '/..' . '/behat/mink/src',
         ),
+        'Bazinga\\Bundle\\HateoasBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/willdurand/hateoas-bundle',
+        ),
+        'Application\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Application',
+        ),
+        'AppBundle\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/AppBundle',
+        ),
         'ApiPlatform\\Core\\' => 
         array (
             0 => __DIR__ . '/..' . '/dunglas/api-bundle/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -617,10 +713,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'S' => 
         array (
-            'Shtumi\\UsefulBundle' => 
-            array (
-                0 => __DIR__ . '/..' . '/shtumi/useful-bundle',
-            ),
             'SensioLabs\\Security' => 
             array (
                 0 => __DIR__ . '/..' . '/sensiolabs/security-checker',
@@ -670,10 +762,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             array (
                 0 => __DIR__ . '/..' . '/mopa/composer-bridge/src',
             ),
-            'Michelf' => 
-            array (
-                0 => __DIR__ . '/..' . '/michelf/php-markdown',
-            ),
             'Metadata\\' => 
             array (
                 0 => __DIR__ . '/..' . '/jms/metadata/src',
@@ -692,10 +780,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             array (
                 0 => __DIR__ . '/..' . '/willdurand/jsonp-callback-validator/src',
             ),
-            'JMS\\SerializerBundle' => 
-            array (
-                0 => __DIR__ . '/..' . '/jms/serializer-bundle',
-            ),
             'JMS\\Serializer' => 
             array (
                 0 => __DIR__ . '/..' . '/jms/serializer/src',
@@ -710,10 +794,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'Imagine' => 
             array (
                 0 => __DIR__ . '/..' . '/imagine/imagine/lib',
-            ),
-            'Ideup\\SimplePaginatorBundle' => 
-            array (
-                0 => __DIR__ . '/..' . '/ideup/simple-paginator-bundle',
             ),
         ),
         'H' => 
@@ -736,10 +816,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'D' => 
         array (
-            'Doctrine\\ORM\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/orm/lib',
-            ),
             'Doctrine\\DBAL\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
@@ -748,21 +824,9 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             array (
                 0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
             ),
-            'Doctrine\\Common\\Inflector\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
-            ),
-            'Doctrine\\Common\\DataFixtures' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/data-fixtures/lib',
-            ),
             'Doctrine\\Common\\Collections\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/collections/lib',
-            ),
-            'DoctrineExtensions' => 
-            array (
-                0 => __DIR__ . '/..' . '/beberlei/DoctrineExtensions/lib',
             ),
             'Diff' => 
             array (
@@ -778,10 +842,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         ),
         'B' => 
         array (
-            'Buzz' => 
-            array (
-                0 => __DIR__ . '/..' . '/kriswallsmith/buzz/lib',
-            ),
             'Behat\\Transliterator' => 
             array (
                 0 => __DIR__ . '/..' . '/behat/transliterator/src',
@@ -805,10 +865,6 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
             'Behat\\Behat' => 
             array (
                 0 => __DIR__ . '/..' . '/behat/behat/src',
-            ),
-            'Bazinga\\Bundle\\HateoasBundle' => 
-            array (
-                0 => __DIR__ . '/..' . '/willdurand/hateoas-bundle',
             ),
         ),
         'A' => 
@@ -835,9 +891,12 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'Locale' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/Locale.php',
         'NumberFormatter' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/NumberFormatter.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/Assert.php',
+        'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/AssertionFailedError.php',
         'PHPUnit\\Framework\\BaseTestListener' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/BaseTestListener.php',
+        'PHPUnit\\Framework\\Test' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/Test.php',
         'PHPUnit\\Framework\\TestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestCase.php',
         'PHPUnit\\Framework\\TestListener' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestListener.php',
+        'PHPUnit\\Framework\\TestSuite' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestSuite.php',
         'PHPUnit_Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit_Extensions_GroupTestSuite' => __DIR__ . '/..' . '/phpunit/phpunit/src/Extensions/GroupTestSuite.php',
         'PHPUnit_Extensions_PhptTestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/Extensions/PhptTestCase.php',
@@ -1273,6 +1332,7 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
         'SebastianBergmann\\RecursionContext\\Exception' => __DIR__ . '/..' . '/sebastian/recursion-context/src/Exception.php',
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
         'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
@@ -1281,11 +1341,10 @@ class ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitca9b62b4cc87fdd42c5e10d4aacba5a4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3fd21fac427d03795682a3726ec16667::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3fd21fac427d03795682a3726ec16667::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3fd21fac427d03795682a3726ec16667::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3fd21fac427d03795682a3726ec16667::$classMap;
 
         }, null, ClassLoader::class);
     }

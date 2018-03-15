@@ -6,8 +6,10 @@ framework:
     form: true
     validation:      { enable_annotations: true }
     default_locale:  en
-    trusted_proxies: ~
     session:         ~
 
 parameters:
     custom_app: 'behat-test-app'
+    collection_param:
+        - 'Param 1'
+        - 'Param 2'

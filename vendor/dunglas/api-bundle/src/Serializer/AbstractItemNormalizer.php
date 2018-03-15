@@ -9,10 +9,14 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Serializer;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Api\ResourceClassResolverInterface;
+use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Exception\ItemNotFoundException;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
@@ -40,8 +44,11 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
     protected $iriConverter;
     protected $resourceClassResolver;
     protected $propertyAccessor;
+    protected $localCache = [];
+    protected $itemDataProvider;
+    protected $allowPlainIdentifiers;
 
-    public function __construct(PropertyNameCollectionFactoryInterface $propertyNameCollectionFactory, PropertyMetadataFactoryInterface $propertyMetadataFactory, IriConverterInterface $iriConverter, ResourceClassResolverInterface $resourceClassResolver, PropertyAccessorInterface $propertyAccessor = null, NameConverterInterface $nameConverter = null, ClassMetadataFactoryInterface $classMetadataFactory = null)
+    public function __construct(PropertyNameCollectionFactoryInterface $propertyNameCollectionFactory, PropertyMetadataFactoryInterface $propertyMetadataFactory, IriConverterInterface $iriConverter, ResourceClassResolverInterface $resourceClassResolver, PropertyAccessorInterface $propertyAccessor = null, NameConverterInterface $nameConverter = null, ClassMetadataFactoryInterface $classMetadataFactory = null, ItemDataProviderInterface $itemDataProvider = null, bool $allowPlainIdentifiers = false)
     {
         parent::__construct($classMetadataFactory, $nameConverter);
 
@@ -50,6 +57,8 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
         $this->iriConverter = $iriConverter;
         $this->resourceClassResolver = $resourceClassResolver;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
+        $this->itemDataProvider = $itemDataProvider;
+        $this->allowPlainIdentifiers = $allowPlainIdentifiers;
 
         $this->setCircularReferenceHandler(function ($object) {
             return $this->iriConverter->getIriFromItem($object);
@@ -61,7 +70,7 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        if (!is_object($data)) {
+        if (!\is_object($data)) {
             return false;
         }
 
@@ -83,6 +92,11 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
         $context = $this->initContext($resourceClass, $context);
         $context['api_normalize'] = true;
 
+        if (isset($context['resources'])) {
+            $resource = $context['iri'] ?? $this->iriConverter->getIriFromItem($object);
+            $context['resources'][$resource] = $resource;
+        }
+
         return parent::normalize($object, $format, $context);
     }
 
@@ -91,7 +105,7 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $this->resourceClassResolver->isResourceClass($type);
+        return $this->localCache[$type] ?? $this->localCache[$type] = $this->resourceClassResolver->isResourceClass($type);
     }
 
     /**
@@ -130,8 +144,9 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
             $propertyMetadata = $this->propertyMetadataFactory->create($context['resource_class'], $propertyName, $options);
 
             if (
-                (isset($context['api_normalize']) && $propertyMetadata->isReadable()) ||
-                (isset($context['api_denormalize']) && $propertyMetadata->isWritable())
+                $this->isAllowedAttribute($classOrObject, $propertyName, null, $context) &&
+                ((isset($context['api_normalize']) && $propertyMetadata->isReadable()) ||
+                (isset($context['api_denormalize']) && $propertyMetadata->isWritable()))
             ) {
                 $allowedAttributes[] = $propertyName;
             }
@@ -145,6 +160,10 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      */
     protected function setAttributeValue($object, $attribute, $value, $format = null, array $context = [])
     {
+        if (!\is_string($attribute)) {
+            throw new InvalidArgumentException('Invalid value provided (invalid IRI?).');
+        }
+
         $propertyMetadata = $this->propertyMetadataFactory->create($context['resource_class'], $attribute, $this->getFactoryOptions($context));
         $type = $propertyMetadata->getType();
 
@@ -179,7 +198,7 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
             $this->setValue(
                 $object,
                 $attribute,
-                $this->denormalizeRelation($attribute, $propertyMetadata, $className, $value, $format, $context)
+                $this->denormalizeRelation($attribute, $propertyMetadata, $className, $value, $format, $this->createChildContext($context, $attribute))
             );
 
             return;
@@ -202,15 +221,15 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
     protected function validateType(string $attribute, Type $type, $value, string $format = null)
     {
         $builtinType = $type->getBuiltinType();
-        if (Type::BUILTIN_TYPE_FLOAT === $builtinType && false !== strpos($format, 'json')) {
-            $isValid = is_float($value) || is_int($value);
+        if (Type::BUILTIN_TYPE_FLOAT === $builtinType && null !== $format && false !== strpos($format, 'json')) {
+            $isValid = \is_float($value) || \is_int($value);
         } else {
-            $isValid = call_user_func('is_'.$builtinType, $value);
+            $isValid = \call_user_func('is_'.$builtinType, $value);
         }
 
         if (!$isValid) {
             throw new InvalidArgumentException(sprintf(
-                'The type of the "%s" attribute must be "%s", "%s" given.', $attribute, $builtinType, gettype($value)
+                'The type of the "%s" attribute must be "%s", "%s" given.', $attribute, $builtinType, \gettype($value)
             ));
         }
     }
@@ -230,11 +249,11 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      *
      * @return array
      */
-    private function denormalizeCollection(string $attribute, PropertyMetadata $propertyMetadata, Type $type, string $className, $value, string $format = null, array $context): array
+    protected function denormalizeCollection(string $attribute, PropertyMetadata $propertyMetadata, Type $type, string $className, $value, string $format = null, array $context): array
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw new InvalidArgumentException(sprintf(
-                'The type of the "%s" attribute must be "array", "%s" given.', $attribute, gettype($value)
+                'The type of the "%s" attribute must be "array", "%s" given.', $attribute, \gettype($value)
             ));
         }
 
@@ -243,14 +262,14 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
 
         $values = [];
         foreach ($value as $index => $obj) {
-            if (null !== $collectionKeyBuiltinType && !call_user_func('is_'.$collectionKeyBuiltinType, $index)) {
+            if (null !== $collectionKeyBuiltinType && !\call_user_func('is_'.$collectionKeyBuiltinType, $index)) {
                 throw new InvalidArgumentException(sprintf(
                         'The type of the key "%s" must be "%s", "%s" given.',
-                        $index, $collectionKeyBuiltinType, gettype($index))
+                        $index, $collectionKeyBuiltinType, \gettype($index))
                 );
             }
 
-            $values[$index] = $this->denormalizeRelation($attribute, $propertyMetadata, $className, $obj, $format, $context);
+            $values[$index] = $this->denormalizeRelation($attribute, $propertyMetadata, $className, $obj, $format, $this->createChildContext($context, $attribute));
         }
 
         return $values;
@@ -270,9 +289,9 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      *
      * @return object|null
      */
-    private function denormalizeRelation(string $attributeName, PropertyMetadata $propertyMetadata, string $className, $value, string $format = null, array $context)
+    protected function denormalizeRelation(string $attributeName, PropertyMetadata $propertyMetadata, string $className, $value, string $format = null, array $context)
     {
-        if (is_string($value)) {
+        if (\is_string($value)) {
             try {
                 return $this->iriConverter->getItemFromIri($value, $context + ['fetch_data' => true]);
             } catch (ItemNotFoundException $e) {
@@ -282,13 +301,30 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
             }
         }
 
-        if (!$this->resourceClassResolver->isResourceClass($className) || $propertyMetadata->isWritableLink()) {
-            return $this->serializer->denormalize($value, $className, $format, $this->createRelationSerializationContext($className, $context));
+        if (
+            !$this->resourceClassResolver->isResourceClass($className) ||
+            $propertyMetadata->isWritableLink()
+        ) {
+            $context['resource_class'] = $className;
+            $context['api_allow_update'] = true;
+
+            return $this->serializer->denormalize($value, $className, $format, $context);
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
+            // repeat the code so that IRIs keep working with the json format
+            if (true === $this->allowPlainIdentifiers && $this->itemDataProvider) {
+                try {
+                    return $this->itemDataProvider->getItem($className, $value, null, $context + ['fetch_data' => true]);
+                } catch (ItemNotFoundException $e) {
+                    throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+                } catch (InvalidArgumentException $e) {
+                    // Give a chance to other normalizers (e.g.: DateTimeNormalizer)
+                }
+            }
+
             throw new InvalidArgumentException(sprintf(
-                'Expected IRI or nested document for attribute "%s", "%s" given.', $attributeName, gettype($value)
+                'Expected IRI or nested document for attribute "%s", "%s" given.', $attributeName, \gettype($value)
             ));
         }
 
@@ -324,8 +360,8 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
     {
         $options = [];
 
-        if (isset($context['groups'])) {
-            $options['serializer_groups'] = $context['groups'];
+        if (isset($context[self::GROUPS])) {
+            $options['serializer_groups'] = $context[self::GROUPS];
         }
 
         if (isset($context['collection_operation_name'])) {
@@ -346,11 +382,12 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
      * @param array  $context
      *
      * @return array
+     *
+     * @deprecated since version 2.1, to be removed in 3.0.
      */
     protected function createRelationSerializationContext(string $resourceClass, array $context): array
     {
-        $context['resource_class'] = $resourceClass;
-        unset($context['item_operation_name'], $context['collection_operation_name']);
+        @trigger_error(sprintf('The method %s() is deprecated since 2.1 and will be removed in 3.0.', __METHOD__), E_USER_DEPRECATED);
 
         return $context;
     }
@@ -377,50 +414,75 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
         $type = $propertyMetadata->getType();
 
         if (
-            (is_array($attributeValue) || $attributeValue instanceof \Traversable) &&
+            (\is_array($attributeValue) || $attributeValue instanceof \Traversable) &&
             $type &&
             $type->isCollection() &&
             ($collectionValueType = $type->getCollectionValueType()) &&
             ($className = $collectionValueType->getClassName()) &&
             $this->resourceClassResolver->isResourceClass($className)
         ) {
-            $value = [];
-            foreach ($attributeValue as $index => $obj) {
-                $value[$index] = $this->normalizeRelation($propertyMetadata, $obj, $className, $format, $context);
-            }
-
-            return $value;
+            return $this->normalizeCollectionOfRelations($propertyMetadata, $attributeValue, $className, $format, $this->createChildContext($context, $attribute));
         }
 
         if (
-            $attributeValue &&
             $type &&
             ($className = $type->getClassName()) &&
             $this->resourceClassResolver->isResourceClass($className)
         ) {
-            return $this->normalizeRelation($propertyMetadata, $attributeValue, $className, $format, $context);
+            return $this->normalizeRelation($propertyMetadata, $attributeValue, $className, $format, $this->createChildContext($context, $attribute));
         }
+
+        unset($context['resource_class']);
 
         return $this->serializer->normalize($attributeValue, $format, $context);
     }
 
     /**
-     * Normalizes a relation as an URI if is a Link or as a JSON-LD object.
+     * Normalizes a collection of relations (to-many).
      *
-     * @param PropertyMetadata $propertyMetadata
-     * @param mixed            $relatedObject
-     * @param string           $resourceClass
-     * @param string|null      $format
-     * @param array            $context
+     * @param iterable $attributeValue
+     */
+    protected function normalizeCollectionOfRelations(PropertyMetadata $propertyMetadata, $attributeValue, string $resourceClass, string $format = null, array $context): array
+    {
+        $value = [];
+        foreach ($attributeValue as $index => $obj) {
+            $value[$index] = $this->normalizeRelation($propertyMetadata, $obj, $resourceClass, $format, $context);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Normalizes a relation as an object if is a Link or as an URI.
+     *
+     * @param mixed       $relatedObject
+     * @param string|null $format
      *
      * @return string|array
      */
-    private function normalizeRelation(PropertyMetadata $propertyMetadata, $relatedObject, string $resourceClass, string $format = null, array $context)
+    protected function normalizeRelation(PropertyMetadata $propertyMetadata, $relatedObject, string $resourceClass, string $format = null, array $context)
     {
-        if ($propertyMetadata->isReadableLink()) {
-            return $this->serializer->normalize($relatedObject, $format, $this->createRelationSerializationContext($resourceClass, $context));
+        // On a subresource, we know the value of the identifiers.
+        // If attributeValue is null, meaning that it hasn't been returned by the DataProvider, get the item Iri
+        if (null === $relatedObject && isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type'] && isset($context['subresource_resources'][$resourceClass])) {
+            return $this->iriConverter->getItemIriFromResourceClass($resourceClass, $context['subresource_resources'][$resourceClass]);
         }
 
-        return $this->iriConverter->getIriFromItem($relatedObject);
+        if (null === $relatedObject || $propertyMetadata->isReadableLink() || !empty($context['attributes'])) {
+            if (null === $relatedObject) {
+                unset($context['resource_class']);
+            } else {
+                $context['resource_class'] = $resourceClass;
+            }
+
+            return $this->serializer->normalize($relatedObject, $format, $context);
+        }
+
+        $iri = $this->iriConverter->getIriFromItem($relatedObject);
+        if (isset($context['resources'])) {
+            $context['resources'][$iri] = $iri;
+        }
+
+        return $iri;
     }
 }

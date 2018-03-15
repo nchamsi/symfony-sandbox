@@ -29,6 +29,7 @@ namespace PackageVersions;
  */
 %s
 {
+    const ROOT_PACKAGE_NAME = '%s';
     const VERSIONS = %s;
 
     private function __construct()
@@ -40,13 +41,13 @@ namespace PackageVersions;
      */
     public static function getVersion(string $packageName) : string
     {
-        if (! isset(self::VERSIONS[$packageName])) {
-            throw new \OutOfBoundsException(
-                'Required package "' . $packageName . '" is not installed: cannot detect its version'
-            );
+        if (isset(self::VERSIONS[$packageName])) {
+            return self::VERSIONS[$packageName];
         }
 
-        return self::VERSIONS[$packageName];
+        throw new \OutOfBoundsException(
+            'Required package "' . $packageName . '" is not installed: cannot detect its version'
+        );
     }
 }
 
@@ -55,7 +56,7 @@ PHP;
     /**
      * {@inheritDoc}
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io) : void
     {
         // Nothing to do here, as all features are provided through event listeners
     }
@@ -63,7 +64,7 @@ PHP;
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents() : array
     {
         return [
             ScriptEvents::POST_INSTALL_CMD => 'dumpVersionsClass',
@@ -72,16 +73,13 @@ PHP;
     }
 
     /**
-     * @param Event $composerEvent
-     *
-     * @return void
-     *
      * @throws \RuntimeException
      */
-    public static function dumpVersionsClass(Event $composerEvent)
+    public static function dumpVersionsClass(Event $composerEvent) : void
     {
         $composer = $composerEvent->getComposer();
-        $versions = iterator_to_array(self::getVersions($composer->getLocker(), $composer->getPackage()));
+        $rootPackage = $composer->getPackage();
+        $versions = iterator_to_array(self::getVersions($composer->getLocker(), $rootPackage));
 
         if (!array_key_exists('ocramius/package-versions', $versions)) {
             //plugin must be globally installed - we only want to generate versions for projects which specifically
@@ -89,55 +87,44 @@ PHP;
             return;
         }
 
-        $io = $composerEvent->getIO();
-        $io->write('<info>ocramius/package-versions:</info>  Generating version class...');
+        $versionClass = self::generateVersionsClass($rootPackage->getName(), $versions);
 
-        self::writeVersionClassToFile(
-            self::generateVersionsClass($versions),
-            $composer->getConfig(),
-            $composer->getPackage()
-        );
-
-        $io->write('<info>ocramius/package-versions:</info> ...done generating version class');
+        self::writeVersionClassToFile($versionClass, $composer, $composerEvent->getIO());
     }
 
-    private static function generateVersionsClass(array $versions) : string
+    private static function generateVersionsClass(string $rootPackageName, array $versions) : string
     {
         return sprintf(
             self::$generatedClassTemplate,
             'fin' . 'al ' . 'cla' . 'ss ' . 'Versions', // note: workaround for regex-based code parsers :-(
+            $rootPackageName,
             var_export($versions, true)
         );
     }
 
     /**
-     * @param string               $versionClassSource
-     * @param Config               $composerConfig
-     * @param RootPackageInterface $rootPackage
-     *
-     * @return void
-     *
      * @throws \RuntimeException
      */
-    private static function writeVersionClassToFile(
-        string $versionClassSource,
-        Config $composerConfig,
-        RootPackageInterface $rootPackage
-    ) {
-        file_put_contents(
-            self::locateRootPackageInstallPath($composerConfig, $rootPackage)
-            . '/src/PackageVersions/Versions.php',
-            $versionClassSource,
-            0664
-        );
+    private static function writeVersionClassToFile(string $versionClassSource, Composer $composer, IOInterface $io) : void
+    {
+        $installPath = self::locateRootPackageInstallPath($composer->getConfig(), $composer->getPackage())
+            . '/src/PackageVersions/Versions.php';
+
+        if (! file_exists(dirname($installPath))) {
+            $io->write('<info>ocramius/package-versions:</info> Package not found (probably scheduled for removal); generation of version class skipped.');
+
+            return;
+        }
+
+        $io->write('<info>ocramius/package-versions:</info>  Generating version class...');
+
+        file_put_contents($installPath, $versionClassSource);
+        chmod($installPath, 0664);
+
+        $io->write('<info>ocramius/package-versions:</info> ...done generating version class');
     }
 
     /**
-     * @param Config               $composerConfig
-     * @param RootPackageInterface $rootPackage
-     *
-     * @return string
-     *
      * @throws \RuntimeException
      */
     private static function locateRootPackageInstallPath(
@@ -163,9 +150,6 @@ PHP;
     }
 
     /**
-     * @param Locker               $locker
-     * @param RootPackageInterface $rootPackage
-     *
      * @return \Generator|\string[]
      */
     private static function getVersions(Locker $locker, RootPackageInterface $rootPackage) : \Generator
@@ -180,6 +164,15 @@ PHP;
             );
         }
 
-        yield $rootPackage->getName() => $rootPackage->getVersion() . '@' . $rootPackage->getSourceReference();
+        foreach ($rootPackage->getReplaces() as $replace) {
+            $version = $replace->getPrettyConstraint();
+            if ($version === 'self.version') {
+                $version = $rootPackage->getPrettyVersion();
+            }
+
+            yield $replace->getTarget() => $version . '@' . $rootPackage->getSourceReference();
+        }
+
+        yield $rootPackage->getName() => $rootPackage->getPrettyVersion() . '@' . $rootPackage->getSourceReference();
     }
 }

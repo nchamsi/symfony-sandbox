@@ -73,10 +73,12 @@ Feature: HAL support
       "dummyFloat": null,
       "dummyPrice": null,
       "jsonData": [],
+      "arrayData": [],
       "name_converted": null,
       "id": 1,
       "name": "Dummy with relations",
-      "alias": null
+      "alias": null,
+      "foo": null
     }
     """
 
@@ -113,10 +115,12 @@ Feature: HAL support
       "dummyFloat": null,
       "dummyPrice": null,
       "jsonData": [],
+      "arrayData": [],
       "name_converted": null,
       "id": 1,
       "name": "A nice dummy",
-      "alias": null
+      "alias": null,
+      "foo": null
     }
     """
 
@@ -192,6 +196,8 @@ Feature: HAL support
           }
         ]
       },
+      "totalItems": 1,
+      "itemsPerPage": 3,
       "_embedded": {
         "item": [
           {
@@ -215,14 +221,14 @@ Feature: HAL support
             "dummyFloat": null,
             "dummyPrice": null,
             "jsonData": [],
+            "arrayData": [],
             "name_converted": null,
             "id": 1,
             "name": "A nice dummy",
-            "alias": null
+            "alias": null,
+            "foo": null
           }
         ]
-      },
-      "totalItems": 1,
-      "itemsPerPage": 3
+      }
     }
     """

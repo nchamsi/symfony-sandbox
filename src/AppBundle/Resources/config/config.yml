@@ -1,4 +1,0 @@
-# related to app/config/sonata/sonata_admin.yml
-imports:
-    - { resource: 'parameters.yml'}
-    - { resource: 'security.yml'}

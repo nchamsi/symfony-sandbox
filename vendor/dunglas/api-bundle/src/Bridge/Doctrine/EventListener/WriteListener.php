@@ -9,8 +9,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\EventListener;
 
+use ApiPlatform\Core\EventListener\WriteListener as BaseWriteListener;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +30,8 @@ final class WriteListener
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
+        @trigger_error(sprintf('The %s class is deprecated since version 2.2 and will be removed in 3.0. Use the %s class instead.', __CLASS__, BaseWriteListener::class), E_USER_DEPRECATED);
+
         $this->managerRegistry = $managerRegistry;
     }
 
@@ -34,8 +39,6 @@ final class WriteListener
      * Persists, updates or delete data return by the controller if applicable.
      *
      * @param GetResponseForControllerResultEvent $event
-     *
-     * @return mixed
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
@@ -58,7 +61,6 @@ final class WriteListener
             case Request::METHOD_POST:
                 $objectManager->persist($controllerResult);
                 break;
-
             case Request::METHOD_DELETE:
                 $objectManager->remove($controllerResult);
                 $event->setControllerResult(null);
@@ -79,9 +81,8 @@ final class WriteListener
     private function getManager(string $resourceClass, $data)
     {
         $objectManager = $this->managerRegistry->getManagerForClass($resourceClass);
-
-        if (null === $objectManager || !is_object($data)) {
-            return;
+        if (null === $objectManager || !\is_object($data)) {
+            return null;
         }
 
         return $objectManager;

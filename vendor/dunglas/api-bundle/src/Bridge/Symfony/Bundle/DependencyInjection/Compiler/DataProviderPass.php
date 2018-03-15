@@ -9,9 +9,14 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Symfony\Bundle\DependencyInjection\Compiler;
 
+use ApiPlatform\Core\Api\OperationType;
+use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -21,16 +26,20 @@ use Symfony\Component\DependencyInjection\Reference;
  * @internal
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
+ * @author Vincent Chalamon <vincentchalamon@gmail.com>
  */
 final class DataProviderPass implements CompilerPassInterface
 {
+    use PriorityTaggedServiceTrait;
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $this->registerDataProviders($container, 'collection');
-        $this->registerDataProviders($container, 'item');
+        foreach (OperationType::TYPES as $type) {
+            $this->registerDataProviders($container, $type);
+        }
     }
 
     /**
@@ -43,17 +52,15 @@ final class DataProviderPass implements CompilerPassInterface
      */
     private function registerDataProviders(ContainerBuilder $container, string $type)
     {
-        $services = $container->findTaggedServiceIds('api_platform.'.$type.'_data_provider');
+        $services = $this->findAndSortTaggedServices("api_platform.{$type}_data_provider", $container);
 
-        $queue = new \SplPriorityQueue();
-
-        foreach ($services as $serviceId => $tags) {
-            foreach ($tags as $attributes) {
-                $priority = $attributes['priority'] ?? 0;
-                $queue->insert(new Reference($serviceId), $priority);
+        foreach ($services as $reference) {
+            $definition = $container->getDefinition((string) $reference);
+            if (is_a($definition->getClass(), SerializerAwareDataProviderInterface::class, true)) {
+                $definition->addMethodCall('setSerializerLocator', [new Reference('api_platform.serializer_locator')]);
             }
         }
 
-        $container->getDefinition('api_platform.'.$type.'_data_provider')->addArgument(iterator_to_array($queue, false));
+        $container->getDefinition("api_platform.{$type}_data_provider")->addArgument($services);
     }
 }

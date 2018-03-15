@@ -87,9 +87,26 @@ class WebDebugToolbarListenerTest extends TestCase
     /**
      * @depends testToolbarIsInjected
      */
+    public function testToolbarIsNotInjectedOnNonHtmlContentType()
+    {
+        $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('X-Debug-Token', 'xxxxxxxx');
+        $response->headers->set('Content-Type', 'text/xml');
+        $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(), HttpKernelInterface::MASTER_REQUEST, $response);
+
+        $listener = new WebDebugToolbarListener($this->getTwigMock());
+        $listener->onKernelResponse($event);
+
+        $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
+    }
+
+    /**
+     * @depends testToolbarIsInjected
+     */
     public function testToolbarIsNotInjectedOnContentDispositionAttachment()
     {
         $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('X-Debug-Token', 'xxxxxxxx');
         $response->headers->set('Content-Disposition', 'attachment; filename=test.html');
         $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(false, 'html'), HttpKernelInterface::MASTER_REQUEST, $response);
 
@@ -291,7 +308,7 @@ class WebDebugToolbarListenerTest extends TestCase
 
     protected function getTwigMock($render = 'WDT')
     {
-        $templating = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
+        $templating = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $templating->expects($this->any())
             ->method('render')
             ->will($this->returnValue($render));

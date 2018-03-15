@@ -18,14 +18,14 @@
 
 namespace JMS\DiExtraBundle\DependencyInjection\Compiler;
 
+use JMS\DiExtraBundle\Config\ServiceFilesResource;
+use JMS\DiExtraBundle\Exception\RuntimeException;
+use JMS\DiExtraBundle\Finder\PatternFinder;
 use JMS\DiExtraBundle\Metadata\MetadataConverter;
 use Metadata\AdvancedMetadataFactoryInterface;
-use JMS\DiExtraBundle\Exception\RuntimeException;
-use JMS\DiExtraBundle\Config\ServiceFilesResource;
 use Symfony\Component\Config\Resource\FileResource;
-use JMS\DiExtraBundle\Finder\PatternFinder;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Search for annotation usage.
@@ -50,7 +50,11 @@ class AnnotationConfigurationPass implements CompilerPassInterface
 
         $directories = $this->getScanDirectories($container);
         if (!$directories) {
-            $container->getCompiler()->addLogMessage('No directories configured for AnnotationConfigurationPass.');
+            if (method_exists($container, 'log')) {
+                $container->log($this, 'No directories configured for AnnotationConfigurationPass.');
+            } else {
+                $container->getCompiler()->addLogMessage('No directories configured for AnnotationConfigurationPass.');
+            }
 
             return;
         }
@@ -65,6 +69,7 @@ class AnnotationConfigurationPass implements CompilerPassInterface
 
     /**
      * @param ContainerBuilder $container
+     *
      * @return \string[]
      */
     private function getPatterns(ContainerBuilder $container)
@@ -89,7 +94,7 @@ class AnnotationConfigurationPass implements CompilerPassInterface
     {
         $finder = new PatternFinder($pattern, '*.php', $disableGrep);
         $files = $finder->findFiles($directories);
-        $container->addResource(new ServiceFilesResource($files, $directories, $disableGrep));
+        $container->addResource(new ServiceFilesResource($files, $directories, $disableGrep, $pattern));
         foreach ($files as $file) {
             $container->addResource(new FileResource($file));
             require_once $file;
@@ -145,9 +150,10 @@ class AnnotationConfigurationPass implements CompilerPassInterface
     /**
      * Only supports one namespaced class per file.
      *
-     * @throws \RuntimeException if the class name cannot be extracted
      *
      * @param string $filename
+     *
+     * @throws \RuntimeException if the class name cannot be extracted
      *
      * @return string the fully qualified class name
      */

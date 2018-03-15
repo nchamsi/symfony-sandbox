@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class JMSDiExtraExtension extends Extension
 {
     /**
-     * Controller blacklist, ie. php files names for controllers that should not be analyzed
+     * Controller blacklist, ie. php files names for controllers that should not be analyzed.
      *
      * @var array
      */
@@ -71,9 +71,11 @@ class JMSDiExtraExtension extends Extension
             $this->generateEntityManagerProxyClass($config, $container);
         }
 
-        $this->addClassesToCompile(array(
-            'JMS\\DiExtraBundle\\HttpKernel\ControllerResolver',
-        ));
+        if (PHP_VERSION_ID < 70000) {
+            $this->addClassesToCompile(array(
+                'JMS\\DiExtraBundle\\HttpKernel\ControllerResolver',
+            ));
+        }
     }
 
     public function blackListControllerFile($filename)
@@ -93,8 +95,8 @@ class JMSDiExtraExtension extends Extension
 
         $enhancer = new Enhancer($ref = new \ReflectionClass('Doctrine\ORM\EntityManager'), array(), array(new RepositoryInjectionGenerator()));
         $uniqid = uniqid(); // We do have to use a non-static id to avoid problems with cache:clear.
-        if (strtoupper(PHP_OS)=='CYGWIN') {
-            $uniqid=preg_replace('/\./','_',$uniqid); // replace dot; cygwin always generates uniqid's with more_entropy
+        if (strtoupper(PHP_OS) == 'CYGWIN') {
+            $uniqid = preg_replace('/\./', '_', $uniqid); // replace dot; cygwin always generates uniqid's with more_entropy
         }
         $enhancer->setNamingStrategy(new DefaultNamingStrategy('EntityManager'.$uniqid));
         $enhancer->writeClass($file = $cacheDir.'/doctrine/EntityManager_'.$uniqid.'.php');
@@ -106,6 +108,7 @@ class JMSDiExtraExtension extends Extension
     {
         if (!isset($config['automatic_controller_injections'])) {
             $container->setAlias('jms_di_extra.metadata_driver', 'jms_di_extra.metadata.driver.annotation_driver');
+            $container->getAlias('jms_di_extra.metadata_driver')->setPublic(true);
 
             return;
         }
@@ -145,6 +148,7 @@ class JMSDiExtraExtension extends Extension
     {
         if ('none' === $config['cache']) {
             $container->removeAlias('jms_di_extra.metadata.cache');
+
             return;
         }
 
@@ -157,11 +161,11 @@ class JMSDiExtraExtension extends Extension
                 $fs->remove($cacheDir);
             }
 
-            if (!file_exists($cacheDir)) {
-                if (false === @mkdir($cacheDir, 0777, true)) {
-                    throw new RuntimeException(sprintf('The cache dir "%s" could not be created.', $cacheDir));
-                }
+            // re-check dir existence to avoid concurrency issues
+            if (!file_exists($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
+                throw new RuntimeException(sprintf('The cache dir "%s" could not be created.', $cacheDir));
             }
+
             if (!is_writable($cacheDir)) {
                 throw new RuntimeException(sprintf('The cache dir "%s" is not writable.', $cacheDir));
             }

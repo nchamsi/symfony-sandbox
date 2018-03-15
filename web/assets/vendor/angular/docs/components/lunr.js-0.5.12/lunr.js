@@ -256,7 +256,7 @@ lunr.Pipeline.warnIfFunctionNotRegistered = function (fn) {
   var isRegistered = fn.label && (fn.label in this.registeredFunctions)
 
   if (!isRegistered) {
-    lunr.utils.warn('Function is not registered with pipeline. This may cause problems when serialising the index.\n', fn)
+    lunr.utils.warn('FieldFunction is not registered with pipeline. This may cause problems when serialising the index.\n', fn)
   }
 }
 

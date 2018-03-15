@@ -3,9 +3,28 @@
 namespace Gaufrette\Functional\Adapter;
 
 use Gaufrette\Adapter\GridFS;
+use Gaufrette\Filesystem;
+use MongoDB\Client;
 
 class GridFSTest extends FunctionalTestCase
 {
+    public function setUp()
+    {
+        $uri = getenv('MONGO_URI');
+        $dbname = getenv('MONGO_DBNAME');
+
+        if ($uri === false || $dbname === false) {
+            $this->markTestSkipped('Either MONGO_URI or MONGO_DBNAME env variables are not defined.');
+        }
+
+        $client = new Client($uri);
+        $db = $client->selectDatabase($dbname);
+        $bucket = $db->selectGridFSBucket();
+        $bucket->drop();
+
+        $this->filesystem = new Filesystem(new GridFS($bucket));
+    }
+
     /**
      * @test
      */
@@ -54,5 +73,20 @@ class GridFSTest extends FunctionalTestCase
             array(),
             $keys['keys'],
             '', 0, 10, true);
+    }
+    
+    /**
+     * @test
+     * Tests metadata written to GridFS can be retrieved after writing
+     */
+    public function testMetadataRetrieveAfterWrite()
+    {
+        //Create local copy of fileadapter
+        $fileadpt = clone $this->filesystem->getAdapter();
+        
+        $this->filesystem->getAdapter()->setMetadata('metadatatest', array('testing'  =>  true));
+        $this->filesystem->write('metadatatest', 'test');
+        
+        $this->assertEquals($this->filesystem->getAdapter()->getMetadata('metadatatest'), $fileadpt->getMetadata('metadatatest'));
     }
 }

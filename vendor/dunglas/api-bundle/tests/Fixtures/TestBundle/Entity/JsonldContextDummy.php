@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -39,7 +41,7 @@ class JsonldContextDummy
      *
      * @ApiProperty(
      *     attributes={
-     *         "jsonld_context"= {
+     *         "jsonld_context"={
      *             "@id"="http://example.com/id",
      *             "@type"="@id",
      *             "foo"="bar"

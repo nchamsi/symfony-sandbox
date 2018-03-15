@@ -2,41 +2,81 @@
 
 namespace Gaufrette\Functional\Adapter;
 
-use Gaufrette\Adapter\AwsS3;
 use Aws\S3\S3Client;
-use Guzzle\Plugin\Mock\MockPlugin;
-use Guzzle\Http\Message\Response;
+use Gaufrette\Adapter\AwsS3;
+use Gaufrette\Filesystem;
 
-/**
- * @todo move to phpspec
- */
-class AwsS3Test extends \PHPUnit_Framework_TestCase
+class AwsS3Test extends FunctionalTestCase
 {
-    protected function getClient()
+    /** @var int */
+    static private $SDK_VERSION;
+
+    /** @var string */
+    private $bucket;
+
+    /** @var S3Client */
+    private $client;
+
+    public function setUp()
     {
-        return S3Client::factory(array(
-            'key'    => 'foo',
-            'secret' => 'bar'
-        ));
+        $key = getenv('AWS_KEY');
+        $secret = getenv('AWS_SECRET');
+
+        if (empty($key) || empty($secret)) {
+            $this->markTestSkipped('Either AWS_KEY and/or AWS_SECRET env variables are not defined.');
+        }
+
+        if (self::$SDK_VERSION === null) {
+            self::$SDK_VERSION = method_exists(S3Client::class, 'getArguments') ? 3 : 2;
+        }
+
+        $this->bucket = uniqid(getenv('AWS_BUCKET'));
+
+        if (self::$SDK_VERSION === 3) {
+            // New way of instantiating S3Client for aws-sdk-php v3
+            $this->client = new S3Client([
+                'region' => 'eu-west-1',
+                'version' => 'latest',
+                'credentials' => [
+                    'key' => $key,
+                    'secret' => $secret,
+                ],
+            ]);
+        } else {
+            $this->client = S3Client::factory([
+                'region' => 'eu-west-1',
+                'version' => '2006-03-01',
+                'key' => $key,
+                'secret' => $secret,
+            ]);
+        }
+
+        $this->createFilesystem(['create' => true]);
     }
 
-    public function testCreatesBucketIfMissing()
+    public function tearDown()
     {
-        $mock = new MockPlugin(array(
-            new Response(404),                // Head bucket response
-            new Response(200),                // Create bucket response
-            new Response(200, array(), 'foo') // Get object response
-        ));
-        $client = $this->getClient();
-        $client->addSubscriber($mock);
-        $adapter = new AwsS3($client, 'bucket', array('create' => true));
-        $this->assertEquals('foo', $adapter->read('foo'));
+        if ($this->client === null || !$this->client->doesBucketExist($this->bucket)) {
+            return;
+        }
 
-        $requests = $mock->getReceivedRequests();
-        $this->assertEquals('HEAD', $requests[0]->getMethod());
-        $this->assertEquals('PUT', $requests[1]->getMethod());
-        $this->assertEquals('GET', $requests[2]->getMethod());
-        $this->assertEquals('bucket.s3.amazonaws.com', $requests[0]->getHost());
+        $result = $this->client->listObjects(['Bucket' => $this->bucket]);
+
+        if (!$result->hasKey('Contents')) {
+            $this->client->deleteBucket(['Bucket' => $this->bucket]);
+            return;
+        }
+
+        foreach ($result->get('Contents') as $staleObject) {
+            $this->client->deleteObject(['Bucket' => $this->bucket, 'Key' => $staleObject['Key']]);
+        }
+
+        $this->client->deleteBucket(['Bucket' => $this->bucket]);
+    }
+
+    private function createFilesystem(array $adapterOptions = [])
+    {
+        $this->filesystem = new Filesystem(new AwsS3($this->client, $this->bucket, $adapterOptions));
     }
 
     /**
@@ -44,74 +84,76 @@ class AwsS3Test extends \PHPUnit_Framework_TestCase
      */
     public function testThrowsExceptionIfBucketMissingAndNotCreating()
     {
-        $mock = new MockPlugin(array(new Response(404)));
-        $client = $this->getClient();
-        $client->addSubscriber($mock);
-        $adapter = new AwsS3($client, 'bucket');
-        $adapter->read('foo');
+        $this->createFilesystem();
+        $this->filesystem->read('foo');
     }
 
     public function testWritesObjects()
     {
-        $mock = new MockPlugin(array(
-            new Response(200), // HEAD bucket response
-            new Response(201)  // PUT object response
-        ));
-        $client = $this->getClient();
-        $client->addSubscriber($mock);
-        $adapter = new AwsS3($client, 'bucket');
-        $this->assertEquals(7, $adapter->write('foo', 'testing'));
-        $requests = $mock->getReceivedRequests();
-        $this->assertEquals('bucket.s3.amazonaws.com', $requests[1]->getHost());
-        $this->assertEquals('PUT', $requests[1]->getMethod());
+        $this->assertEquals(7, $this->filesystem->write('foo', 'testing'));
     }
 
     public function testChecksForObjectExistence()
     {
-        $mock = new MockPlugin(array(new Response(200)));
-        $client = $this->getClient();
-        $client->addSubscriber($mock);
-        $adapter = new AwsS3($client, 'bucket');
-        $this->assertTrue($adapter->exists('foo'));
-        $requests = $mock->getReceivedRequests();
-        $this->assertEquals('bucket.s3.amazonaws.com', $requests[0]->getHost());
-        $this->assertEquals('HEAD', $requests[0]->getMethod());
-        $this->assertEquals('/foo', $requests[0]->getResource());
+        $this->filesystem->write('foo', '');
+        $this->assertTrue($this->filesystem->has('foo'));
     }
 
     public function testGetsObjectUrls()
     {
-        $client = $this->getClient();
-        $adapter = new AwsS3($client, 'bucket');
-        $this->assertEquals('https://bucket.s3.amazonaws.com/foo', $adapter->getUrl('foo'));
+        $this->assertNotEmpty($this->filesystem->getAdapter()->getUrl('foo'));
     }
 
     public function testChecksForObjectExistenceWithDirectory()
     {
-        $mock = new MockPlugin(array(new Response(200)));
-        $client = $this->getClient();
-        $client->addSubscriber($mock);
-        $adapter = new AwsS3($client, 'bucket', array('directory' => 'bar'));
-        $this->assertTrue($adapter->exists('foo'));
-        $requests = $mock->getReceivedRequests();
-        $this->assertEquals('bucket.s3.amazonaws.com', $requests[0]->getHost());
-        $this->assertEquals('HEAD', $requests[0]->getMethod());
-        $this->assertEquals('/bar/foo', $requests[0]->getResource());
+        $this->createFilesystem(['directory' => 'bar', 'create' => true]);
+        $this->filesystem->write('foo', '');
+
+        $this->assertTrue($this->filesystem->has('foo'));
     }
 
     public function testGetsObjectUrlsWithDirectory()
     {
-        $client = $this->getClient();
-        $adapter = new AwsS3($client, 'bucket', array('directory' => 'bar'));
-        $this->assertEquals('https://bucket.s3.amazonaws.com/bar/foo', $adapter->getUrl('foo'));
+        $this->createFilesystem(['directory' => 'bar']);
+        $this->assertNotEmpty($this->filesystem->getAdapter()->getUrl('foo'));
     }
 
-    public function shouldListKeysWithoutDirectory()
+    public function testListKeysWithoutDirectory()
     {
-        $client = $this->getClient();
-        $adapter = new AwsS3($client, 'bucket', array('directory' => 'bar'));
-        $adapter->write('test.txt', 'some content');
-        $keys = $adapter->listKeys();
-        $this->assertEquals('test.txt', $keys['key']);
+        $this->assertEquals([], $this->filesystem->listKeys());
+        $this->filesystem->write('test.txt', 'some content');
+        $this->assertEquals(['test.txt'], $this->filesystem->listKeys());
+    }
+
+    public function testListKeysWithDirectory()
+    {
+        $this->createFilesystem(['create' => true, 'directory' => 'root/']);
+        $this->filesystem->write('test.txt', 'some content');
+        $this->assertEquals(['test.txt'], $this->filesystem->listKeys());
+        $this->assertTrue($this->filesystem->has('test.txt'));
+    }
+
+    public function testKeysWithoutDirectory()
+    {
+        $this->filesystem->write('test.txt', 'some content');
+        $this->assertEquals(['test.txt'], $this->filesystem->keys());
+    }
+
+    public function testKeysWithDirectory()
+    {
+        $this->createFilesystem(['create' => true, 'directory' => 'root/']);
+        $this->filesystem->write('test.txt', 'some content');
+        $this->assertEquals(['test.txt'], $this->filesystem->keys());
+    }
+
+    public function testUploadWithGivenContentType()
+    {
+        /** @var AwsS3 $adapter */
+        $adapter = $this->filesystem->getAdapter();
+
+        $adapter->setMetadata('foo', ['ContentType' => 'text/html']);
+        $this->filesystem->write('foo', '<html></html>');
+
+        $this->assertEquals('text/html', $this->filesystem->mimeType('foo'));
     }
 }

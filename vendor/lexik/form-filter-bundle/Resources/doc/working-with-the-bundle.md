@@ -1,5 +1,5 @@
-5. Working with the bundle
-==========================
+[5] Working with the bundle
+===========================
 
 i. Customize condition operator
 -------------------------------
@@ -112,7 +112,7 @@ ii. Filter customization
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
-If this option is defined the `QueryBuilderUpdater` won't trigger any event, but if will call the given closure instead.
+If this option is defined the `QueryBuilderUpdater` won't trigger any event, but it will call the given closure instead.
 
 The closure takes 3 parameters:
 
@@ -514,7 +514,7 @@ class OptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('item', new ItemFilterType(), array(
+        $builder->add('item', ItemFilterType::class, array(
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     $filterBuilder->leftJoin($alias . '.item', $joinAlias);

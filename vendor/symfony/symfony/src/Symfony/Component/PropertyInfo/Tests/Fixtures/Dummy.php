@@ -68,6 +68,13 @@ class Dummy extends ParentDummy
      */
     public $g;
 
+    /**
+     * This should not be removed.
+     *
+     * @var
+     */
+    public $emptyVar;
+
     public static function getStatic()
     {
     }
@@ -114,6 +121,10 @@ class Dummy extends ParentDummy
      * @return int
      */
     public function getId()
+    {
+    }
+
+    public function get123()
     {
     }
 }

@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block title %}
-    {{ "title_show"|trans({'%name%': admin.toString(object)|truncate(15) }, 'SonataAdminBundle') }}
+    {{ "title_show"|trans({'%name%': admin.toString(object)|truncate(50) }, 'SonataAdminBundle') }}
 {% endblock %}
 
 {% block navbar_title %}

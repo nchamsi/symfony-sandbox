@@ -21,7 +21,7 @@ namespace JMS\DiExtraBundle\Metadata;
 use Metadata\ClassMetadata as BaseClassMetadata;
 
 /**
- * class metadata
+ * class metadata.
  */
 class ClassMetadata extends BaseClassMetadata
 {
@@ -43,11 +43,17 @@ class ClassMetadata extends BaseClassMetadata
     public $initMethods = array();
     public $environments = array();
     public $decorates;
+    public $decorationInnerName;
+    /**
+     * @deprecated since version 1.8, to be removed in 2.0. Use $initMethods instead.
+     */
     public $decoration_inner_name;
     public $deprecated;
 
     public $autowire;
     public $autowiringTypes;
+
+    public $factoryMethods = array();
 
     /**
      * @param string $env
@@ -87,8 +93,10 @@ class ClassMetadata extends BaseClassMetadata
             $this->environments,
             $this->decorates,
             $this->decoration_inner_name,
+            $this->decorationInnerName,
             $this->deprecated,
             $this->initMethods,
+            $this->factoryMethods,
         ));
     }
 
@@ -119,9 +127,10 @@ class ClassMetadata extends BaseClassMetadata
             $this->environments,
             $this->decorates,
             $this->decoration_inner_name,
+            $this->decorationInnerName,
             $this->deprecated,
             $this->initMethods,
-        ) = $data;
+            $this->factoryMethods) = $data;
 
         parent::unserialize($parentStr);
     }

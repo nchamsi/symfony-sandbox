@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.29.44",
+    "Version": "2.1.37.1",
     "Names": {
         "AED": [
             "AED",
@@ -120,6 +120,10 @@
         "CLP": [
             "CLP",
             "Chili pesosi"
+        ],
+        "CNH": [
+            "CNH",
+            "CNH"
         ],
         "CNY": [
             "CN¥",
@@ -431,7 +435,7 @@
         ],
         "PEN": [
             "PEN",
-            "Peru yangi soli"
+            "Peru soli"
         ],
         "PGK": [
             "PGK",

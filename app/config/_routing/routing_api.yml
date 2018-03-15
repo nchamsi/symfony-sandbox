@@ -21,11 +21,6 @@ api_token_refresh:
 
 # API routes
 
-application_api_security:
-    resource: "@ApplicationApiSecurityBundle/Controller/Api/"
-    type:     annotation
-    prefix:   /
-
 app_api:
     resource: "@AppBundle/Controller/Api/"
     type:     annotation

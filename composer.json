@@ -1,10 +1,12 @@
 {
-    "name": "franklin/symfony-sandbox-3.x",
+    "name": "franklin/symfony-sandbox",
     "license": "proprietary",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "AppBundle\\": "src/AppBundle",
+            "Application\\": "src/Application",
+            "TechPromux\\": "src/TechPromux"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -21,7 +23,6 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "behat/mink-zombie-driver": "^1.4",
         "data-dog/audit-bundle": "^0.1.5",
         "doctrine/data-fixtures": "^1.2",
         "doctrine/doctrine-bundle": "^1.6",
@@ -31,11 +32,11 @@
         "doctrine/migrations": "^1.5",
         "doctrine/orm": "^2.5",
         "dunglas/api-bundle": "^2.0",
+        "evercodelab/dependent-select-bundle": "^1.0",
         "friendsofsymfony/jsrouting-bundle": "^1.6",
         "friendsofsymfony/rest-bundle": "^2.1",
         "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
         "gregwar/captcha-bundle": "^2.0",
-        "ideup/simple-paginator-bundle": "dev-master",
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/aop-bundle": "^1.2",
         "jms/di-extra-bundle": "^1.8",
@@ -49,15 +50,14 @@
         "mopa/bootstrap-bundle": "^3.1",
         "nelmio/api-doc-bundle": "^2.13",
         "nelmio/cors-bundle": "^1.5",
-        "phpdocumentor/reflection-docblock": "^3.1",
-        "sensio/distribution-bundle": "^5.0",
+        "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "shtumi/useful-bundle": "dev-master",
         "simplethings/entity-audit-bundle": "^1.0",
-        "sonata-project/admin-bundle": "^3.16",
+        "sonata-project/admin-bundle": "^3.18",
         "sonata-project/block-bundle": "^3.3",
         "sonata-project/cache-bundle": "^2.3",
         "sonata-project/classification-bundle": "^3.3",
+        "sonata-project/easy-extends-bundle": "^2.2",
         "sonata-project/formatter-bundle": "^3.2",
         "sonata-project/google-authenticator": "^1.0",
         "sonata-project/intl-bundle": "^2.3",
@@ -66,10 +66,10 @@
         "sonata-project/user-bundle": "dev-add_support_for_fos_user2",
         "stof/doctrine-extensions-bundle": "^1.2",
         "symfony/assetic-bundle": "^2.8",
-        "symfony/monolog-bundle": "^3.0.2",
+        "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3.10",
-        "symfony/symfony": "3.2.*",
+        "symfony/symfony": "3.3.*",
         "twig/twig": "^1.0||^2.0",
         "white-october/pagerfanta-bundle": "^1.0",
         "willdurand/hateoas": "^2.10",
@@ -79,14 +79,16 @@
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
+		
         "behat/behat": "^3.2",
         "behat/mink-extension": "^2.2",
         "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.3",
+        "behat/mink-zombie-driver": "^1.4",
         "behat/symfony2-extension": "^2.1",
         "behatch/contexts": "^2.1",
         "phpspec/phpspec": "^2.5",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8"			
     },
     "scripts": {
         "symfony-scripts": [

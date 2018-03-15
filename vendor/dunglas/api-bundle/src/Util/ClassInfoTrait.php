@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Util;
 
 use Doctrine\Common\Util\ClassUtils;
@@ -31,6 +33,6 @@ trait ClassInfoTrait
      */
     private function getObjectClass($object)
     {
-        return class_exists(ClassUtils::class) ? ClassUtils::getClass($object) : get_class($object);
+        return class_exists(ClassUtils::class) ? ClassUtils::getClass($object) : \get_class($object);
     }
 }

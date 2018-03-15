@@ -9,13 +9,18 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Extension;
 
 use ApiPlatform\Core\Api\FilterCollection;
+use ApiPlatform\Core\Api\FilterLocatorTrait;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Psr\Container\ContainerInterface;
 
 /**
  * Applies filters on a resource query.
@@ -23,22 +28,31 @@ use Doctrine\ORM\QueryBuilder;
  * @author Kévin Dunglas <dunglas@gmail.com>
  * @author Samuel ROZE <samuel.roze@gmail.com>
  */
-final class FilterExtension implements QueryCollectionExtensionInterface
+final class FilterExtension implements ContextAwareQueryCollectionExtensionInterface
 {
-    private $resourceMetadataFactory;
-    private $filters;
+    use FilterLocatorTrait;
 
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, FilterCollection $filters)
+    private $resourceMetadataFactory;
+
+    /**
+     * @param ContainerInterface|FilterCollection $filterLocator The new filter locator or the deprecated filter collection
+     */
+    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, $filterLocator)
     {
+        $this->setFilterLocator($filterLocator);
+
         $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->filters = $filters;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass = null, string $operationName = null, array $context = [])
     {
+        if (null === $resourceClass) {
+            throw new InvalidArgumentException('The "$resourceClass" parameter must not be null');
+        }
+
         $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
         $resourceFilters = $resourceMetadata->getCollectionOperationAttribute($operationName, 'filters', [], true);
 
@@ -46,10 +60,14 @@ final class FilterExtension implements QueryCollectionExtensionInterface
             return;
         }
 
-        foreach ($this->filters as $filterName => $filter) {
-            if ($filter instanceof FilterInterface && in_array($filterName, $resourceFilters)) {
-                $filter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operationName);
+        foreach ($resourceFilters as $filterId) {
+            if (!($filter = $this->getFilter($filterId)) instanceof FilterInterface) {
+                continue;
             }
+
+            $context['filters'] = $context['filters'] ?? [];
+
+            $filter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
         }
     }
 }

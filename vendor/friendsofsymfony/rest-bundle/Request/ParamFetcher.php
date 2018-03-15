@@ -125,7 +125,7 @@ class ParamFetcher implements ParamFetcherInterface
     protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict, $default)
     {
         $this->checkNotIncompatibleParams($param);
-        if ($default !== null && $default === $paramValue) {
+        if (null !== $default && $default === $paramValue) {
             return $paramValue;
         }
 
@@ -195,6 +195,10 @@ class ParamFetcher implements ParamFetcherInterface
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
     {
+        if (null === $param->getValue($this->getRequest(), null)) {
+            return;
+        }
+
         $params = $this->getParams();
         foreach ($param->getIncompatibilities() as $incompatibleParamName) {
             if (!array_key_exists($incompatibleParamName, $params)) {
@@ -202,7 +206,7 @@ class ParamFetcher implements ParamFetcherInterface
             }
             $incompatibleParam = $params[$incompatibleParamName];
 
-            if ($incompatibleParam->getValue($this->getRequest(), null) !== null) {
+            if (null !== $incompatibleParam->getValue($this->getRequest(), null)) {
                 $exceptionMessage = sprintf(
                     "'%s' param is incompatible with %s param.",
                     $param->getName(),
@@ -234,7 +238,7 @@ class ParamFetcher implements ParamFetcherInterface
     private function getRequest()
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request === null) {
+        if (null === $request) {
             throw new \RuntimeException('There is no current request.');
         }
 

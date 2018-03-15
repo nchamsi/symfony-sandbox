@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.28.79",
+    "Version": "2.1.37.5",
     "Names": {
         "AED": [
             "AED",
@@ -132,6 +132,10 @@
         "CLP": [
             "CLP",
             "Čīles peso"
+        ],
+        "CNH": [
+            "CNH",
+            "Ķīnas juaņa (ofšors)"
         ],
         "CNY": [
             "CN¥",
@@ -311,7 +315,7 @@
         ],
         "ISK": [
             "ISK",
-            "Īslandes krona"
+            "Islandes krona"
         ],
         "ITL": [
             "ITL",
@@ -519,7 +523,7 @@
         ],
         "PEN": [
             "PEN",
-            "Peru jaunais sols"
+            "Peru sols"
         ],
         "PGK": [
             "PGK",

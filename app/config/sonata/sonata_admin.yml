@@ -69,23 +69,23 @@ sonata_admin:
         show:    SonataAdminBundle:CRUD:show.html.twig
         edit:    SonataAdminBundle:CRUD:edit.html.twig
 
-        base_list_field:    ApplicationSonataAdminBundle:CRUD:base_list_field.html.twig
+        #base_list_field:    SonataAdminBundle:CRUD:base_list_field.html.twig
 
     dashboard:
         blocks:
             #- { position: left, type: sonata.admin.block.admin_list }
             #- { position: right, type: sonata.admin_doctrine_orm.block.audit}
-            - { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
+            #- { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
 
         groups:
             sonata.admin.group.administration:
                 label:           sonata_administration
                 label_catalogue: SonataAdminBundle
                 icon: '<i class="glyphicon glyphicon-user"></i>'
-                items: 
-                    - sonata.user.admin.user
-                    - sonata.user.admin.group
-                    - data_dog_audit.admin.audit_log
+                items:
+                    #- sonata.user.admin.user
+                    #- sonata.user.admin.group
+                    #- data_dog_audit.admin.audit_log
 
             sonata.admin.group.site_builder:
                 label:           sonata_page

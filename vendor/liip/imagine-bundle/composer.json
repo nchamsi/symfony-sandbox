@@ -19,7 +19,7 @@
     },
     "require": {
         "php": "^5.3.9|^7.0",
-        "imagine/Imagine": "^0.6.3,<0.7",
+        "imagine/Imagine": "^0.6.3|^0.7.0,<0.8",
         "symfony/asset": "~2.3|~3.0",
         "symfony/filesystem": "~2.3|~3.0",
         "symfony/finder": "~2.3|~3.0",
@@ -35,7 +35,7 @@
         "aws/aws-sdk-php": "~2.4",
         "doctrine/cache": "~1.1",
         "doctrine/orm": "~2.3",
-        "friendsofphp/php-cs-fixer": "~2.0",
+        "friendsofphp/php-cs-fixer": "~1.0",
         "phpunit/phpunit": "~4.3|~5.0",
         "psr/log": "~1.0",
         "satooshi/php-coveralls": "~1.0",
@@ -62,7 +62,8 @@
         "doctrine/mongodb-odm": "required to use mongodb-backed doctrine components",
         "league/flysystem": "required to use FlySystem data loader or cache resolver",
         "monolog/monolog": "A psr/log compatible logger is required to enable logging",
-        "twig/twig": "required to use the provided Twig extension. Version 1.12 or greater needed"
+        "twig/twig": "required to use the provided Twig extension. Version 1.12 or greater needed",
+        "enqueue/enqueue-bundle": "add if you like to process images in background"
     },
     "minimum-stability": "dev",
     "config": {

@@ -11,7 +11,7 @@ parameters:
     mailer_user:        service@symfony.com
     mailer_password:    service
 
-    locale:             es
+    locale:             en
 
     # App Options
     
@@ -20,7 +20,7 @@ parameters:
 
     # Sonata Media options
     
-    sonata_media.cdn.host:     %webapp_url%/uploads/media # http://127.0.0.1:8000/uploads/media
+    sonata_media.cdn.host:     /uploads/media # http://127.0.0.1:8000/uploads/media
 
     # lexik jwt
     jwt_token_ttl: 86400

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Filter;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
@@ -20,7 +22,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Lee Siong Chan <ahlee2326@me.com>
  */
-class RangeFilter extends AbstractFilter
+class RangeFilter extends AbstractContextAwareFilter
 {
     const PARAMETER_BETWEEN = 'between';
     const PARAMETER_GREATER_THAN = 'gt';
@@ -61,18 +63,18 @@ class RangeFilter extends AbstractFilter
     protected function filterProperty(string $property, $values, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
         if (
-            !is_array($values) ||
-            !$this->isPropertyEnabled($property) ||
+            !\is_array($values) ||
+            !$this->isPropertyEnabled($property, $resourceClass) ||
             !$this->isPropertyMapped($property, $resourceClass)
         ) {
             return;
         }
 
-        $alias = 'o';
+        $alias = $queryBuilder->getRootAliases()[0];
         $field = $property;
 
-        if ($this->isPropertyNested($property)) {
-            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator);
+        if ($this->isPropertyNested($property, $resourceClass)) {
+            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator, $resourceClass);
         }
 
         foreach ($values as $operator => $value) {
@@ -105,7 +107,7 @@ class RangeFilter extends AbstractFilter
             case self::PARAMETER_BETWEEN:
                 $rangeValue = explode('..', $value);
 
-                if (2 !== count($rangeValue)) {
+                if (2 !== \count($rangeValue)) {
                     $this->logger->notice('Invalid filter ignored', [
                         'exception' => new InvalidArgumentException(sprintf('Invalid format for "[%s]", expected "<min>..<max>"', $operator)),
                     ]);
@@ -127,7 +129,6 @@ class RangeFilter extends AbstractFilter
                     ->setParameter(sprintf('%s_2', $valueParameter), $rangeValue[1]);
 
                 break;
-
             case self::PARAMETER_GREATER_THAN:
                 if (!is_numeric($value)) {
                     $this->logger->notice('Invalid filter ignored', [
@@ -142,7 +143,6 @@ class RangeFilter extends AbstractFilter
                     ->setParameter($valueParameter, $value);
 
                 break;
-
             case self::PARAMETER_GREATER_THAN_OR_EQUAL:
                 if (!is_numeric($value)) {
                     $this->logger->notice('Invalid filter ignored', [
@@ -157,7 +157,6 @@ class RangeFilter extends AbstractFilter
                     ->setParameter($valueParameter, $value);
 
                 break;
-
             case self::PARAMETER_LESS_THAN:
                 if (!is_numeric($value)) {
                     $this->logger->notice('Invalid filter ignored', [
@@ -172,7 +171,6 @@ class RangeFilter extends AbstractFilter
                     ->setParameter($valueParameter, $value);
 
                 break;
-
             case self::PARAMETER_LESS_THAN_OR_EQUAL:
                 if (!is_numeric($value)) {
                     $this->logger->notice('Invalid filter ignored', [

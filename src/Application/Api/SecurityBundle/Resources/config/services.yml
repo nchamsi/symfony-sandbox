@@ -1,4 +1,0 @@
-services:
-#    application_api_security.example:
-#        class: Application\Api\SecurityBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
