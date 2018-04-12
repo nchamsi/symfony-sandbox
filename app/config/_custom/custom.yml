@@ -28,36 +28,3 @@ fos_user:
                 address:        no-reply@symfony.com
                 sender_name:    webmaster
         
-sonata_admin:
-
-    templates:
-        layout:             AppBundle:Admin:standard_layout.html.twig
-        base_list_field:    AppBundle:Admin:CRUD/base_list_field.html.twig
-
-    dashboard:
-        blocks:
-            #- { position: left, type: sonata.admin.block.admin_list }
-            #- { position: right, type: sonata.admin_doctrine_orm.block.audit}
-            - { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
-
-        groups:
-
-            admin:
-                label:           sonata_administration
-                label_catalogue: SonataAdminBundle
-                icon: '<i class="glyphicon glyphicon-user"></i>'
-                items:
-                    - sonata.user.admin.user
-                    - sonata.user.admin.group
-                    - data_dog_audit.admin.audit_log
-
-            user:
-                label: admin.dashboard.menu.user.label
-                label_catalogue: AppBundle
-                icon: '<i class="fa fa-list-alt"></i>'
-                roles: [ ROLE_USER ]
-                items:
-                #    - app.admin.entity
-
-
-

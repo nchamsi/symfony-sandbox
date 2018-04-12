@@ -1,0 +1,26 @@
+# related to app/config/security.yml
+
+security:
+    role_hierarchy:
+        
+        # sonata generated roles
+        
+#        ROLE_APP_ADMIN_ENTITY:
+#
+#            - ROLE_APP_ADMIN_ENTITY_LIST
+#            - ROLE_APP_ADMIN_ENTITY_VIEW
+#            - ROLE_APP_ADMIN_ENTITY_CREATE
+#            - ROLE_APP_ADMIN_ENTITY_EDIT
+#            - ROLE_APP_ADMIN_ENTITY_DELETE
+#            - ROLE_APP_ADMIN_ENTITY_EXPORT
+
+        # application roles
+
+        ROLE_APP_USER:
+            - ROLE_USER
+            - ROLE_DASHBOARD_USER            
+
+        ROLE_APP_ADMIN:
+            - ROLE_USER
+            - ROLE_ADMIN
+

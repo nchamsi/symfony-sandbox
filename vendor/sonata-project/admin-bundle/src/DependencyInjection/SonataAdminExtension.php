@@ -146,10 +146,6 @@ class SonataAdminExtension extends Extension implements PrependExtensionInterfac
             $loader->load('exporter.xml');
         }
 
-        $container->getDefinition('sonata.admin.exporter')->setDeprecated(
-            'The service "%service_id%" is deprecated in favor of the "sonata.exporter.exporter" service'
-        );
-
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -157,6 +153,7 @@ class SonataAdminExtension extends Extension implements PrependExtensionInterfac
         $config['options']['stylesheets'] = $this->buildStylesheets($config);
         $config['options']['role_admin'] = $config['security']['role_admin'];
         $config['options']['role_super_admin'] = $config['security']['role_super_admin'];
+        $config['options']['search'] = $config['search'];
 
         $pool = $container->getDefinition('sonata.admin.pool');
         $pool->replaceArgument(1, $config['title']);
@@ -290,6 +287,7 @@ class SonataAdminExtension extends Extension implements PrependExtensionInterfac
 
         // set filter persistence
         $container->setParameter('sonata.admin.configuration.filters.persist', $config['persist_filters']);
+        $container->setParameter('sonata.admin.configuration.filters.persister', $config['filter_persister']);
 
         $container->setParameter('sonata.admin.configuration.show.mosaic.button', $config['show_mosaic_button']);
 

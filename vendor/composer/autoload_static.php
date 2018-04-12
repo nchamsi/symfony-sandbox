@@ -15,9 +15,9 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
-        '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
+        '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
+        '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         'd11dcc0191a380951885e568af488540' => __DIR__ . '/..' . '/sonata-project/block-bundle/src/Resources/stubs/symfony2.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
         'ea499cad8830ec01a037ef53bd65fdd3' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php',
@@ -43,7 +43,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
             'Twig\\Extensions\\' => 16,
             'Twig\\' => 5,
             'Tests\\' => 6,
-            'TechPromux\\' => 11,
         ),
         'S' => 
         array (
@@ -204,9 +203,9 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
     public static $prefixDirsPsr4 = array (
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Zend\\EventManager\\' => 
         array (
@@ -235,10 +234,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         'Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
-        ),
-        'TechPromux\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/TechPromux',
         ),
         'Symfony\\Polyfill\\Util\\' => 
         array (
@@ -654,10 +649,10 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         ),
         'Behat\\Mink\\Driver\\' => 
         array (
-            0 => __DIR__ . '/..' . '/behat/mink-zombie-driver/src',
-            1 => __DIR__ . '/..' . '/behat/mink-browserkit-driver/src',
-            2 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
-            3 => __DIR__ . '/..' . '/behat/mink-selenium2-driver/src',
+            0 => __DIR__ . '/..' . '/behat/mink-browserkit-driver/src',
+            1 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
+            2 => __DIR__ . '/..' . '/behat/mink-selenium2-driver/src',
+            3 => __DIR__ . '/..' . '/behat/mink-zombie-driver/src',
         ),
         'Behat\\Mink\\' => 
         array (

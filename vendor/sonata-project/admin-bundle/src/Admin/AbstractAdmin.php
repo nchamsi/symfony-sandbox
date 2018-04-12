@@ -25,6 +25,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\Pager;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Filter\Persister\FilterPersisterInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
@@ -33,6 +34,7 @@ use Sonata\AdminBundle\Route\RouteGeneratorInterface;
 use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
 use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Templating\MutableTemplateRegistryInterface;
 use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
 use Sonata\CoreBundle\Model\Metadata;
 use Sonata\CoreBundle\Validator\Constraints\InlineConstraint;
@@ -169,7 +171,7 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
      *
      * @var array
      */
-    protected $perPageOptions = [16, 32, 64, 128, 192];
+    protected $perPageOptions = [16, 32, 64, 128, 256];
 
     /**
      * Pager type.
@@ -195,7 +197,11 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
     /**
      * Whether or not to persist the filters in the session.
      *
+     * NEXT_MAJOR: remove this property
+     *
      * @var bool
+     *
+     * @deprecated since 3.34, to be removed in 4.0.
      */
     protected $persistFilters = false;
 
@@ -399,6 +405,8 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
 
     /**
      * @var array
+     *
+     * @deprecated since 3.34, will be dropped in 4.0. Use TemplateRegistry services instead
      */
     protected $templates = [];
 
@@ -452,6 +460,11 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
      * @var array [action1 => requiredRole1, action2 => [requiredRole2, requiredRole3]]
      */
     protected $accessMapping = [];
+
+    /**
+     * @var MutableTemplateRegistryInterface
+     */
+    private $templateRegistry;
 
     /**
      * The class name managed by the admin class.
@@ -544,6 +557,13 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
      * @var BreadcrumbsBuilderInterface
      */
     private $breadcrumbsBuilder;
+
+    /**
+     * Component responsible for persisting filters.
+     *
+     * @var FilterPersisterInterface|null
+     */
+    private $filterPersister;
 
     /**
      * @param string $code
@@ -734,12 +754,20 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
         if ($this->hasRequest()) {
             $filters = $this->request->query->get('filter', []);
 
-            // if persisting filters, save filters to session, or pull them out of session if no new filters set
-            if ($this->persistFilters) {
-                if ($filters == [] && 'reset' != $this->request->query->get('filters')) {
-                    $filters = $this->request->getSession()->get($this->getCode().'.filter.parameters', []);
+            // if filter persistence is configured
+            // NEXT_MAJOR: remove `$this->persistFilters !== false` from the condition
+            if (false !== $this->persistFilters && null !== $this->filterPersister) {
+                // if reset filters is asked, remove from storage
+                if ('reset' === $this->request->query->get('filters')) {
+                    $this->filterPersister->reset($this->getCode());
+                }
+
+                // if no filters, fetch from storage
+                // otherwise save to storage
+                if (empty($filters)) {
+                    $filters = $this->filterPersister->get($this->getCode());
                 } else {
-                    $this->request->getSession()->set($this->getCode().'.filter.parameters', $filters);
+                    $this->filterPersister->set($this->getCode(), $filters);
                 }
             }
 
@@ -1124,9 +1152,17 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
         return $this->routeGenerator->generateMenuUrl($this, $name, $parameters, $absolute);
     }
 
+    final public function setTemplateRegistry(MutableTemplateRegistryInterface $templateRegistry)
+    {
+        $this->templateRegistry = $templateRegistry;
+    }
+
     public function setTemplates(array $templates)
     {
+        // NEXT_MAJOR: Remove this line
         $this->templates = $templates;
+
+        $this->getTemplateRegistry()->setTemplates($templates);
     }
 
     /**
@@ -1135,22 +1171,32 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
      */
     public function setTemplate($name, $template)
     {
+        // NEXT_MAJOR: Remove this line
         $this->templates[$name] = $template;
+
+        $this->getTemplateRegistry()->setTemplate($name, $template);
     }
 
     /**
+     * @deprecated since 3.34, will be dropped in 4.0. Use TemplateRegistry services instead
+     *
      * @return array
      */
     public function getTemplates()
     {
-        return $this->templates;
+        return $this->getTemplateRegistry()->getTemplates();
     }
 
+    /**
+     * @deprecated since 3.34, will be dropped in 4.0. Use TemplateRegistry services instead
+     *
+     * @param string $name
+     *
+     * @return null|string
+     */
     public function getTemplate($name)
     {
-        if (isset($this->templates[$name])) {
-            return $this->templates[$name];
-        }
+        return $this->getTemplateRegistry()->getTemplate($name);
     }
 
     public function getNewInstance()
@@ -1363,10 +1409,29 @@ abstract class AbstractAdmin implements AdminInterface, DomainObjectInterface, A
 
     /**
      * @param bool $persist
+     *
+     * NEXT_MAJOR: remove this method
+     *
+     * @deprecated since 3.34, to be removed in 4.0.
      */
     public function setPersistFilters($persist)
     {
+        @trigger_error(
+            'The '.__METHOD__.' method is deprecated since version 3.34 and will be removed in 4.0.',
+            E_USER_DEPRECATED
+        );
+
         $this->persistFilters = $persist;
+    }
+
+    /**
+     * @param FilterPersisterInterface|null $filterPersister
+     */
+    public function setFilterPersister(FilterPersisterInterface $filterPersister = null)
+    {
+        $this->filterPersister = $filterPersister;
+        // NEXT_MAJOR remove the deprecated property will be removed. Needed for persisted filter condition.
+        $this->persistFilters = true;
     }
 
     /**
@@ -2493,7 +2558,9 @@ EOT;
             && $this->hasRoute('create')
         ) {
             $list['create'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_create'),
+//                'template' => $this->getTemplateRegistry()->getTemplate('button_create'),
             ];
         }
 
@@ -2502,7 +2569,9 @@ EOT;
             && $this->hasRoute('edit')
         ) {
             $list['edit'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_edit'),
+                //'template' => $this->getTemplateRegistry()->getTemplate('button_edit'),
             ];
         }
 
@@ -2511,7 +2580,9 @@ EOT;
             && $this->hasRoute('history')
         ) {
             $list['history'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_history'),
+                // 'template' => $this->getTemplateRegistry()->getTemplate('button_history'),
             ];
         }
 
@@ -2521,7 +2592,9 @@ EOT;
             && $this->hasRoute('acl')
         ) {
             $list['acl'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_acl'),
+                // 'template' => $this->getTemplateRegistry()->getTemplate('button_acl'),
             ];
         }
 
@@ -2531,7 +2604,9 @@ EOT;
             && $this->hasRoute('show')
         ) {
             $list['show'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_show'),
+                // 'template' => $this->getTemplateRegistry()->getTemplate('button_show'),
             ];
         }
 
@@ -2540,7 +2615,9 @@ EOT;
             && $this->hasRoute('list')
         ) {
             $list['list'] = [
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('button_list'),
+                // 'template' => $this->getTemplateRegistry()->getTemplate('button_list'),
             ];
         }
 
@@ -2580,7 +2657,9 @@ EOT;
             $actions['create'] = [
                 'label' => 'link_add',
                 'translation_domain' => 'SonataAdminBundle',
+                // NEXT_MAJOR: Remove this line and use commented line below it instead
                 'template' => $this->getTemplate('action_create'),
+                // 'template' => $this->getTemplateRegistry()->getTemplate('action_create'),
                 'url' => $this->generateUrl('create'),
                 'icon' => 'plus-circle',
             ];
@@ -2655,6 +2734,14 @@ EOT;
     public function canAccessObject($action, $object)
     {
         return $object && $this->id($object) && $this->hasAccess($action, $object);
+    }
+
+    /**
+     * @return MutableTemplateRegistryInterface
+     */
+    final protected function getTemplateRegistry()
+    {
+        return $this->templateRegistry;
     }
 
     /**
@@ -2780,7 +2867,9 @@ EOT;
             );
 
             $fieldDescription->setAdmin($this);
+            // NEXT_MAJOR: Remove this line and use commented line below it instead
             $fieldDescription->setTemplate($this->getTemplate('batch'));
+            // $fieldDescription->setTemplate($this->getTemplateRegistry()->getTemplate('batch'));
 
             $mapper->add($fieldDescription, 'batch');
         }
@@ -2804,7 +2893,9 @@ EOT;
             );
 
             $fieldDescription->setAdmin($this);
+            // NEXT_MAJOR: Remove this line and use commented line below it instead
             $fieldDescription->setTemplate($this->getTemplate('select'));
+            // $fieldDescription->setTemplate($this->getTemplateRegistry()->getTemplate('select'));
 
             $mapper->add($fieldDescription, 'select');
         }

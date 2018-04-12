@@ -47,14 +47,18 @@ class TypeGuesser extends AbstractTypeGuesser
         switch ($metadata->getTypeOfField($propertyName)) {
             case 'array':
             case 'json':
+            case 'json_array':
                 return new TypeGuess('array', [], Guess::HIGH_CONFIDENCE);
             case 'boolean':
                 return new TypeGuess('boolean', [], Guess::HIGH_CONFIDENCE);
             case 'datetime':
+            case 'datetime_immutable':
             case 'vardatetime':
             case 'datetimetz':
+            case 'datetimetz_immutable':
                 return new TypeGuess('datetime', [], Guess::HIGH_CONFIDENCE);
             case 'date':
+            case 'date_immutable':
                 return new TypeGuess('date', [], Guess::HIGH_CONFIDENCE);
             case 'decimal':
             case 'float':
@@ -68,6 +72,7 @@ class TypeGuesser extends AbstractTypeGuesser
             case 'text':
                 return new TypeGuess('textarea', [], Guess::MEDIUM_CONFIDENCE);
             case 'time':
+            case 'time_immutable':
                 return new TypeGuess('time', [], Guess::HIGH_CONFIDENCE);
             default:
                 return new TypeGuess('text', [], Guess::LOW_CONFIDENCE);

@@ -15,9 +15,6 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new AppBundle\AppBundle(),
-
-            //-------------------------------------------------------------------
 
             // ADDITIONAL BUNDLES
 
@@ -58,7 +55,7 @@ class AppKernel extends Kernel
             //new Sonata\CacheBundle\SonataCacheBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
             new Sonata\ClassificationBundle\SonataClassificationBundle(),
-            new Sonata\NotificationBundle\SonataNotificationBundle(),
+            //new Sonata\NotificationBundle\SonataNotificationBundle(),
             new Sonata\DatagridBundle\SonataDatagridBundle(),
             //
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
@@ -83,7 +80,13 @@ class AppKernel extends Kernel
             # JWT Authorization
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
             new Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle(),
-        ];
+
+            //-------------------------------------------------------------------
+
+            new AppBundle\AppBundle(),
+
+            //-------------------------------------------------------------------
+	];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();

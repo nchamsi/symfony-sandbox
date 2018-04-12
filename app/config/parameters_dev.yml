@@ -11,7 +11,7 @@ parameters:
     mailer_user:        service@symfony.com
     mailer_password:    service
 
-    locale:             en
+    locale:             es
 
     # App Options
     

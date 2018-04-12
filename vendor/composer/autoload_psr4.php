@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'Zend\\EventManager\\' => array($vendorDir . '/zendframework/zend-eventmanager/src'),
     'Zend\\Code\\' => array($vendorDir . '/zendframework/zend-code/src'),
     'WhiteOctober\\PagerfantaBundle\\' => array($vendorDir . '/white-october/pagerfanta-bundle'),
@@ -14,7 +14,6 @@ return array(
     'Twig\\Extensions\\' => array($vendorDir . '/twig/extensions/src'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Tests\\' => array($baseDir . '/tests'),
-    'TechPromux\\' => array($baseDir . '/src/TechPromux'),
     'Symfony\\Polyfill\\Util\\' => array($vendorDir . '/symfony/polyfill-util'),
     'Symfony\\Polyfill\\Php70\\' => array($vendorDir . '/symfony/polyfill-php70'),
     'Symfony\\Polyfill\\Php56\\' => array($vendorDir . '/symfony/polyfill-php56'),
@@ -118,7 +117,7 @@ return array(
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
     'Buzz\\' => array($vendorDir . '/kriswallsmith/buzz/lib/Buzz'),
     'Behatch\\' => array($vendorDir . '/behatch/contexts/src'),
-    'Behat\\Mink\\Driver\\' => array($vendorDir . '/behat/mink-zombie-driver/src', $vendorDir . '/behat/mink-browserkit-driver/src', $vendorDir . '/behat/mink-goutte-driver/src', $vendorDir . '/behat/mink-selenium2-driver/src'),
+    'Behat\\Mink\\Driver\\' => array($vendorDir . '/behat/mink-browserkit-driver/src', $vendorDir . '/behat/mink-goutte-driver/src', $vendorDir . '/behat/mink-selenium2-driver/src', $vendorDir . '/behat/mink-zombie-driver/src'),
     'Behat\\Mink\\' => array($vendorDir . '/behat/mink/src'),
     'Bazinga\\Bundle\\HateoasBundle\\' => array($vendorDir . '/willdurand/hateoas-bundle'),
     'Application\\' => array($baseDir . '/src/Application'),
