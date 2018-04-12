@@ -5,8 +5,7 @@
     "autoload": {
         "psr-4": {
             "AppBundle\\": "src/AppBundle",
-            "Application\\": "src/Application",
-            "TechPromux\\": "src/TechPromux"
+            "Application\\": "src/Application"
         },
         "classmap": [
             "app/AppKernel.php",
