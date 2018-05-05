@@ -4,6 +4,9 @@
 twig:
     base_template_class: Sonata\CacheBundle\Twig\TwigTemplate14
 
+    form_themes:
+        - '@SonataCore/Form/datepicker.html.twig'
+
 #    form:
 #        resources:
 #            - 'SonataFormatterBundle:Form:formatter.html.twig'
