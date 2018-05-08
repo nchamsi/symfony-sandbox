@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Filter;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
@@ -31,18 +33,64 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @author Kévin Dunglas <dunglas@gmail.com>
  * @author Théo FIDRY <theo.fidry@gmail.com>
  */
-class OrderFilter extends AbstractFilter
+class OrderFilter extends AbstractContextAwareFilter
 {
+    const NULLS_SMALLEST = 'nulls_smallest';
+    const NULLS_LARGEST = 'nulls_largest';
+    const NULLS_DIRECTION_MAP = [
+        self::NULLS_SMALLEST => [
+            'ASC' => 'ASC',
+            'DESC' => 'DESC',
+        ],
+        self::NULLS_LARGEST => [
+            'ASC' => 'DESC',
+            'DESC' => 'ASC',
+        ],
+    ];
+
     /**
      * @var string Keyword used to retrieve the value
      */
     protected $orderParameterName;
 
-    public function __construct(ManagerRegistry $managerRegistry, RequestStack $requestStack, string $orderParameterName, LoggerInterface $logger = null, array $properties = null)
+    /**
+     * @param RequestStack|null $requestStack No prefix to prevent autowiring of this deprecated property
+     */
+    public function __construct(ManagerRegistry $managerRegistry, $requestStack = null, string $orderParameterName = 'order', LoggerInterface $logger = null, array $properties = null)
     {
+        if (null !== $properties) {
+            $properties = array_map(function ($propertyOptions) {
+                // shorthand for default direction
+                if (\is_string($propertyOptions)) {
+                    $propertyOptions = [
+                        'default_direction' => $propertyOptions,
+                    ];
+                }
+
+                return $propertyOptions;
+            }, $properties);
+        }
+
         parent::__construct($managerRegistry, $requestStack, $logger, $properties);
 
         $this->orderParameterName = $orderParameterName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
+    {
+        if (!isset($context['filters'][$this->orderParameterName]) || !\is_array($context['filters'][$this->orderParameterName])) {
+            $context['filters'] = null;
+            parent::apply($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+
+            return;
+        }
+
+        foreach ($context['filters'][$this->orderParameterName] as $property => $value) {
+            $this->filterProperty($property, $value, $queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+        }
     }
 
     /**
@@ -57,7 +105,7 @@ class OrderFilter extends AbstractFilter
             $properties = array_fill_keys($this->getClassMetadata($resourceClass)->getFieldNames(), null);
         }
 
-        foreach ($properties as $property => $defaultDirection) {
+        foreach ($properties as $property => $propertyOptions) {
             if (!$this->isPropertyMapped($property, $resourceClass)) {
                 continue;
             }
@@ -77,25 +125,34 @@ class OrderFilter extends AbstractFilter
      */
     protected function filterProperty(string $property, $direction, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
-        if (!$this->isPropertyEnabled($property) || !$this->isPropertyMapped($property, $resourceClass)) {
+        if (!$this->isPropertyEnabled($property, $resourceClass) || !$this->isPropertyMapped($property, $resourceClass)) {
             return;
         }
 
-        if (empty($direction) && isset($this->properties[$property])) {
+        if (empty($direction) && null !== $defaultDirection = $this->properties[$property]['default_direction'] ?? null) {
             // fallback to default direction
-            $direction = $this->properties[$property];
+            $direction = $defaultDirection;
         }
 
         $direction = strtoupper($direction);
-        if (!in_array($direction, ['ASC', 'DESC'])) {
+        if (!\in_array($direction, ['ASC', 'DESC'], true)) {
             return;
         }
 
-        $alias = 'o';
+        $alias = $queryBuilder->getRootAliases()[0];
         $field = $property;
 
-        if ($this->isPropertyNested($property)) {
-            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator);
+        if ($this->isPropertyNested($property, $resourceClass)) {
+            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator, $resourceClass);
+        }
+
+        if (null !== $nullsComparison = $this->properties[$property]['nulls_comparison'] ?? null) {
+            $nullsDirection = self::NULLS_DIRECTION_MAP[$nullsComparison][$direction];
+
+            $nullRankHiddenField = sprintf('_%s_%s_null_rank', $alias, $field);
+
+            $queryBuilder->addSelect(sprintf('CASE WHEN %s.%s IS NULL THEN 0 ELSE 1 END AS HIDDEN %s', $alias, $field, $nullRankHiddenField));
+            $queryBuilder->addOrderBy($nullRankHiddenField, $nullsDirection);
         }
 
         $queryBuilder->addOrderBy(sprintf('%s.%s', $alias, $field), $direction);
@@ -104,8 +161,11 @@ class OrderFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    protected function extractProperties(Request $request): array
+    protected function extractProperties(Request $request/*, string $resourceClass*/): array
     {
-        return $request->query->get($this->orderParameterName, []);
+        @trigger_error(sprintf('The use of "%s::extractProperties()" is deprecated since 2.2. Use the "filters" key of the context instead.', __CLASS__), E_USER_DEPRECATED);
+        $properties = $request->query->get($this->orderParameterName);
+
+        return \is_array($properties) ? $properties : [];
     }
 }

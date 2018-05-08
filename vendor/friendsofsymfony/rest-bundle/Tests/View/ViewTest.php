@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Victor Berchet <victor@suumit.com>
  */
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -106,7 +107,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         return [
             'null as data' => [null],
             'array as data' => [['foo' => 'bar']],
-            'function as data' => [function () {}],
+            'function as data' => [function () {
+            }],
         ];
     }
 
@@ -126,21 +128,25 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($format, $view->getFormat());
     }
 
+    /**
+     * @dataProvider viewWithHeadersProvider
+     */
     public function testSetHeaders()
     {
         $view = new View();
-        $headers = ['foo' => 'bar'];
-        $expected = ['foo' => ['bar'], 'cache-control' => ['no-cache']];
-        $view->setHeaders($headers);
-        $this->assertEquals($expected, $view->getHeaders());
+        $view->setHeaders(['foo' => 'bar']);
+
+        $headers = $view->getResponse()->headers;
+        $this->assertTrue($headers->has('foo'));
+        $this->assertEquals('bar', $headers->get('foo'));
     }
 
-    public function testHeadersInConstructorAreAssignedToResponseObject()
+    public function viewWithHeadersProvider()
     {
-        $headers = ['foo' => 'bar'];
-        $expected = ['foo' => ['bar'], 'cache-control' => ['no-cache']];
-        $view = new View(null, null, $headers);
-        $this->assertEquals($expected, $view->getHeaders());
+        return [
+            [(new View())->setHeaders(['foo' => 'bar'])],
+            [new View(null, null, ['foo' => 'bar'])],
+        ];
     }
 
     public function testSetStatusCode()

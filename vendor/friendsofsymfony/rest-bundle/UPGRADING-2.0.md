@@ -1,7 +1,7 @@
 Upgrading From 1.x To 2.0
 =========================
 
- * The `RedirectView` and `RouteRedirect` view classes were removed. Use
+ * The `RedirectView` and `RouteRedirectView` classes were removed. Use
    `View::createRedirect()` and `View::createRouteRedirect()` instead.
 
    **Note**: the default status code for a route redirect has changed from
@@ -198,8 +198,10 @@ Upgrading From 1.x To 2.0
    fos_rest:
       format_listener:
           rules:
-              - { path: ^/, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController } }
-              - { path: ^/, fallback_format: html } }
+              # instead of the the twig controller it can also be 'fos_rest.exception.controller:showAction' if the TwigBundle
+              # is not enabled or a custom exception controller that you configured in fos_rest.exception.exception_controller
+              - { path: ^/, fallback_format: json, attributes: { _controller: 'fos_rest.exception.twig_controller:showAction' } }
+              - { path: ^/, fallback_format: html }
    ```
 
  * `View::setSerializationContext` and `View::getSerializationContext`

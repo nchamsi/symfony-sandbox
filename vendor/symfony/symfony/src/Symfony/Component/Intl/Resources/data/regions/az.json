@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.28.79",
+    "Version": "2.1.37.1",
     "Names": {
         "AC": "Askenson adası",
         "AD": "Andorra",
@@ -56,7 +56,7 @@
         "CW": "Kurasao",
         "CX": "Milad adası",
         "CY": "Kipr",
-        "CZ": "Çex Respublikası",
+        "CZ": "Çexiya",
         "DE": "Almaniya",
         "DG": "Dieqo Qarsiya",
         "DJ": "Cibuti",
@@ -72,6 +72,7 @@
         "ER": "Eritreya",
         "ES": "İspaniya",
         "ET": "Efiopiya",
+        "EZ": "Avrozona",
         "FI": "Finlandiya",
         "FJ": "Fici",
         "FK": "Folklend adaları",

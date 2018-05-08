@@ -13,10 +13,12 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\AccessDeniedListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -25,7 +27,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
+class AccessDeniedListenerTest extends TestCase
 {
     /**
      * @dataProvider getFormatsDataProvider
@@ -77,7 +79,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException')
     {
         $exception = new AccessDeniedException();
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
+        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
         $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -97,7 +99,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setRequestFormat(key($formats));
         $exception = new \Exception('foo');
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
+        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
 
         $listener = new AccessDeniedListener($formats, null, 'foo');
         $listener->onKernelException($event);
@@ -139,7 +141,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
     {
         $exception = new AuthenticationException();
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
+        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
         $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');

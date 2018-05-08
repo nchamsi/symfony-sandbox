@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\EventListener;
 
 /**
@@ -18,14 +20,17 @@ namespace ApiPlatform\Core\EventListener;
  */
 final class EventPriorities
 {
+    // kernel.request
     const PRE_READ = 5;
     const POST_READ = 3;
     const PRE_DESERIALIZE = 3;
     const POST_DESERIALIZE = 1;
+    // kernel.view
     const PRE_VALIDATE = 65;
     const POST_VALIDATE = 63;
     const PRE_WRITE = 33;
     const POST_WRITE = 31;
     const PRE_RESPOND = 9;
+    // kernel.response
     const POST_RESPOND = 0;
 }

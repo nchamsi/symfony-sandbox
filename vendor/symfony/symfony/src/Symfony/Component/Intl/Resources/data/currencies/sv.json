@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.30.7",
+    "Version": "2.1.37.5",
     "Names": {
         "ADP": [
             "ADP",
@@ -260,6 +260,10 @@
         "CLP": [
             "CLP",
             "chilensk peso"
+        ],
+        "CNH": [
+            "CNH",
+            "CNH"
         ],
         "CNX": [
             "CNX",
@@ -779,7 +783,7 @@
         ],
         "PEN": [
             "PEN",
-            "peruansk nuevo sol"
+            "peruansk sol"
         ],
         "PES": [
             "PES",

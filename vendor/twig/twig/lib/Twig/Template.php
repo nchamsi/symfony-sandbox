@@ -27,20 +27,21 @@ abstract class Twig_Template
     const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
-    /**
-     * @internal
-     */
-    protected static $cache = array();
-
     protected $parent;
     protected $parents = array();
     protected $env;
     protected $blocks = array();
     protected $traits = array();
 
+    /**
+     * @internal
+     */
+    protected $extensions = array();
+
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
+        $this->extensions = $env->getExtensions();
     }
 
     /**
@@ -413,3 +414,5 @@ abstract class Twig_Template
      */
     abstract protected function doDisplay(array $context, array $blocks = array());
 }
+
+class_alias('Twig_Template', 'Twig\Template', false);

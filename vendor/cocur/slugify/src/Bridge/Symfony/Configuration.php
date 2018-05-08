@@ -26,8 +26,9 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('lowercase')->defaultTrue()->end()
-                ->scalarNode('separator')->defaultValue('-')->end()
+                ->booleanNode('lowercase')->end()
+                ->booleanNode('trim')->end()
+                ->scalarNode('separator')->end()
                 ->scalarNode('regexp')->end()
                 ->arrayNode('rulesets')->prototype('scalar')->end()
             ->end();

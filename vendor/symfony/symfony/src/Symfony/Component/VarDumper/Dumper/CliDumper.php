@@ -12,6 +12,7 @@
 namespace Symfony\Component\VarDumper\Dumper;
 
 use Symfony\Component\VarDumper\Cloner\Cursor;
+use Symfony\Component\VarDumper\Cloner\Stub;
 
 /**
  * CliDumper dumps variables for command line output.
@@ -155,7 +156,7 @@ class CliDumper extends AbstractDumper
 
         $this->line .= $this->style($style, $value, $attr);
 
-        $this->dumpLine($cursor->depth, true);
+        $this->endValue($cursor);
     }
 
     /**
@@ -171,7 +172,7 @@ class CliDumper extends AbstractDumper
         }
         if ('' === $str) {
             $this->line .= '""';
-            $this->dumpLine($cursor->depth, true);
+            $this->endValue($cursor);
         } else {
             $attr += array(
                 'length' => 0 <= $cut ? mb_strlen($str, 'UTF-8') + $cut : 0,
@@ -237,7 +238,11 @@ class CliDumper extends AbstractDumper
                     $lineCut = 0;
                 }
 
-                $this->dumpLine($cursor->depth, $i > $m);
+                if ($i > $m) {
+                    $this->endValue($cursor);
+                } else {
+                    $this->dumpLine($cursor->depth);
+                }
             }
         }
     }
@@ -280,7 +285,7 @@ class CliDumper extends AbstractDumper
     {
         $this->dumpEllipsis($cursor, $hasChild, $cut);
         $this->line .= Cursor::HASH_OBJECT === $type ? '}' : (Cursor::HASH_RESOURCE !== $type ? ']' : ($hasChild ? '}' : ''));
-        $this->dumpLine($cursor->depth, true);
+        $this->endValue($cursor);
     }
 
     /**
@@ -324,6 +329,7 @@ class CliDumper extends AbstractDumper
                         break;
                     }
                     $style = 'index';
+                    // no break
                 case Cursor::HASH_ASSOC:
                     if (is_int($key)) {
                         $this->line .= $this->style($style, $key).' => ';
@@ -334,7 +340,7 @@ class CliDumper extends AbstractDumper
 
                 case Cursor::HASH_RESOURCE:
                     $key = "\0~\0".$key;
-                    // No break;
+                    // no break
                 case Cursor::HASH_OBJECT:
                     if (!isset($key[0]) || "\0" !== $key[0]) {
                         $this->line .= '+'.$bin.$this->style('public', $key).': ';
@@ -485,5 +491,18 @@ class CliDumper extends AbstractDumper
             $this->line = sprintf("\033[%sm%s\033[m", $this->styles['default'], $this->line);
         }
         parent::dumpLine($depth);
+    }
+
+    protected function endValue(Cursor $cursor)
+    {
+        if (Stub::ARRAY_INDEXED === $cursor->hashType || Stub::ARRAY_ASSOC === $cursor->hashType) {
+            if (self::DUMP_TRAILING_COMMA & $this->flags && 0 < $cursor->depth) {
+                $this->line .= ',';
+            } elseif (self::DUMP_COMMA_SEPARATOR & $this->flags && 1 < $cursor->hashLength - $cursor->hashIndex) {
+                $this->line .= ',';
+            }
+        }
+
+        $this->dumpLine($cursor->depth, true);
     }
 }

@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="es" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="log.new_action">
+                <source>log.new_action</source>
+                <target>New</target>
+            </trans-unit>
+            <trans-unit id="log.new_action_label">
+                <source>log.new_action_label</source>
+                <target>was inserted</target>
+            </trans-unit>
+            <trans-unit id="log.update_action_label">
+                <source>log.update_action_label</source>
+                <target>was updated</target>
+            </trans-unit>
+            <trans-unit id="log.remove_action_label">
+                <source>log.remove_action_label</source>
+                <target>was removed</target>
+            </trans-unit>
+            <trans-unit id="list.label_source__typ_label">
+                <source>list.label_source__typ_label</source>
+                <target>Actions</target>
+            </trans-unit>   	
+            <trans-unit id="list.label_blame_label">
+                <source>list.label_blame_label</source>
+                <target>User</target>
+            </trans-unit>  
+            <trans-unit id="list.label_logged_at">
+                <source>list.label_logged_at</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="list.label_hora">
+                <source>list.label_hora</source>
+                <target>Time</target>
+            </trans-unit>
+            <trans-unit id="list.label_ip">
+                <source>list.label_ip</source>
+                <target>IP</target>
+            </trans-unit>
+            <trans-unit id="log.associate_action_label">
+                <source>log.associate_action_label</source>
+                <target>was linked to</target>
+            </trans-unit>
+            <trans-unit id="log.dissociate_action_label">
+                <source>log.dissociate_action_label</source>
+                <target>was unlinked to</target>
+            </trans-unit>
+            <trans-unit id="log.user">
+                <source>log.user</source>
+                <target>User</target>
+            </trans-unit>                   
+            <trans-unit id="System Logs">
+                <source>System Logs</source>
+                <target>System logs</target>
+            </trans-unit>                   
+            <trans-unit id="breadcrumb.link_audit_log_list">
+                <source>breadcrumb.link_audit_log_list</source>
+                <target>System logs</target>
+            </trans-unit>                   
+            <trans-unit id="filter.label_created_at_start">
+                <source>filter.label_created_at_start</source>
+                <target>Since</target>
+            </trans-unit>                   
+            <trans-unit id="filter.label_created_at_end">
+                <source>filter.label_created_at_end</source>
+                <target>Until</target>
+            </trans-unit>                   
+            <trans-unit id="log.last_login">
+                <source>log.last_login</source>
+                <target>Last Access</target>
+            </trans-unit>                   
+            <trans-unit id="log.updated_at">
+                <source>log.updated_at</source>
+                <target>Updated</target>
+            </trans-unit>                   
+            <trans-unit id="log.created_at">
+                <source>log.created_at</source>
+                <target>Created</target>
+            </trans-unit>                   
+            <trans-unit id="User">
+                <source>User</source>
+                <target>User</target>
+            </trans-unit>                   
+            <trans-unit id="IP">
+                <source>IP</source>
+                <target>IP</target>
+            </trans-unit>                   
+            <trans-unit id="Field">
+                <source>Field</source>
+                <target>Field</target>
+            </trans-unit>                   
+            <trans-unit id="Fields">
+                <source>Fields</source>
+                <target>Fields</target>
+            </trans-unit>                   
+            <trans-unit id="Old">
+                <source>Old</source>
+                <target>Old Value</target>
+            </trans-unit>                   
+            <trans-unit id="New">
+                <source>New</source>
+                <target>New Value</target>
+            </trans-unit>                   
+            <trans-unit id="was authenticated in system">
+                <source>was authenticated in system</source>
+                <target>was authenticated in system</target>
+            </trans-unit>                   
+            
+            <!--
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>                   
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>                   
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>                   
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>                   
+            <trans-unit id="">
+                <source></source>
+                <target></target>
+            </trans-unit>                   
+            -->
+        </body>
+    </file>
+</xliff>

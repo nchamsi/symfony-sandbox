@@ -517,7 +517,7 @@ if ( typeof Symbol === "function" ) {
 }
 
 // Populate the class2type map
-jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
+jQuery.each( "Boolean Number String FieldFunction Array Date RegExp Object Error Symbol".split( " " ),
 function( i, name ) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 } );
@@ -10749,10 +10749,10 @@ var isArray = Array.isArray;
  * @kind function
  *
  * @description
- * Determines if a reference is a `Function`.
+ * Determines if a reference is a `FieldFunction`.
  *
  * @param {*} value Reference to check.
- * @returns {boolean} True if `value` is a `Function`.
+ * @returns {boolean} True if `value` is a `FieldFunction`.
  */
 function isFunction(value) {return typeof value === 'function';}
 
@@ -11301,9 +11301,9 @@ function sliceArgs(args, startIndex) {
  * distinguished from [function currying](http://en.wikipedia.org/wiki/Currying#Contrast_with_partial_function_application).
  *
  * @param {Object} self Context which `fn` should be evaluated in.
- * @param {function()} fn Function to be bound.
+ * @param {function()} fn FieldFunction to be bound.
  * @param {...*} args Optional arguments to be prebound to the `fn` function call.
- * @returns {function()} Function that wraps the `fn` with all the specified bindings.
+ * @returns {function()} FieldFunction that wraps the `fn` with all the specified bindings.
  */
 /* jshint +W101 */
 function bind(self, fn) {
@@ -12214,7 +12214,7 @@ function setupModuleLoader(window) {
            * @name angular.Module#factory
            * @module ng
            * @param {string} name service name
-           * @param {Function} providerFunction Function for creating new instance of the service.
+           * @param {Function} providerFunction FieldFunction for creating new instance of the service.
            * @description
            * See {@link auto.$provide#factory $provide.factory()}.
            */
@@ -14066,7 +14066,7 @@ function annotate(fn, strictDi, name) {
  *   })).toBe($injector);
  * ```
  *
- * # Injection Function Annotation
+ * # Injection FieldFunction Annotation
  *
  * JavaScript does not have annotations, and annotations are needed for dependency injection. The
  * following are all valid ways of annotating function with injection arguments and are equivalent.
@@ -14118,7 +14118,7 @@ function annotate(fn, strictDi, name) {
  * @description
  * Invoke the method and supply the method arguments from the `$injector`.
  *
- * @param {Function|Array.<string|Function>} fn The injectable function to invoke. Function parameters are
+ * @param {Function|Array.<string|Function>} fn The injectable function to invoke. FieldFunction parameters are
  *   injected according to the {@link guide/di $inject Annotation} rules.
  * @param {Object=} self The `this` for the invoked method.
  * @param {Object=} locals Optional object. If preset then any argument names are read from this
@@ -14227,7 +14227,7 @@ function annotate(fn, strictDi, name) {
  *    ).toEqual(['$compile', '$rootScope']);
  * ```
  *
- * @param {Function|Array.<string|Function>} fn Function for which dependent service names need to
+ * @param {Function|Array.<string|Function>} fn FieldFunction for which dependent service names need to
  * be retrieved as described above.
  *
  * @param {boolean=} [strictDi=false] Disallow argument name annotation inference.
@@ -16058,7 +16058,7 @@ function Browser(window, document, $log, $sniffer) {
    * @private
    * Note: this method is used only by scenario runner
    * TODO(vojta): prefix this method with $$ ?
-   * @param {function()} callback Function that will be called when no outstanding request
+   * @param {function()} callback FieldFunction that will be called when no outstanding request
    */
   self.notifyWhenNoOutstandingRequests = function(callback) {
     if (outstandingRequestCount === 0) {
@@ -18395,7 +18395,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
        * changes.
        *
        * @param {string} key Normalized key. (ie ngAttribute) .
-       * @param {function(interpolatedValue)} fn Function that will be called whenever
+       * @param {function(interpolatedValue)} fn FieldFunction that will be called whenever
                 the interpolated value of the attribute changes.
        *        See the {@link guide/interpolation#how-text-and-attribute-bindings-work Interpolation
        *        guide} for more info.
@@ -20236,7 +20236,7 @@ function nodesetLinkingFn(
   /* angular.Scope */ scope,
   /* NodeList */ nodeList,
   /* Element */ rootElement,
-  /* function(Function) */ boundTranscludeFn
+  /* function(FieldFunction) */ boundTranscludeFn
 ) {}
 
 function directiveLinkingFn(
@@ -20244,7 +20244,7 @@ function directiveLinkingFn(
   /* angular.Scope */ scope,
   /* Node */ node,
   /* Element */ rootElement,
-  /* function(Function) */ boundTranscludeFn
+  /* function(FieldFunction) */ boundTranscludeFn
 ) {}
 
 function tokenDifference(str1, str2) {
@@ -20787,7 +20787,7 @@ function headersGetter(headers) {
  * @param {*} data Data to transform.
  * @param {function(string=)} headers HTTP headers getter fn.
  * @param {number} status HTTP status code of the response.
- * @param {(Function|Array.<Function>)} fns Function or an array of functions.
+ * @param {(Function|Array.<Function>)} fns FieldFunction or an array of functions.
  * @returns {*} Transformed data.
  */
 function transformData(data, headers, status, fns) {
@@ -24020,7 +24020,7 @@ var $parseMinErr = minErr('$parse');
 // ------------------------------
 // Angular expressions are generally considered safe because these expressions only have direct
 // access to `$scope` and locals. However, one can obtain the ability to execute arbitrary JS code by
-// obtaining a reference to native JS functions such as the Function constructor.
+// obtaining a reference to native JS functions such as the FieldFunction constructor.
 //
 // As an example, consider the following Angular expression:
 //
@@ -24070,11 +24070,11 @@ function getStringValue(name) {
 }
 
 function ensureSafeObject(obj, fullExpression) {
-  // nifty check if obj is Function that is fast and works across iframes and other contexts
+  // nifty check if obj is FieldFunction that is fast and works across iframes and other contexts
   if (obj) {
     if (obj.constructor === obj) {
       throw $parseMinErr('isecfn',
-          'Referencing Function in Angular expressions is disallowed! Expression: {0}',
+          'Referencing FieldFunction in Angular expressions is disallowed! Expression: {0}',
           fullExpression);
     } else if (// isWindow(obj)
         obj.window === obj) {
@@ -24104,7 +24104,7 @@ function ensureSafeFunction(obj, fullExpression) {
   if (obj) {
     if (obj.constructor === obj) {
       throw $parseMinErr('isecfn',
-        'Referencing Function in Angular expressions is disallowed! Expression: {0}',
+        'Referencing FieldFunction in Angular expressions is disallowed! Expression: {0}',
         fullExpression);
     } else if (obj === CALL || obj === APPLY || obj === BIND) {
       throw $parseMinErr('isecff',
@@ -26351,7 +26351,7 @@ function $ParseProvider() {
  *    }));
  *  ```
  *
- * @param {function(function, function)} resolver Function which is responsible for resolving or
+ * @param {function(function, function)} resolver FieldFunction which is responsible for resolving or
  *   rejecting the newly created promise. The first parameter is a function which resolves the
  *   promise, the second parameter is a function which rejects the promise.
  *
@@ -26377,8 +26377,8 @@ function $$QProvider() {
 /**
  * Constructs a promise manager.
  *
- * @param {function(function)} nextTick Function for executing functions in the next turn.
- * @param {function(...*)} exceptionHandler Function into which unexpected exceptions are passed for
+ * @param {function(function)} nextTick FieldFunction for executing functions in the next turn.
+ * @param {function(...*)} exceptionHandler FieldFunction into which unexpected exceptions are passed for
  *     debugging purposes.
  * @returns {object} Promise manager.
  */
@@ -27920,7 +27920,7 @@ function $RootScopeProvider() {
        *   - `defaultPrevented` - `{boolean}`: true if `preventDefault` was called.
        *
        * @param {string} name Event name to listen on.
-       * @param {function(event, ...args)} listener Function to call when the event is emitted.
+       * @param {function(event, ...args)} listener FieldFunction to call when the event is emitted.
        * @returns {function()} Returns a deregistration function for this listener.
        */
       $on: function(name, listener) {
@@ -32930,7 +32930,7 @@ var ISO_DATE_REGEXP = /^\d{4,}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+(?:[+-
 //   5. Hostname
 //   6. Port
 //   7. Path
-//   8. Query
+//   8. DataModel
 //   9. Fragment
 //                 1111111111111111 222   333333    44444        555555555555555555555555    666     77777777     8888888     999
 var URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
@@ -42642,9 +42642,9 @@ angular.scenario.Describe.prototype.xit = angular.noop;
  *   definition : Object // parent Describe
  *   only: boolean
  *   name: string
- *   before: Function
- *   body: Function
- *   after: Function
+ *   before: FieldFunction
+ *   body: FieldFunction
+ *   after: FieldFunction
  *  }
  */
 angular.scenario.Describe.prototype.getSpecs = function() {
@@ -42852,7 +42852,7 @@ angular.scenario.ObjectModel = function(runner) {
  * Adds a listener for an event.
  *
  * @param {string} eventName Name of the event to add a handler for
- * @param {function()} listener Function that will be called when event is fired
+ * @param {function()} listener FieldFunction that will be called when event is fired
  */
 angular.scenario.ObjectModel.prototype.on = function(eventName, listener) {
   eventName = eventName.toLowerCase();
@@ -43225,7 +43225,7 @@ angular.scenario.SpecRunner = function() {
  *
  * @param {Object} spec A spec object
  * @param {function()} specDone function that is called when the spec finishes,
- *                              of the form `Function(error, index)`
+ *                              of the form `FieldFunction(error, index)`
  */
 angular.scenario.SpecRunner.prototype.run = function(spec, specDone) {
   var self = this;

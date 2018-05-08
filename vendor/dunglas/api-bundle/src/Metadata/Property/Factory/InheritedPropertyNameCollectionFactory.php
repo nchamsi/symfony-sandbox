@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Property\Factory;
 
 use ApiPlatform\Core\Metadata\Property\PropertyNameCollection;
@@ -38,8 +40,10 @@ final class InheritedPropertyNameCollectionFactory implements PropertyNameCollec
         $propertyNames = [];
 
         // Inherited from parent
-        foreach ($this->decorated->create($resourceClass, $options) as $propertyName) {
-            $propertyNames[$propertyName] = true;
+        if ($this->decorated) {
+            foreach ($this->decorated->create($resourceClass, $options) as $propertyName) {
+                $propertyNames[$propertyName] = (string) $propertyName;
+            }
         }
 
         foreach ($this->resourceNameCollection->create() as $knownResourceClass) {
@@ -49,11 +53,11 @@ final class InheritedPropertyNameCollectionFactory implements PropertyNameCollec
 
             if (is_subclass_of($knownResourceClass, $resourceClass)) {
                 foreach ($this->create($knownResourceClass) as $propertyName) {
-                    $propertyNames[$propertyName] = true;
+                    $propertyNames[$propertyName] = $propertyName;
                 }
             }
         }
 
-        return new PropertyNameCollection(array_keys($propertyNames));
+        return new PropertyNameCollection(array_values($propertyNames));
     }
 }

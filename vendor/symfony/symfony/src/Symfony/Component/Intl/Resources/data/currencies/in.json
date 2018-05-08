@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.28.79",
+    "Version": "2.1.37.5",
     "Names": {
         "ADP": [
             "ADP",
@@ -256,6 +256,10 @@
         "CLP": [
             "CLP",
             "Peso Cile"
+        ],
+        "CNH": [
+            "CNH",
+            "Yuan Tiongkok (luar negeri)"
         ],
         "CNY": [
             "CN¥",
@@ -771,7 +775,7 @@
         ],
         "PEN": [
             "PEN",
-            "Nuevo Sol Peru"
+            "Sol Peru"
         ],
         "PES": [
             "PES",

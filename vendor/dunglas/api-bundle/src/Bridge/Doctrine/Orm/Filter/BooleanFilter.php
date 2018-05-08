@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Filter;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
@@ -28,7 +30,7 @@ use Doctrine\ORM\QueryBuilder;
  * @author Amrouche Hamza <hamza.simperfit@gmail.com>
  * @author Teoh Han Hui <teohhanhui@gmail.com>
  */
-class BooleanFilter extends AbstractFilter
+class BooleanFilter extends AbstractContextAwareFilter
 {
     /**
      * {@inheritdoc}
@@ -63,16 +65,16 @@ class BooleanFilter extends AbstractFilter
     protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
         if (
-            !$this->isPropertyEnabled($property) ||
+            !$this->isPropertyEnabled($property, $resourceClass) ||
             !$this->isPropertyMapped($property, $resourceClass) ||
             !$this->isBooleanField($property, $resourceClass)
         ) {
             return;
         }
 
-        if (in_array($value, ['true', '1'], true)) {
+        if (\in_array($value, [true, 'true', '1'], true)) {
             $value = true;
-        } elseif (in_array($value, ['false', '0'], true)) {
+        } elseif (\in_array($value, [false, 'false', '0'], true)) {
             $value = false;
         } else {
             $this->logger->notice('Invalid filter ignored', [
@@ -87,12 +89,13 @@ class BooleanFilter extends AbstractFilter
             return;
         }
 
-        $alias = 'o';
+        $alias = $queryBuilder->getRootAliases()[0];
         $field = $property;
 
-        if ($this->isPropertyNested($property)) {
-            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator);
+        if ($this->isPropertyNested($property, $resourceClass)) {
+            list($alias, $field) = $this->addJoinsForNestedProperty($property, $alias, $queryBuilder, $queryNameGenerator, $resourceClass);
         }
+
         $valueParameter = $queryNameGenerator->generateParameterName($field);
 
         $queryBuilder
@@ -110,7 +113,7 @@ class BooleanFilter extends AbstractFilter
      */
     protected function isBooleanField(string $property, string $resourceClass): bool
     {
-        $propertyParts = $this->splitPropertyParts($property);
+        $propertyParts = $this->splitPropertyParts($property, $resourceClass);
         $metadata = $this->getNestedMetadata($resourceClass, $propertyParts['associations']);
 
         return DBALType::BOOLEAN === $metadata->getTypeOfField($propertyParts['field']);

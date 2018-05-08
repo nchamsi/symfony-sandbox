@@ -1,15 +1,15 @@
-5. Working with the bundle
-==========================
+[5] Working with the bundle
+===========================
 
 i. Customize condition operator
 -------------------------------
 
-By default the `lexik_form_filter.query_builder_updater` service will add conditions by using AND.
+By default the `lexik_form_filter.query_builder_updater` service will add conditions by using `AND`.
 But you can customize the operator (and/or) to use between each conditions when its added to the (doctrine) query builder.
 To do so you will have to use the `filter_condition_builder` option in your main type class.
 
 Here a simple example, the main type `ItemFilterType` is composed of 2 simple fields and a sub type (RelatedOptionsType).
-The `filter_condition_builder` option is expected to be a closuse that will be used to set operators to use between conditions.
+The `filter_condition_builder` option is expected to be a closure that will be used to set operators to use between conditions.
 
 ```php
 <?php
@@ -112,7 +112,7 @@ ii. Filter customization
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
-If this option is defined the `QueryBuilderUpdater` won't trigger any event, but if will call the given closure instead.
+If this option is defined the `QueryBuilderUpdater` won't trigger any event, but it will call the given closure instead.
 
 The closure takes 3 parameters:
 
@@ -514,7 +514,7 @@ class OptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('item', new ItemFilterType(), array(
+        $builder->add('item', ItemFilterType::class, array(
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     $filterBuilder->leftJoin($alias . '.item', $joinAlias);

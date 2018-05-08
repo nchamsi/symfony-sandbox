@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -34,5 +36,10 @@ class ParentDummy
     public function getAge()
     {
         return $this->age;
+    }
+
+    public function setAge($age)
+    {
+        return $this->age = $age;
     }
 }

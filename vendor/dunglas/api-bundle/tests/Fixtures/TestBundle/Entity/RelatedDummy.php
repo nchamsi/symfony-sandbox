@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -59,12 +62,14 @@ class RelatedDummy extends ParentDummy
     public $dummyDate;
 
     /**
+     * @ApiSubresource
      * @ORM\ManyToOne(targetEntity="ThirdLevel", cascade={"persist"})
      * @Groups({"barcelona", "chicago", "friends"})
      */
     public $thirdLevel;
 
     /**
+     * @ApiSubresource
      * @ORM\OneToMany(targetEntity="RelatedToDummyFriend", cascade={"persist"}, mappedBy="relatedDummy")
      * @Groups({"fakemanytomany", "friends"})
      */
@@ -83,9 +88,22 @@ class RelatedDummy extends ParentDummy
      */
     public $dummyBoolean;
 
+    /**
+     * @var EmbeddableDummy
+     *
+     * @ORM\Embedded(class="EmbeddableDummy")
+     * @Groups({"friends"})
+     */
+    public $embeddedDummy;
+
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function setName($name)
@@ -135,9 +153,25 @@ class RelatedDummy extends ParentDummy
     }
 
     /**
+     * @return ThirdLevel|null
+     */
+    public function getThirdLevel()
+    {
+        return $this->thirdLevel;
+    }
+
+    /**
+     * @param ThirdLevel|null $thirdLevel
+     */
+    public function setThirdLevel(ThirdLevel $thirdLevel = null)
+    {
+        $this->thirdLevel = $thirdLevel;
+    }
+
+    /**
      * Get relatedToDummyFriend.
      *
-     * @return relatedToDummyFriend
+     * @return RelatedToDummyFriend[]
      */
     public function getRelatedToDummyFriend()
     {
@@ -147,10 +181,26 @@ class RelatedDummy extends ParentDummy
     /**
      * Set relatedToDummyFriend.
      *
-     * @param relatedToDummyFriend the value to set
+     * @param RelatedToDummyFriend $relatedToDummyFriend the value to set
      */
     public function addRelatedToDummyFriend(RelatedToDummyFriend $relatedToDummyFriend)
     {
         $this->relatedToDummyFriend->add($relatedToDummyFriend);
+    }
+
+    /**
+     * @return EmbeddableDummy
+     */
+    public function getEmbeddedDummy()
+    {
+        return $this->embeddedDummy;
+    }
+
+    /**
+     * @param EmbeddableDummy $embeddedDummy
+     */
+    public function setEmbeddedDummy(EmbeddableDummy $embeddedDummy)
+    {
+        $this->embeddedDummy = $embeddedDummy;
     }
 }

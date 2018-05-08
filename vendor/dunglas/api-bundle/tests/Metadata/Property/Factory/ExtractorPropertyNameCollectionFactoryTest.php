@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Metadata\Property\Factory;
 
 use ApiPlatform\Core\Metadata\Extractor\XmlExtractor;
@@ -17,11 +19,12 @@ use ApiPlatform\Core\Metadata\Property\Factory\ExtractorPropertyNameCollectionFa
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\PropertyNameCollection;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\FileConfigDummy;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Baptiste Meyer <baptiste.meyer@gmail.com>
  */
-class ExtractorPropertyNameCollectionFactoryTest extends \PHPUnit_Framework_TestCase
+class ExtractorPropertyNameCollectionFactoryTest extends TestCase
 {
     public function testCreateXml()
     {
@@ -57,12 +60,12 @@ class ExtractorPropertyNameCollectionFactoryTest extends \PHPUnit_Framework_Test
     {
         $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/resourcenotfound.xml';
 
-        (new ExtractorPropertyNameCollectionFactory(new XmlExtractor([$configPath])))->create(\ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\ThisDoesNotExist::class);
+        (new ExtractorPropertyNameCollectionFactory(new XmlExtractor([$configPath])))->create('ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\ThisDoesNotExist');
     }
 
     /**
      * @expectedException \ApiPlatform\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessageRegExp /.+Element 'foo': This element is not expected\..+/
+     * @expectedExceptionMessageRegExp #.+Element '\{https://api-platform.com/schema/metadata\}foo': This element is not expected\..+#
      */
     public function testCreateWithInvalidXml()
     {
@@ -105,7 +108,7 @@ class ExtractorPropertyNameCollectionFactoryTest extends \PHPUnit_Framework_Test
     {
         $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/resourcenotfound.yml';
 
-        (new ExtractorPropertyNameCollectionFactory(new YamlExtractor([$configPath])))->create(\ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\ThisDoesNotExist::class);
+        (new ExtractorPropertyNameCollectionFactory(new YamlExtractor([$configPath])))->create('ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\ThisDoesNotExist');
     }
 
     /**

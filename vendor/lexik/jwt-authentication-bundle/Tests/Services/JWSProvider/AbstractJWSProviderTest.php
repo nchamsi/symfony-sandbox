@@ -4,13 +4,14 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the JWSProvider.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-abstract class AbstractJWSProviderTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractJWSProviderTest extends TestCase
 {
     protected static $privateKey = '
 -----BEGIN RSA PRIVATE KEY-----
@@ -58,6 +59,7 @@ vwIDAQAB
 ';
 
     protected static $providerClass;
+
     protected static $keyLoaderClass;
 
     /**
@@ -106,6 +108,40 @@ vwIDAQAB
         $this->assertTrue(isset($payload['exp']));
         $this->assertTrue(isset($payload['iat']));
         $this->assertTrue(isset($payload['username']));
+    }
+
+    public function testAllowEmptyTtl()
+    {
+        $keyLoader = $this->getKeyLoaderMock();
+        $keyLoader
+            ->expects($this->at(0))
+            ->method('loadKey')
+            ->with('private')
+            ->willReturn(static::$privateKey);
+        $keyLoader
+            ->expects($this->at(1))
+            ->method('getPassphrase')
+            ->willReturn('foobar');
+
+        $keyLoader
+            ->expects($this->at(2))
+            ->method('loadKey')
+            ->with('public')
+            ->willReturn(static::$publicKey);
+
+        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null);
+        $jws      = $provider->create(['username' => 'chalasr']);
+
+        $this->assertInstanceOf(CreatedJWS::class, $jws);
+        $this->assertTrue($jws->isSigned());
+
+        $jws = $provider->load($jws->getToken());
+
+        $this->assertInstanceOf(LoadedJWS::class, $jws);
+        $this->assertFalse($jws->isInvalid());
+        $this->assertFalse($jws->isExpired());
+        $this->assertTrue($jws->isVerified());
+        $this->assertArrayNotHasKey('exp', $jws->getPayload());
     }
 
     /**

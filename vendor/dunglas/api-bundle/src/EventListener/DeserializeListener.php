@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\EventListener;
 
-use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -45,13 +47,13 @@ final class DeserializeListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->isMethodSafe(false) || $request->isMethod(Request::METHOD_DELETE)) {
-            return;
-        }
-
-        try {
-            $attributes = RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (
+            $request->isMethodSafe(false)
+            || $request->isMethod('DELETE')
+            || !($attributes = RequestAttributesExtractor::extractAttributes($request))
+            || !$attributes['receive']
+            || ('' === ($requestContent = $request->getContent()) && $request->isMethod('PUT'))
+        ) {
             return;
         }
 
@@ -60,13 +62,13 @@ final class DeserializeListener
 
         $data = $request->attributes->get('data');
         if (null !== $data) {
-            $context['object_to_populate'] = $data;
+            $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $data;
         }
 
         $request->attributes->set(
             'data',
             $this->serializer->deserialize(
-                $request->getContent(), $attributes['resource_class'], $format, $context
+                $requestContent, $attributes['resource_class'], $format, $context
             )
         );
     }
@@ -88,7 +90,7 @@ final class DeserializeListener
         }
 
         $format = $request->getFormat($contentType);
-        if (!isset($this->formats[$format])) {
+        if (null === $format || !isset($this->formats[$format])) {
             $supportedMimeTypes = [];
             foreach ($this->formats as $mimeTypes) {
                 foreach ($mimeTypes as $mimeType) {

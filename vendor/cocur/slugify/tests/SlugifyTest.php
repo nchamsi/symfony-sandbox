@@ -160,6 +160,9 @@ class SlugifyTest extends \PHPUnit_Framework_TestCase
             ['serbian', 'А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш Š Đ Ž Ć Č š đ ž ć č', 'a-b-v-g-d-dj-e-z-z-i-j-k-l-lj-m-n-nj-o-p-r-s-t-c-u-f-h-c-c-dz-s-a-b-v-g-d-dj-e-z-z-i-j-k-l-lj-m-n-nj-o-p-r-s-t-c-u-f-h-c-c-dz-s-s-dj-z-c-c-s-dj-z-c-c'],
             ['lithuanian', 'Ą Č Ę Ė Į Š Ų Ū Ž ą č ę ė į š ų ū ž', 'a-c-e-e-i-s-u-u-z-a-c-e-e-i-s-u-u-z'],
             ['estonian', 'Š Ž Õ Ä Ö Ü š ž õ ä ö ü', 's-z-o-a-o-u-s-z-o-a-o-u'],
+            ['hungarian', 'Á É Í Ó Ö Ő Ú Ü Ű á é í ó ö ő ú ü ű', 'a-e-i-o-o-o-u-u-u-a-e-i-o-o-o-u-u-u'],
+            ['macedonian', 'Ѓезвето беше полно со црно кафе. ', 'gjezveto-beshe-polno-so-crno-kafe'],
+            ['chinese', '活动日起', 'huodongriqi'],
         ];
     }
 
@@ -205,6 +208,9 @@ class SlugifyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('file-name', $this->slugify->slugify('FILE NAME'));
         $this->assertEquals('FILE-NAME', $this->slugify->slugify('FILE NAME', ['lowercase' => false]));
+
+        $this->assertEquals('file-name', $this->slugify->slugify('file name '));
+        $this->assertEquals('file-name-', $this->slugify->slugify('file name ', ['trim' => false]));
     }
 
     /**

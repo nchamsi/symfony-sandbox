@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\Negotiatior;
 
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Negotiation\Accept;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
+class FormatNegotiatorTest extends TestCase
 {
     private $requestStack;
     private $request;
@@ -41,7 +42,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException FOS\RestBundle\Util\StopFormatListenerException
+     * @expectedException \FOS\RestBundle\Util\StopFormatListenerException
      * @expectedExceptionMessage Stopped
      */
     public function testStopException()
@@ -101,6 +102,45 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $priorities = ['json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'fallback_format' => 'xml']);
         $this->assertEquals(new Accept('application/json;version=1.0'), $this->negotiator->getBest(''));
+    }
+
+    public function testGetBestWithPreferExtension()
+    {
+        $priorities = ['text/html', 'application/json'];
+        $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
+
+        $reflectionClass = new \ReflectionClass(get_class($this->request));
+        $reflectionProperty = $reflectionClass->getProperty('pathInfo');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->request, '/file.json');
+
+        // Without extension mime-type in Accept header
+
+        $this->request->headers->set('Accept', 'text/html; q=1.0');
+        $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
+
+        // With low q extension mime-type in Accept header
+
+        $this->request->headers->set('Accept', 'text/html; q=1.0, application/json; q=0.1');
+        $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
+
+        $reflectionProperty->setValue($this->request, null);
+    }
+
+    public function testGetBestWithPreferExtensionAndUnknownExtension()
+    {
+        $priorities = ['text/html', 'application/json'];
+        $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
+
+        $reflectionClass = new \ReflectionClass(get_class($this->request));
+        $reflectionProperty = $reflectionClass->getProperty('pathInfo');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->request, '/file.123456789');
+
+        $this->request->headers->set('Accept', 'text/html, application/json');
+        $this->assertEquals(new Accept('text/html'), $this->negotiator->getBest(''));
+
+        $reflectionProperty->setValue($this->request, null);
     }
 
     public function testGetBestWithFormatWithRequestMimeTypeFallback()

@@ -4,6 +4,7 @@ Feature: Testing RESTContext
         When I send a GET request to "rest/index.php"
         And the header "Content-Type" should contain "text"
         And the header "Content-Type" should be equal to "text/html; charset=UTF-8"
+        And the header "Content-Type" should not be equal to "x-test/no-such-type"
         And the header "Content-Type" should not contain "text/json"
         And the header "xxx" should not exist
         And the response should expire in the future
@@ -54,6 +55,10 @@ Feature: Testing RESTContext
         Given I add "xxx" header equal to "yyy"
         When I send a GET request to "/rest/index.php"
         Then I should see "HTTP_XXX : yyy"
+
+    Scenario: Header should not be cross-scenarios persistent
+        When I send a GET request to "/rest/index.php"
+        Then I should not see "HTTP_XXX : yyy"
 
     Scenario: Case-insensitive header name
         Like describe in the rfc2614 §4.2

@@ -1,7 +1,7 @@
 default:
     suites:
         default:
-            paths: [ %paths.base%/tests/features ]
+            paths: [ '%paths.base%/tests/features' ]
             contexts:
                 - Behat\MinkExtension\Context\MinkContext
                 - behatch:browser:
@@ -21,4 +21,15 @@ default:
             files_path: 'tests/fixtures/files'
             goutte: ~
             selenium2: ~
-        Sanpi\Behatch\Extension: ~
+            browser_name: 'chrome'
+            sessions:
+                default:
+                    goutte: ~
+                symfony2:
+                    goutte: ~
+        Behatch\Extension: ~
+
+symfony2:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: symfony2

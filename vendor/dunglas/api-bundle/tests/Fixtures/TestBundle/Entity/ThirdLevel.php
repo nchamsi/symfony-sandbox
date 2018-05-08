@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -37,7 +40,7 @@ class ThirdLevel
     /**
      * @var int
      *
-     * @ORM\Column(type = "integer")
+     * @ORM\Column(type="integer")
      * @Groups({"barcelona", "chicago"})
      */
     private $level = 3;
@@ -45,9 +48,16 @@ class ThirdLevel
     /**
      * @var bool
      *
-     * @ORM\Column(type = "boolean")
+     * @ORM\Column(type="boolean")
      */
     private $test = true;
+
+    /**
+     * @ApiSubresource
+     * @ORM\ManyToOne(targetEntity="FourthLevel", cascade={"persist"})
+     * @Groups({"barcelona", "chicago", "friends"})
+     */
+    public $fourthLevel;
 
     /**
      * @return int
@@ -87,5 +97,21 @@ class ThirdLevel
     public function setTest($test)
     {
         $this->test = $test;
+    }
+
+    /**
+     * @return FourthLevel|null
+     */
+    public function getFourthLevel()
+    {
+        return $this->fourthLevel;
+    }
+
+    /**
+     * @param FourthLevel|null $fourthLevel
+     */
+    public function setFourthLevel(FourthLevel $fourthLevel = null)
+    {
+        $this->fourthLevel = $fourthLevel;
     }
 }

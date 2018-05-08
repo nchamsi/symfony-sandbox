@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Bridge\Doctrine\Orm\Metadata\Property;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Metadata\Property\DoctrineOrmPropertyMetadataFactory;
@@ -19,11 +21,12 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Antoine Bluchet <soyuka@gmail.com>
  */
-class DoctrineOrmPropertyMetadataFactoryTest extends \PHPUnit_Framework_TestCase
+class DoctrineOrmPropertyMetadataFactoryTest extends TestCase
 {
     public function testCreateNoManager()
     {
@@ -77,10 +80,34 @@ class DoctrineOrmPropertyMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($doctrineOrmPropertyMetadataFactory->create(Dummy::class, 'id', []), $propertyMetadata);
     }
 
+    public function testCreateIsWritable()
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata = $propertyMetadata->withWritable(false);
+
+        $propertyMetadataFactory = $this->prophesize(PropertyMetadataFactoryInterface::class);
+        $propertyMetadataFactory->create(Dummy::class, 'id', [])->shouldBeCalled()->willReturn($propertyMetadata);
+
+        $classMetadata = $this->prophesize(ClassMetadataInfo::class);
+        $classMetadata->getIdentifier()->shouldBeCalled()->willReturn(['id']);
+
+        $objectManager = $this->prophesize(ObjectManager::class);
+        $objectManager->getClassMetadata(Dummy::class)->shouldBeCalled()->willReturn($classMetadata->reveal());
+
+        $managerRegistry = $this->prophesize(ManagerRegistry::class);
+        $managerRegistry->getManagerForClass(Dummy::class)->shouldBeCalled()->willReturn($objectManager->reveal());
+
+        $doctrineOrmPropertyMetadataFactory = new DoctrineOrmPropertyMetadataFactory($managerRegistry->reveal(), $propertyMetadataFactory->reveal());
+
+        $doctrinePropertyMetadata = $doctrineOrmPropertyMetadataFactory->create(Dummy::class, 'id', []);
+
+        $this->assertEquals($doctrinePropertyMetadata->isIdentifier(), true);
+        $this->assertEquals($doctrinePropertyMetadata->isWritable(), false);
+    }
+
     public function testCreateClassMetadataInfo()
     {
         $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata = $propertyMetadata->withWritable(true);
 
         $propertyMetadataFactory = $this->prophesize(PropertyMetadataFactoryInterface::class);
         $propertyMetadataFactory->create(Dummy::class, 'id', [])->shouldBeCalled()->willReturn($propertyMetadata);
@@ -106,7 +133,6 @@ class DoctrineOrmPropertyMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateClassMetadata()
     {
         $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata = $propertyMetadata->withWritable(true);
 
         $propertyMetadataFactory = $this->prophesize(PropertyMetadataFactoryInterface::class);
         $propertyMetadataFactory->create(Dummy::class, 'id', [])->shouldBeCalled()->willReturn($propertyMetadata);

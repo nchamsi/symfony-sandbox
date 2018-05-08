@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -46,9 +48,9 @@ class CompositeRelation
     private $compositeLabel;
 
     /**
-     * Get value.
+     * Gets value.
      *
-     * @return value
+     * @return string|null
      */
     public function getValue()
     {
@@ -56,19 +58,19 @@ class CompositeRelation
     }
 
     /**
-     * Set value.
+     * Sets value.
      *
-     * @param value the value to set
+     * @param string|null $value the value to set
      */
-    public function setValue($value)
+    public function setValue($value = null)
     {
         $this->value = $value;
     }
 
     /**
-     * Get compositeItem.
+     * Gets compositeItem.
      *
-     * @return compositeItem
+     * @return CompositeItem
      */
     public function getCompositeItem()
     {
@@ -76,19 +78,19 @@ class CompositeRelation
     }
 
     /**
-     * Set compositeItem.
+     * Sets compositeItem.
      *
-     * @param compositeItem the value to set
+     * @param CompositeItem $compositeItem the value to set
      */
-    public function setCompositeItem($compositeItem)
+    public function setCompositeItem(CompositeItem $compositeItem)
     {
         $this->compositeItem = $compositeItem;
     }
 
     /**
-     * Get compositeLabel.
+     * Gets compositeLabel.
      *
-     * @return compositeLabel
+     * @return CompositeLabel
      */
     public function getCompositeLabel()
     {
@@ -96,11 +98,11 @@ class CompositeRelation
     }
 
     /**
-     * Set compositeLabel.
+     * Sets compositeLabel.
      *
-     * @param compositeLabel the value to set
+     * @param CompositeLabel $compositeLabel the value to set
      */
-    public function setCompositeLabel($compositeLabel)
+    public function setCompositeLabel(CompositeLabel $compositeLabel)
     {
         $this->compositeLabel = $compositeLabel;
     }

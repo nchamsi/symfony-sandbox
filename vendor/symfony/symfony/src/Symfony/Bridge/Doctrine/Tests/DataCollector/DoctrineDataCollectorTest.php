@@ -127,7 +127,13 @@ class DoctrineDataCollectorTest extends TestCase
             array(null, array(), null, true),
             array(new \DateTime('2011-09-11'), array('date'), '2011-09-11', true),
             array(fopen(__FILE__, 'r'), array(), 'Resource(stream)', false),
-            array(new \SplFileInfo(__FILE__), array(), 'Object(SplFileInfo)', false),
+            array(new \stdClass(), array(), 'Object(stdClass)', false),
+            array(
+                new StringRepresentableClass(),
+                array(),
+                'Object(Symfony\Bridge\Doctrine\Tests\DataCollector\StringRepresentableClass): "string representation"',
+                false,
+            ),
         );
     }
 
@@ -142,13 +148,13 @@ class DoctrineDataCollectorTest extends TestCase
 
         $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $registry
-                ->expects($this->any())
-                ->method('getConnectionNames')
-                ->will($this->returnValue(array('default' => 'doctrine.dbal.default_connection')));
+            ->expects($this->any())
+            ->method('getConnectionNames')
+            ->will($this->returnValue(array('default' => 'doctrine.dbal.default_connection')));
         $registry
-                ->expects($this->any())
-                ->method('getManagerNames')
-                ->will($this->returnValue(array('default' => 'doctrine.orm.default_entity_manager')));
+            ->expects($this->any())
+            ->method('getManagerNames')
+            ->will($this->returnValue(array('default' => 'doctrine.orm.default_entity_manager')));
         $registry->expects($this->any())
             ->method('getConnection')
             ->will($this->returnValue($connection));
@@ -160,5 +166,13 @@ class DoctrineDataCollectorTest extends TestCase
         $collector->addLogger('default', $logger);
 
         return $collector;
+    }
+}
+
+class StringRepresentableClass
+{
+    public function __toString()
+    {
+        return 'string representation';
     }
 }

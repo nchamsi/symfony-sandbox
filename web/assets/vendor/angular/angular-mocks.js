@@ -1232,7 +1232,7 @@ angular.mock.dump = function(object) {
  *
  * The `callback` function should be of the form `function(method, url, data, headers, params)`.
  *
- * ### Query parameters
+ * ### DataModel parameters
  *
  * By default, query parameters on request URLs are parsed into the `params` object. So a request URL
  * of `/list?q=searchstr&orderby=-name` would set `params` to be `{q: 'searchstr', orderby: '-name'}`.

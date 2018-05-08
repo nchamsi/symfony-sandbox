@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Hal\Serializer;
 
 use ApiPlatform\Core\Api\Entrypoint;
@@ -19,11 +21,12 @@ use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
 use ApiPlatform\Core\Metadata\Resource\ResourceNameCollection;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\Dummy;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class EntrypointNormalizerTest extends \PHPUnit_Framework_TestCase
+class EntrypointNormalizerTest extends TestCase
 {
     public function testSupportNormalization()
     {

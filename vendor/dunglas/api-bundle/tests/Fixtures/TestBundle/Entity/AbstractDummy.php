@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -21,11 +23,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Jérémy Derussé <jeremy@derusse.com>
  *
- * @ApiResource(attributes={"filters": {"my_dummy.search", "my_dummy.order", "my_dummy.date"}})
+ * @ApiResource(attributes={"filters"={"my_dummy.search", "my_dummy.order", "my_dummy.date"}})
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string", length=16)
- * @ORM\DiscriminatorMap({"concrete" = "ConcreteDummy"})
+ * @ORM\DiscriminatorMap({"concrete"="ConcreteDummy"})
  */
 abstract class AbstractDummy
 {

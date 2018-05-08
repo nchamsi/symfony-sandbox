@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
@@ -22,7 +24,7 @@ use SebastianBergmann\CodeCoverage\Report\PHP;
  * @author Kévin Dunglas <dunglas@gmail.com>
  * @copyright Adapted from https://gist.github.com/eliecharra/9c8b3ba57998b50e14a6
  */
-class CoverageContext implements Context
+final class CoverageContext implements Context
 {
     /**
      * @var CodeCoverage

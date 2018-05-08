@@ -4,13 +4,12 @@ doctrine:
             default:
                 mappings:
                     SonataClassificationBundle: ~
-                    ApplicationSonataClassificationBundle: ~
 
 sonata_classification:
     class:
-        tag:            Application\Sonata\ClassificationBundle\Entity\Classification\Tag
-        category:       Application\Sonata\ClassificationBundle\Entity\Classification\Category
-        context:        Application\Sonata\ClassificationBundle\Entity\Classification\Context
-        collection:     Application\Sonata\ClassificationBundle\Entity\Classification\Collection
-        media:          Application\Sonata\MediaBundle\Entity\Media\Media
+        tag:            AppBundle\Entity\Classification\Tag
+        category:       AppBundle\Entity\Classification\Category
+        context:        AppBundle\Entity\Classification\Context
+        collection:     AppBundle\Entity\Classification\Collection
+        media:          AppBundle\Entity\Media\Media
 

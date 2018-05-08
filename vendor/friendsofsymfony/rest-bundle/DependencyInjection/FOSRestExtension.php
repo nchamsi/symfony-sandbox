@@ -12,6 +12,9 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -58,20 +61,25 @@ class FOSRestExtension extends Extension
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(2, $config['routing_loader']['include_format']);
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(2, $config['routing_loader']['include_format']);
         $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(3, $config['routing_loader']['include_format']);
-
-        // The validator service alias is only set if validation is enabled for the request body converter
-        $validator = $config['service']['validator'];
-        unset($config['service']['validator']);
+        $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(5, $config['routing_loader']['prefix_methods']);
 
         foreach ($config['service'] as $key => $service) {
+            if ('validator' === $service && empty($config['body_converter']['validate'])) {
+                continue;
+            }
+
             if (null !== $service) {
-                $container->setAlias('fos_rest.'.$key, $service);
+                if ('view_handler' === $key) {
+                    $container->setAlias('fos_rest.'.$key, new Alias($service, true));
+                } else {
+                    $container->setAlias('fos_rest.'.$key, $service);
+                }
             }
         }
 
         $this->loadForm($config, $loader, $container);
         $this->loadException($config, $loader, $container);
-        $this->loadBodyConverter($config, $validator, $loader, $container);
+        $this->loadBodyConverter($config, $loader, $container);
         $this->loadView($config, $loader, $container);
 
         $this->loadBodyListener($config, $loader, $container);
@@ -149,6 +157,17 @@ class FOSRestExtension extends Extension
 
             $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(1, $config['body_listener']['decoders']);
 
+            if (class_exists(ServiceLocatorTagPass::class)) {
+                $decoderServicesMap = array();
+
+                foreach ($config['body_listener']['decoders'] as $id) {
+                    $decoderServicesMap[$id] = new Reference($id);
+                }
+
+                $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
+                $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $decodersServiceLocator);
+            }
+
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
 
             if (null !== $arrayNormalizer['service']) {
@@ -223,29 +242,24 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadBodyConverter(array $config, $validator, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadBodyConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (empty($config['body_converter'])) {
+        if (!$this->isConfigEnabled($container, $config['body_converter'])) {
             return;
         }
 
-        if (!empty($config['body_converter']['enabled'])) {
-            $loader->load('request_body_param_converter.xml');
+        $loader->load('request_body_param_converter.xml');
 
-            if (!empty($config['body_converter']['validation_errors_argument'])) {
-                $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
-            }
-        }
-
-        if (!empty($config['body_converter']['validate'])) {
-            $container->setAlias('fos_rest.validator', $validator);
+        if (!empty($config['body_converter']['validation_errors_argument'])) {
+            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
         }
     }
 
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if (!empty($config['view']['jsonp_handler'])) {
-            $handler = new DefinitionDecorator($config['service']['view_handler']);
+            $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
+            $handler = new $childDefinitionClass($config['service']['view_handler']);
             $handler->setPublic(true);
 
             $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
@@ -349,18 +363,6 @@ class FOSRestExtension extends Extension
             $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
                 ->replaceArgument(1, $config['exception']['debug']);
         }
-
-        foreach ($config['exception']['codes'] as $exception => $code) {
-            if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\Symfony\Component\HttpFoundation\Response::$code");
-            }
-
-            $this->testExceptionExists($exception);
-        }
-
-        foreach ($config['exception']['messages'] as $exception => $message) {
-            $this->testExceptionExists($exception);
-        }
     }
 
     private function loadSerializer(array $config, ContainerBuilder $container)
@@ -419,25 +421,12 @@ class FOSRestExtension extends Extension
             array_pop($arguments);
         }
 
+        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
         $container
-            ->setDefinition($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
+            ->setDefinition($id, new $childDefinitionClass('fos_rest.zone_request_matcher'))
             ->setArguments($arguments)
         ;
 
         return new Reference($id);
-    }
-
-    /**
-     * Checks if an exception is loadable.
-     *
-     * @param string $exception Class to test
-     *
-     * @throws \InvalidArgumentException if the class was not found
-     */
-    private function testExceptionExists($exception)
-    {
-        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
-            throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\Exception'. Most probably this is a configuration problem.");
-        }
     }
 }

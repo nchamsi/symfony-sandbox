@@ -14,14 +14,21 @@ abstract class BaseContext extends RawMinkContext implements TranslatableContext
     }
 
     /**
+     * en
      * @transform /^(0|[1-9]\d*)(?:st|nd|rd|th)?$/
+     *
+     * fr
+     * @transform /^(0|[1-9]\d*)(?:ier|er|e|ème)?$/
+     *
+     * pt
+     * @transform /^(0|[1-9]\d*)º?$/
      */
     public function castToInt($count)
     {
         return intval($count);
     }
 
-    protected function not(Callable $callbable, $errorMessage)
+    protected function not(callable $callbable, $errorMessage)
     {
         try {
             $callbable();
@@ -30,13 +37,13 @@ abstract class BaseContext extends RawMinkContext implements TranslatableContext
             return;
         }
 
-        throw new ExpectationException($errorMessage, $this->getSession());
+        throw new ExpectationException($errorMessage, $this->getSession()->getDriver());
     }
 
     protected function assert($test, $message)
     {
         if ($test === false) {
-            throw new ExpectationException($message, $this->getSession());
+            throw new ExpectationException($message, $this->getSession()->getDriver());
         }
     }
 

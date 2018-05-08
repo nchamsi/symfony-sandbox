@@ -42,6 +42,8 @@ If you use forms to capture GET requests, you will have to specify the
 
     public function searchAction(Request $request)
     {
+        //...
+    }
 
 Multiple response models
 ------------------------
@@ -80,7 +82,7 @@ when this endpoint returns a ``400 Validation failed.`` HTTP response.
     the default ``output`` property instead. That will result on the same thing.
 
 Integration with ``swagger-api/swagger-ui``
----------------------------------------
+-------------------------------------------
 
 You could import the routes for use with `swagger-ui`_.
 

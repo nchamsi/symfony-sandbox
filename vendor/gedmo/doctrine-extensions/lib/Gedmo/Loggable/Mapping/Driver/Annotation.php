@@ -68,7 +68,7 @@ class Annotation extends AbstractAnnotationDriver
             // versioned property
             if ($this->reader->getPropertyAnnotation($property, self::VERSIONED)) {
                 if (!$this->isMappingValid($meta, $field)) {
-                    throw new InvalidMappingException("Cannot versioned [{$field}] as it is collection in object - {$meta->name}");
+                    throw new InvalidMappingException("Cannot apply versioning to field [{$field}] as it is collection in object - {$meta->name}");
                 }
                 if (isset($meta->embeddedClasses[$field])) {
                     $this->inspectEmbeddedForVersioned($field, $config, $meta);
@@ -128,7 +128,12 @@ class Annotation extends AbstractAnnotationDriver
         foreach ($сlass->getProperties() as $property) {
             // versioned property
             if ($this->reader->getPropertyAnnotation($property, self::VERSIONED)) {
-                $config['versioned'][] = $field . '.' . $property->getName();
+                $embeddedField = $field . '.' . $property->getName();
+                $config['versioned'][] = $embeddedField;
+
+                if (isset($meta->embeddedClasses[$embeddedField])) {
+                    $this->inspectEmbeddedForVersioned($embeddedField, $config, $meta);
+                }
             }
         }
     }

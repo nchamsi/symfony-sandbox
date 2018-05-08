@@ -82,8 +82,7 @@ class BrowserContext extends BaseContext
      */
     public function iFollowTheNthLink($index, $link)
     {
-        $element = ['link', $this->getSession()->getSelectorsHandler()->xpathLiteral($link)];
-        $node = $this->findElement('named', $element, $index);
+        $node = $this->findElement('named', ['link', $link], $index);
         $node->click();
     }
 
@@ -94,8 +93,7 @@ class BrowserContext extends BaseContext
      */
     public function pressTheNthButton($index, $button)
     {
-        $element = ['button', $this->getSession()->getSelectorsHandler()->xpathLiteral($button)];
-        $node = $this->findElement('named', $element, $index);
+        $node = $this->findElement('named', ['button', $button], $index);
         $node->click();
     }
 
@@ -210,7 +208,7 @@ class BrowserContext extends BaseContext
                 return;
             }
             catch (ExpectationException $e) {
-                /* Intentionaly leave blank */
+                /* Intentionally leave blank */
             }
             catch (StaleElementReference $e) {
                 // assume page reloaded whilst we were still waiting
@@ -259,6 +257,7 @@ class BrowserContext extends BaseContext
     {
         $found = false;
         $startTime = time();
+        $e = null;
 
         do {
             try {
@@ -268,14 +267,14 @@ class BrowserContext extends BaseContext
                 $found = true;
             }
             catch (ExpectationException $e) {
-                /* Intentionnaly leave blank */
+                /* Intentionally leave blank */
             }
         }
         while (!$found && (time() - $startTime < $count));
 
         if ($found === false) {
             $message = "The element '$element' was not found after a $count seconds timeout";
-            throw new ResponseTextException($message, $this->getSession(), $e);
+            throw new ResponseTextException($message, $this->getSession()->getDriver(), $e);
         }
     }
 
@@ -354,7 +353,7 @@ class BrowserContext extends BaseContext
         $obj = $this->getSession()->getPage()->findField($select);
         if ($obj === null) {
             throw new ElementNotFoundException(
-                $this->getSession(), 'select box', 'id|name|label|value', $select
+                $this->getSession()->getDriver(), 'select box', 'id|name|label|value', $select
             );
         }
         $optionText = $obj->getText();

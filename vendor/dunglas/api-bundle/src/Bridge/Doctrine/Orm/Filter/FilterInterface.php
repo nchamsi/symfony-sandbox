@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Filter;
 
 use ApiPlatform\Core\Api\FilterInterface as BaseFilterInterface;
@@ -24,11 +26,6 @@ interface FilterInterface extends BaseFilterInterface
 {
     /**
      * Applies the filter.
-     *
-     * @param QueryBuilder                $queryBuilder
-     * @param QueryNameGeneratorInterface $queryNameGenerator
-     * @param string                      $resourceClass
-     * @param string|null                 $operationName
      */
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null);
 }

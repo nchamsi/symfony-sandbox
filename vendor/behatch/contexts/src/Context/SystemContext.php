@@ -93,7 +93,7 @@ class SystemContext implements Context
     public function commandShouldLastLessThan($seconds)
     {
         if ($this->lastExecutionTime > $seconds) {
-            throw new \Exception(sprintf("Last command last %s which is more than %s seconds", $lastExecutionTime, $seconds));
+            throw new \Exception(sprintf("Last command last %s which is more than %s seconds", $this->lastExecutionTime, $seconds));
         }
     }
 
@@ -105,7 +105,7 @@ class SystemContext implements Context
     public function commandShouldMoreLessThan($seconds)
     {
         if ($this->lastExecutionTime < $seconds) {
-            throw new \Exception(sprintf("Last command last %s which is less than %s seconds", $lastExecutionTime, $seconds));
+            throw new \Exception(sprintf("Last command last %s which is less than %s seconds", $this->lastExecutionTime, $seconds));
         }
     }
 
@@ -131,12 +131,22 @@ class SystemContext implements Context
         }
     }
 
+
+    public function ouputShouldNotContain($text)
+    {
+        trigger_error(
+            sprintf('The %s function is deprecated since version 2.8 and will be removed in 3.0. Use the %s::outputShouldNotContain function instead.', __METHOD__, __CLASS__),
+            E_USER_DEPRECATED
+        );
+        $this->outputShouldNotContain($text);
+    }
+
     /**
      * Checks, that output not contains specified text.
      *
      * @Then output should not contain :text
      */
-    public function ouputShouldNotContain($text)
+    public function outputShouldNotContain($text)
     {
         $regex = '~'.$text.'~ui';
 

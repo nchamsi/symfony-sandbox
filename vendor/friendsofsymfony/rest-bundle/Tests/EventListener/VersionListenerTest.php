@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,18 +21,20 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class VersionListenerTest extends \PHPUnit_Framework_TestCase
+class VersionListenerTest extends TestCase
 {
     /**
      * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface
      */
     private $viewHandler;
+
     /**
      * @var \FOS\RestBundle\Version\VersionResolverInterface
      */
     private $resolver;
+
     /**
-     * @var \FOS\RestBundle\EventListener\VersionListener
+     * @var VersionListener
      */
     private $listener;
 
@@ -41,11 +44,6 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
         $this->resolver = $this->getMockBuilder('FOS\RestBundle\Version\VersionResolverInterface')->getMock();
 
         $this->listener = new VersionListener($this->viewHandler, $this->resolver);
-    }
-
-    public function testDefaultVersion()
-    {
-        $this->assertEquals(false, $this->listener->getVersion());
     }
 
     public function testMatchNoZone()
@@ -63,6 +61,6 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->listener->onKernelRequest($event);
 
-        $this->assertFalse($this->listener->getVersion());
+        $this->assertFalse($request->attributes->has('version'));
     }
 }

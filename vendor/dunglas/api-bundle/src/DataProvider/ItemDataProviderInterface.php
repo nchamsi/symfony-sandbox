@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\DataProvider;
 
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
@@ -23,10 +25,7 @@ interface ItemDataProviderInterface
     /**
      * Retrieves an item.
      *
-     * @param string      $resourceClass
-     * @param string|null $operationName
-     * @param int|string  $id
-     * @param array       $context
+     * @param int|string $id
      *
      * @throws ResourceClassNotSupportedException
      *

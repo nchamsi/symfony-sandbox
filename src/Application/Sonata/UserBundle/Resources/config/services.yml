@@ -1,4 +1,0 @@
-services:
-#    application_sonata_user.example:
-#        class: Application\Sonata\UserBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]

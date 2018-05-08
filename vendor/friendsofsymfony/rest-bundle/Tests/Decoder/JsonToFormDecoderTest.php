@@ -12,13 +12,14 @@
 namespace FOS\RestBundle\Tests\Decoder;
 
 use FOS\RestBundle\Decoder\JsonToFormDecoder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the form-like encoder.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonToFormDecoderTest extends TestCase
 {
     public function testDecodeWithRemovingFalseData()
     {
@@ -36,8 +37,8 @@ class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
         $decoder = new JsonToFormDecoder();
         $decoded = $decoder->decode(json_encode($data));
 
-        $this->assertTrue(is_array($decoded));
-        $this->assertTrue(is_array($decoded['arrayKey']));
+        $this->assertInternalType('array', $decoded);
+        $this->assertInternalType('array', $decoded['arrayKey']);
         $this->assertNull($decoded['arrayKey']['falseKey']);
         $this->assertEquals('foo', $decoded['arrayKey']['stringKey']);
         $this->assertNull($decoded['falseKey']);

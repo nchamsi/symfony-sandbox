@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\JsonLd;
 
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
@@ -26,6 +28,7 @@ interface ContextBuilderInterface
     const RDFS_NS = 'http://www.w3.org/2000/01/rdf-schema#';
     const XML_NS = 'http://www.w3.org/2001/XMLSchema#';
     const OWL_NS = 'http://www.w3.org/2002/07/owl#';
+    const SCHEMA_ORG_NS = 'http://schema.org/';
 
     /**
      * Gets the base context.

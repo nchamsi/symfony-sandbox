@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Symfony\Routing;
 
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
@@ -73,6 +75,7 @@ final class Router implements RouterInterface, UrlGeneratorInterface
         $context = (new RequestContext())->fromRequest($request);
         $context->setPathInfo($pathInfo);
         $context->setScheme($baseContext->getScheme());
+        $context->setHost($baseContext->getHost());
 
         try {
             $this->router->setContext($context);

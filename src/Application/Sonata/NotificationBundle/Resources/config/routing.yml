@@ -1,3 +1,0 @@
-#application_sonata_notification_homepage:
-#    path:     /hello/{name}
-#    defaults: { _controller: ApplicationSonataNotificationBundle:Default:index }

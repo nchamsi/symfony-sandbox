@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,7 +25,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  *
- * @ApiResource(attributes={"filters"={"my_dummy.search", "my_dummy.order", "my_dummy.date", "my_dummy.range", "my_dummy.boolean", "my_dummy.numeric"}})
+ * @ApiResource(attributes={
+ *     "filters"={
+ *         "my_dummy.boolean",
+ *         "my_dummy.date",
+ *         "my_dummy.exists",
+ *         "my_dummy.numeric",
+ *         "my_dummy.order",
+ *         "my_dummy.range",
+ *         "my_dummy.search",
+ *         "my_dummy.property"
+ *     }
+ * })
  * @ORM\Entity
  */
 class Dummy
@@ -113,6 +127,7 @@ class Dummy
      * @var ArrayCollection Several dummies
      *
      * @ORM\ManyToMany(targetEntity="RelatedDummy")
+     * @ApiSubresource
      */
     public $relatedDummies;
 
@@ -122,6 +137,13 @@ class Dummy
      * @ORM\Column(type="json_array", nullable=true)
      */
     public $jsonData;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    public $arrayData;
 
     /**
      * @var string
@@ -138,11 +160,17 @@ class Dummy
     {
         $this->relatedDummies = new ArrayCollection();
         $this->jsonData = [];
+        $this->arrayData = [];
     }
 
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function setName($name)
@@ -179,8 +207,14 @@ class Dummy
     {
     }
 
+    public function getFoo()
+    {
+        return $this->foo;
+    }
+
     public function setFoo(array $foo = null)
     {
+        $this->foo = $foo;
     }
 
     public function setDummyDate(\DateTime $dummyDate = null)
@@ -213,6 +247,16 @@ class Dummy
     public function getJsonData()
     {
         return $this->jsonData;
+    }
+
+    public function setArrayData($arrayData)
+    {
+        $this->arrayData = $arrayData;
+    }
+
+    public function getArrayData()
+    {
+        return $this->arrayData;
     }
 
     public function getRelatedDummy()
@@ -254,5 +298,10 @@ class Dummy
     public function getDummy()
     {
         return $this->dummy;
+    }
+
+    public function getRelatedDummies()
+    {
+        return $this->relatedDummies;
     }
 }

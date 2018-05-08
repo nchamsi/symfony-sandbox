@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Serializer;
 
 /**
@@ -28,10 +30,6 @@ trait ContextTrait
      */
     private function initContext(string $resourceClass, array $context): array
     {
-        if (isset($context['api_sub_level'])) {
-            return $context;
-        }
-
         return array_merge($context, [
             'api_sub_level' => true,
             'resource_class' => $resourceClass,

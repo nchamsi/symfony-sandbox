@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Extension;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
@@ -22,13 +24,5 @@ use Doctrine\ORM\QueryBuilder;
  */
 interface QueryItemExtensionInterface
 {
-    /**
-     * @param QueryBuilder                $queryBuilder
-     * @param QueryNameGeneratorInterface $queryNameGenerator
-     * @param string                      $resourceClass
-     * @param array                       $identifiers
-     * @param string|null                 $operationName
-     * @param array                       $context
-     */
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []);
 }

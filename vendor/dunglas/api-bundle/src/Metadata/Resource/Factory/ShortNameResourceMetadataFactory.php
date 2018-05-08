@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Metadata\Resource\Factory;
 
 use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
@@ -38,6 +40,10 @@ final class ShortNameResourceMetadataFactory implements ResourceMetadataFactoryI
             return $resourceMetadata;
         }
 
-        return $resourceMetadata->withShortName(substr($resourceClass, strrpos($resourceClass, '\\') + 1));
+        if (false !== $pos = strrpos($resourceClass, '\\')) {
+            return $resourceMetadata->withShortName(substr($resourceClass, $pos + 1));
+        }
+
+        return $resourceMetadata->withShortName($resourceClass);
     }
 }

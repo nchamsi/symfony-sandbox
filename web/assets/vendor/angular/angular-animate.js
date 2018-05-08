@@ -669,10 +669,10 @@ var ANIMATE_TIMER_KEY = '$$animateCss';
  * ```js
  * {
  *   // starts the animation
- *   start: Function,
+ *   start: FieldFunction,
  *
  *   // ends (aborts) the animation
- *   end: Function
+ *   end: FieldFunction
  * }
  * ```
  *

@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Victor Berchet <victor@suumit.com>
  */
-class ViewHandlerTest extends \PHPUnit_Framework_TestCase
+class ViewHandlerTest extends TestCase
 {
     private $router;
     private $serializer;
@@ -46,7 +47,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSupportsFormat($expected, $formats, $customFormatName)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler($customFormatName, function () {});
+        $viewHandler->registerHandler($customFormatName, function () {
+        });
 
         $this->assertEquals($expected, $viewHandler->supports('html'));
     }
@@ -64,7 +66,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRegisterHandle()
     {
         $viewHandler = $this->createViewHandler();
-        $viewHandler->registerHandler('html', ($callback = function () {}));
+        $viewHandler->registerHandler('html', ($callback = function () {
+        }));
         $this->assertAttributeEquals(['html' => $callback], 'customHandlers', $viewHandler);
     }
 
@@ -355,7 +358,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponse($expected, $formats)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler('html', function ($handler, $view) { return $view; });
+        $viewHandler->registerHandler('html', function ($handler, $view) {
+            return $view;
+        });
 
         $response = $viewHandler->handle(new View(null, $expected), new Request());
         $this->assertEquals($expected, $response->getStatusCode());
@@ -390,7 +395,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleCustom()
     {
         $viewHandler = $this->createViewHandler([]);
-        $viewHandler->registerHandler('html', ($callback = function () { return 'foo'; }));
+        $viewHandler->registerHandler('html', ($callback = function () {
+            return 'foo';
+        }));
 
         $this->requestStack->push(new Request());
 
@@ -441,6 +448,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setMethods(['createView', 'getData'])
             ->disableOriginalConstructor()
+            ->disableOriginalClone()
             ->getMock();
         $form
             ->expects($this->once())
@@ -461,7 +469,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'template data is added to data' => [['foo' => 'bar'], ['baz' => 'qux'], ['foo' => 'bar', 'baz' => 'qux']],
             'lazy template data is added to data' => [
                 ['foo' => 'bar'],
-                function () { return ['baz' => 'qux']; },
+                function () {
+                    return ['baz' => 'qux'];
+                },
                 ['foo' => 'bar', 'baz' => 'qux'],
             ],
             'lazy template data have reference to viewhandler and view' => [
@@ -552,6 +562,19 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'json' => ['json'],
             'xml' => ['xml'],
         ];
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage An instance of Symfony\Bundle\FrameworkBundle\Templating\EngineInterface must be injected in FOS\RestBundle\View\ViewHandler to render templates.
+     */
+    public function testTemplatingNotInjected()
+    {
+        $this->templating = null;
+
+        $view = (new View())->setTemplate('foo.html.twig');
+        $viewHandler = $this->createViewHandler();
+        $viewHandler->renderTemplate($view, 'html');
     }
 
     private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null, $defaultEngine = 'twig')

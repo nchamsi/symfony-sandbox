@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Metadata\Resource\Factory;
 
 use ApiPlatform\Core\Metadata\Extractor\XmlExtractor;
@@ -16,8 +18,8 @@ use ApiPlatform\Core\Metadata\Extractor\YamlExtractor;
 use ApiPlatform\Core\Metadata\Resource\Factory\ExtractorResourceMetadataFactory;
 use ApiPlatform\Core\Metadata\Resource\Factory\ExtractorResourceNameCollectionFactory;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
+use ApiPlatform\Core\Metadata\Resource\Factory\ShortNameResourceMetadataFactory;
 use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
-use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\Dummy;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\FileConfigDummy;
 
 /**
@@ -36,7 +38,6 @@ class ExtractorResourceMetadataFactoryTest extends FileConfigurationMetadataFact
 
         $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new XmlExtractor([$configPath]));
         $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
-        $resourceMetadataDummy = $resourceMetadataFactory->create(Dummy::class);
 
         $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
         $this->assertEquals($expectedResourceMetadata, $resourceMetadata);
@@ -63,6 +64,53 @@ class ExtractorResourceMetadataFactoryTest extends FileConfigurationMetadataFact
     public function testXmlOptionalResourceMetadata($expectedResourceMetadata)
     {
         $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/resourcesoptional.xml';
+
+        $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new XmlExtractor([$configPath]));
+        $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
+
+        $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
+
+        $this->assertEquals($expectedResourceMetadata, $resourceMetadata);
+    }
+
+    /**
+     * @expectedDeprecation Configuring "%s" tags without using a parent "%ss" tag is deprecated since API Platform 2.1 and will not be possible anymore in API Platform 3
+     * @group legacy
+     * @dataProvider legacyOperationsResourceMetadataProvider
+     */
+    public function testLegacyOperationsResourceMetadata($expectedResourceMetadata)
+    {
+        $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/legacyoperations.xml';
+
+        $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new XmlExtractor([$configPath]));
+        $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
+
+        $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
+
+        $this->assertEquals($expectedResourceMetadata, $resourceMetadata);
+    }
+
+    /**
+     * @dataProvider noCollectionOperationsResourceMetadataProvider
+     */
+    public function testXmlNoCollectionOperationsResourceMetadata($expectedResourceMetadata)
+    {
+        $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/nocollectionoperations.xml';
+
+        $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new XmlExtractor([$configPath]));
+        $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
+
+        $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
+
+        $this->assertEquals($expectedResourceMetadata, $resourceMetadata);
+    }
+
+    /**
+     * @dataProvider noItemOperationsResourceMetadataProvider
+     */
+    public function testXmlNoItemOperationsResourceMetadata($expectedResourceMetadata)
+    {
+        $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/noitemoperations.xml';
 
         $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new XmlExtractor([$configPath]));
         $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
@@ -127,7 +175,6 @@ class ExtractorResourceMetadataFactoryTest extends FileConfigurationMetadataFact
 
         $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new YamlExtractor([$configPath]));
         $resourceMetadata = $resourceMetadataFactory->create(FileConfigDummy::class);
-        $resourceMetadataDummy = $resourceMetadataFactory->create(Dummy::class);
 
         $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
         $this->assertEquals($expectedResourceMetadata, $resourceMetadata);
@@ -230,5 +277,17 @@ class ExtractorResourceMetadataFactoryTest extends FileConfigurationMetadataFact
         $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/bad_declaration.yml';
 
         (new ExtractorResourceMetadataFactory(new YamlExtractor([$configPath])))->create(FileConfigDummy::class);
+    }
+
+    public function testCreateShortNameResourceMetadataForClassWithoutNamespace()
+    {
+        $configPath = __DIR__.'/../../../Fixtures/FileConfigurations/resourceswithoutnamespace.yml';
+
+        $resourceMetadataFactory = new ExtractorResourceMetadataFactory(new YamlExtractor([$configPath]));
+        $shortNameResourceMetadataFactory = new ShortNameResourceMetadataFactory($resourceMetadataFactory);
+
+        $resourceMetadata = $shortNameResourceMetadataFactory->create(\DateTime::class);
+        $this->assertInstanceOf(ResourceMetadata::class, $resourceMetadata);
+        $this->assertSame(\DateTime::class, $resourceMetadata->getShortName());
     }
 }

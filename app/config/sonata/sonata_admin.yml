@@ -4,6 +4,9 @@
 twig:
     base_template_class: Sonata\CacheBundle\Twig\TwigTemplate14
 
+    form_themes:
+        - '@SonataCore/Form/datepicker.html.twig'
+
 #    form:
 #        resources:
 #            - 'SonataFormatterBundle:Form:formatter.html.twig'
@@ -41,7 +44,7 @@ sonata_admin:
     title_logo: "%sonata_admin.logo_title%"
 
     options:
-        title_mode:  single_image         # One of "single_text"; "single_image"; "both"
+        title_mode:  both         # One of "single_text"; "single_image"; "both"
         html5_validate: true # does not use html5 validation
         pager_links: 5        # pager max links to display
         # another options
@@ -55,7 +58,6 @@ sonata_admin:
         dropdown_number_groups_per_colums:  2
         # Enable locking when editing an object, if the corresponding object manager supports it.
         lock_protection:      true
-        
 
     templates:
         # default global templates
@@ -69,23 +71,23 @@ sonata_admin:
         show:    SonataAdminBundle:CRUD:show.html.twig
         edit:    SonataAdminBundle:CRUD:edit.html.twig
 
-        base_list_field:    ApplicationSonataAdminBundle:CRUD:base_list_field.html.twig
+        #base_list_field:    SonataAdminBundle:CRUD:base_list_field.html.twig
 
     dashboard:
         blocks:
             #- { position: left, type: sonata.admin.block.admin_list }
             #- { position: right, type: sonata.admin_doctrine_orm.block.audit}
-            - { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
+            #- { position: left, type: sonata.admin.block.admin_list, settings: { groups: [sonata.admin.group.administration] } }
 
         groups:
             sonata.admin.group.administration:
                 label:           sonata_administration
                 label_catalogue: SonataAdminBundle
                 icon: '<i class="glyphicon glyphicon-user"></i>'
-                items: 
-                    - sonata.user.admin.user
-                    - sonata.user.admin.group
-                    - data_dog_audit.admin.audit_log
+                items:
+                    #- sonata.user.admin.user
+                    #- sonata.user.admin.group
+                    #- data_dog_audit.admin.audit_log
 
             sonata.admin.group.site_builder:
                 label:           sonata_page

@@ -2,7 +2,13 @@
     "name": "sonata-project/formatter-bundle",
     "type": "symfony-bundle",
     "description": "Symfony SonataFormatterBundle",
-    "keywords": ["sonata", "formatter", "markdown", "ckeditor", "markitup"],
+    "keywords": [
+        "sonata",
+        "formatter",
+        "markdown",
+        "ckeditor",
+        "markitup"
+    ],
     "homepage": "https://sonata-project.org/bundles/formatter",
     "license": "MIT",
     "authors": [
@@ -17,40 +23,30 @@
         }
     ],
     "require": {
-        "php": "^5.3 || ^7.0",
+        "php": "^5.6 || ^7.0",
         "egeloen/ckeditor-bundle": "^4.0 || ^5.0",
         "knplabs/knp-markdown-bundle": "^1.4",
-        "sonata-project/block-bundle": "^3.2",
+        "sonata-project/block-bundle": "^3.11",
         "sonata-project/core-bundle": "^3.0",
-        "symfony/form": "^2.3 || ^3.0",
-        "symfony/framework-bundle": "^2.3 || ^3.0",
-        "symfony/property-access": "^2.3 || ^3.0",
-        "twig/twig": "^1.12 || ^2.0"
-    },
-    "require-dev": {
-        "matthiasnoback/symfony-dependency-injection-test": "^0.1 || ^1.0",
-        "sllh/php-cs-fixer-styleci-bridge": "^2.0",
-        "sonata-project/admin-bundle": "^3.1",
-        "sonata-project/media-bundle": "^3.5",
-        "symfony/phpunit-bridge": "^2.7 || ^3.0",
-        "symfony/validator": "^2.3 || ^3.0"
-    },
-    "suggest": {
-        "sonata-project/admin-bundle": "For using the admin media browser.",
-        "sonata-project/media-bundle": "For using the admin media browser."
+        "symfony/form": "^2.8 || ^3.2 || ^4.0",
+        "symfony/framework-bundle": "^2.8 || ^3.2 || ^4.0",
+        "symfony/property-access": "^2.8 || ^3.2 || ^4.0",
+        "twig/twig": "^1.34 || ^2.0"
     },
     "conflict": {
         "sonata-project/admin-bundle": "<3.0",
         "sonata-project/media-bundle": "<3.0"
     },
-    "autoload": {
-        "psr-4": { "Sonata\\FormatterBundle\\": "" },
-        "exclude-from-classmap": [
-            "Tests/"
-        ]
+    "require-dev": {
+        "matthiasnoback/symfony-dependency-injection-test": "^1.1",
+        "sonata-project/admin-bundle": "^3.11",
+        "sonata-project/media-bundle": "^3.10",
+        "symfony/phpunit-bridge": "^3.3 || ^4.0",
+        "symfony/validator": "^2.8 || ^3.2 || ^4.0"
     },
-    "autoload-dev": {
-        "psr-4": { "Sonata\\FormatterBundle\\Tests\\": "Tests/" }
+    "suggest": {
+        "sonata-project/admin-bundle": "For using the admin media browser.",
+        "sonata-project/media-bundle": "For using the admin media browser."
     },
     "config": {
         "sort-packages": true
@@ -58,6 +54,16 @@
     "extra": {
         "branch-alias": {
             "dev-master": "3.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Sonata\\FormatterBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sonata\\FormatterBundle\\Tests\\": "tests/"
         }
     }
 }

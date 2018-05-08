@@ -11,14 +11,16 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Request\RequestBodyParamConverter;
+use PHPUnit\Framework\TestCase;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
-class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
+class RequestBodyParamConverterTest extends TestCase
 {
     protected $serializer;
     protected $converterBuilder;
@@ -72,7 +74,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
      */
     public function testExecutionInterceptsUnsupportedFormatException()
     {
@@ -85,10 +87,14 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testExecutionInterceptsJMSException()
     {
+        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+            $this->markTestSkipped('JMSSerializerBundle is not installed.');
+        }
+
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->serializer
             ->expects($this->once())
@@ -98,7 +104,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testExecutionInterceptsSymfonySerializerException()
     {
@@ -142,6 +148,26 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => ['foo']]]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals('fooError', $request->attributes->get('errors'));
+    }
+
+    public function testValidatorSkipping()
+    {
+        $this->serializer
+            ->expects($this->once())
+            ->method('deserialize')
+            ->willReturn('Object');
+
+        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
+        $validator
+            ->expects($this->never())
+            ->method('validate');
+
+        $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
+
+        $request = $this->createRequest();
+        $configuration = $this->createConfiguration(null, null, ['validate' => false]);
+        $this->launchExecution($converter, $request, $configuration);
+        $this->assertNull($request->attributes->get('errors'));
     }
 
     public function testReturn()
@@ -234,42 +260,24 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     protected function launchExecution($converter, $request = null, $configuration = null)
     {
-        if ($request === null) {
+        if (null === $request) {
             $request = $this->createRequest('body', 'application/json');
         }
-        if ($configuration === null) {
+        if (null === $configuration) {
             $configuration = $this->createConfiguration('FooClass', 'foo');
         }
 
         return $converter->apply($request, $configuration);
     }
 
-    protected function createConfiguration($class = null, $name = null, $options = null)
+    protected function createConfiguration($class = null, $name = null, array $options = array())
     {
-        $config = $this->getMockBuilder('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter')
-            ->disableOriginalConstructor()
-            ->setMethods(['getClass', 'getAliasName', 'getOptions', 'getName', 'allowArray'])
-            ->getMock();
-
-        if ($name !== null) {
-            $config->expects($this->any())
-                ->method('getName')
-                ->will($this->returnValue($name));
-        }
-
-        if ($class !== null) {
-            $config->expects($this->any())
-                ->method('getClass')
-                ->will($this->returnValue($class));
-        }
-
-        if ($options !== null) {
-            $config->expects($this->any())
-                ->method('getOptions')
-                ->will($this->returnValue($options));
-        }
-
-        return $config;
+        return new ParamConverter([
+            'name' => $name,
+            'class' => $class,
+            'options' => $options,
+            'converter' => 'fos_rest.request_body',
+        ]);
     }
 
     protected function createRequest($body = null, $contentType = null)

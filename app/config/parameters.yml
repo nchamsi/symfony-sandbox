@@ -1,5 +1,6 @@
 # This file is auto-generated during the composer install
 parameters:
+    database_driver: pdo_mysql
     database_host: 127.0.0.1
     database_port: null
     database_name: symfony
@@ -13,21 +14,16 @@ parameters:
     secret: 692cd6b4574faf02145126fe2f31c3fdbf88a5fc
     webapp_host: 127.0.0.1
     webapp_url: 'http://%webapp_host%'
-    webapp.logo: /logo.png
+    webapp.logo: logo.png
     webapp.short_title: Symfony
     webapp.title: Symfony
     sonata_admin.title: Symfony
     sonata_admin.short_title: Symfony
-    sonata_admin.logo_title: /logo.png
+    sonata_admin.logo_title: logo.png
     sonata_admin.skin: skin-blue
-    sonata_media.cdn.host: '%webapp_url%/uploads/media'
-    security_user_class: Application\Sonata\UserBundle\Entity\User\User
-    security_group_class: Application\Sonata\UserBundle\Entity\User\Group
-    security_user_group_table: user__user_group
-    security_user_admin_class: Application\Sonata\UserBundle\Admin\User\UserAdmin
-    security_group_admin_class: Application\Sonata\UserBundle\Admin\User\GroupAdmin
+    sonata_media.cdn.host: /uploads/media
     sonata_user.google_authenticator.server: app.symfony-sonata-project.com
-    jwt_private_key_path: '%kernel.root_dir%/../var/jwt/server.key'
-    jwt_public_key_path: '%kernel.root_dir%/../var/jwt/server.crt'
+    jwt_private_key_path: '%kernel.root_dir%/../app/config/jwt/server.key'
+    jwt_public_key_path: '%kernel.root_dir%/../app/config/jwt/server.crt'
     jwt_key_pass_phrase: '1234'
     jwt_token_ttl: 86400

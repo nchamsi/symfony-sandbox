@@ -15,6 +15,7 @@ use Doctrine\ORM\Query;
 use Exporter\Exception\InvalidMethodCallException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyPath;
 
 class DoctrineORMQuerySourceIterator implements SourceIteratorInterface
@@ -35,7 +36,7 @@ class DoctrineORMQuerySourceIterator implements SourceIteratorInterface
     protected $propertyPaths;
 
     /**
-     * @var PropertyAccess
+     * @var PropertyAccessor
      */
     protected $propertyAccessor;
 
@@ -59,7 +60,7 @@ class DoctrineORMQuerySourceIterator implements SourceIteratorInterface
 
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        $this->propertyPaths = array();
+        $this->propertyPaths = [];
         foreach ($fields as $name => $field) {
             if (is_string($name) && is_string($field)) {
                 $this->propertyPaths[$name] = new PropertyPath($field);
@@ -77,7 +78,7 @@ class DoctrineORMQuerySourceIterator implements SourceIteratorInterface
     {
         $current = $this->iterator->current();
 
-        $data = array();
+        $data = [];
 
         foreach ($this->propertyPaths as $name => $propertyPath) {
             try {
@@ -155,7 +156,7 @@ class DoctrineORMQuerySourceIterator implements SourceIteratorInterface
     {
         if (is_array($value) || $value instanceof \Traversable) {
             $value = null;
-        } elseif ($value instanceof \DateTime) {
+        } elseif ($value instanceof \DateTimeInterface) {
             $value = $value->format($this->dateTimeFormat);
         } elseif (is_object($value)) {
             $value = (string) $value;

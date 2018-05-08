@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\EventListener;
 
 use ApiPlatform\Core\Exception\RuntimeException;
+use ApiPlatform\Core\Serializer\ResourceList;
 use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,18 +53,21 @@ final class SerializeListener
             return;
         }
 
-        try {
-            $attributes = RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (!$attributes = RequestAttributesExtractor::extractAttributes($request)) {
             $this->serializeRawData($event, $request, $controllerResult);
 
             return;
         }
 
         $context = $this->serializerContextBuilder->createFromRequest($request, true, $attributes);
-        $request->attributes->set('_api_respond', true);
+        $resources = new ResourceList();
+        $context['resources'] = &$resources;
+        $request->attributes->set('_api_normalization_context', $context);
 
         $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $context));
+
+        $request->attributes->set('_api_respond', true);
+        $request->attributes->set('_resources', $request->attributes->get('_resources', []) + (array) $resources);
     }
 
     /**
@@ -79,8 +85,8 @@ final class SerializeListener
             return;
         }
 
-        if (is_object($controllerResult)) {
-            $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat()));
+        if (\is_object($controllerResult)) {
+            $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $request->attributes->get('_api_normalization_context', [])));
 
             return;
         }

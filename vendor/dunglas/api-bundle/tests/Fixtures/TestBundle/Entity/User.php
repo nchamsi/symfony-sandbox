@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -21,6 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * A User.
  *
  * @ORM\Entity
+ * @ORM\Table(name="user_test")
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"user", "user-read"}},
  *     "denormalization_context"={"groups"={"user", "user-write"}}

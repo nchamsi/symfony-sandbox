@@ -82,7 +82,7 @@ Example:
     * @Get("/users/foo", name="_foo")
     * @Get("/users/bar", name="_bar")
     */
-    public function getUsers() { /** */ }
+    public function getUsersAction() { /** */ }
 
 
 Result:
@@ -107,7 +107,7 @@ Example:
     * @Get("/users/foo", name="get_foo", options={ "method_prefix" = false })
     * @Get("/users/bar", name="get_bar", options={ "method_prefix" = false })
     */
-    public function getUsers() { /** */ }
+    public function getUsersAction() { /** */ }
 
 
 Result:
@@ -118,3 +118,11 @@ Name                 Method  Scheme  Host  Path
 get_foo              GET      ANY    ANY   /users/foo.{_format}
 get_bar              GET      ANY    ANY   /users/bar.{_format}
 ===================  ======  ======  ====  ====================
+
+Or you can disable it globally by setting:
+
+.. code-block:: yaml
+
+    ...
+    routing_loader:
+        prefix_methods: false

@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Api;
 
-use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Core\Util\ClassInfoTrait;
@@ -27,6 +28,7 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
     use ClassInfoTrait;
 
     private $resourceNameCollectionFactory;
+    private $localIsResourceClassCache = [];
 
     public function __construct(ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory)
     {
@@ -38,7 +40,7 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
      */
     public function getResourceClass($value, string $resourceClass = null, bool $strict = false): string
     {
-        if (is_object($value) && !$value instanceof PaginatorInterface) {
+        if (\is_object($value) && !$value instanceof \Traversable) {
             $typeToFind = $type = $this->getObjectClass($value);
             if (null === $resourceClass) {
                 $resourceClass = $typeToFind;
@@ -49,12 +51,15 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
             $typeToFind = $type = $resourceClass;
         }
 
-        if (($strict && isset($type) && $resourceClass !== $type) || !$this->isResourceClass($typeToFind)) {
+        if (($strict && isset($type) && $resourceClass !== $type) || false === $isResourceClass = $this->isResourceClass($typeToFind)) {
             if (is_subclass_of($type, $resourceClass) && $this->isResourceClass($resourceClass)) {
                 return $type;
             }
+            if ($isResourceClass ?? $this->isResourceClass($typeToFind)) {
+                return $typeToFind;
+            }
 
-            throw new InvalidArgumentException(sprintf('No resource class found for object of type "%s"', $typeToFind));
+            throw new InvalidArgumentException(sprintf('No resource class found for object of type "%s".', $typeToFind));
         }
 
         return $resourceClass;
@@ -65,12 +70,16 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
      */
     public function isResourceClass(string $type): bool
     {
+        if (isset($this->localIsResourceClassCache[$type])) {
+            return $this->localIsResourceClassCache[$type];
+        }
+
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
             if ($type === $resourceClass) {
-                return true;
+                return $this->localIsResourceClassCache[$type] = true;
             }
         }
 
-        return false;
+        return $this->localIsResourceClassCache[$type] = false;
     }
 }

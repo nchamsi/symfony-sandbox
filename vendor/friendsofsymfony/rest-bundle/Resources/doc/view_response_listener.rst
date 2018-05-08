@@ -72,9 +72,10 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
     <?php
 
     use FOS\RestBundle\View\View;
+    use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 
     /**
-     * @View()
+     * @ViewAnnotation()
      */
     public function getUsersAction()
     {
@@ -167,7 +168,7 @@ You can also define your serializer options dynamically:
         $context->setVersion('1.0');
         $context->addGroup('user');
 
-        $view->setSerializationContext($context);
+        $view->setContext($context);
 
         // ...
         $view

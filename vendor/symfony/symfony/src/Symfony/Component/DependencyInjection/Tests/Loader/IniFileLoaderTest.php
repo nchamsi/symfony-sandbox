@@ -51,11 +51,11 @@ class IniFileLoaderTest extends TestCase
     public function testTypeConversionsWithNativePhp($key, $value, $supported)
     {
         if (defined('HHVM_VERSION_ID')) {
-            return $this->markTestSkipped();
+            $this->markTestSkipped();
         }
 
         if (!$supported) {
-            return;
+            $this->markTestSkipped(sprintf('Converting the value "%s" to "%s" is not supported by the IniFileLoader.', $key, $value));
         }
 
         $this->loader->load('types.ini');
@@ -127,6 +127,7 @@ class IniFileLoaderTest extends TestCase
         $loader = new IniFileLoader(new ContainerBuilder(), new FileLocator());
 
         $this->assertTrue($loader->supports('foo.ini'), '->supports() returns true if the resource is loadable');
-        $this->assertFalse($loader->supports('foo.foo'), '->supports() returns true if the resource is loadable');
+        $this->assertFalse($loader->supports('foo.foo'), '->supports() returns false if the resource is not loadable');
+        $this->assertTrue($loader->supports('with_wrong_ext.yml', 'ini'), '->supports() returns true if the resource with forced type is loadable');
     }
 }

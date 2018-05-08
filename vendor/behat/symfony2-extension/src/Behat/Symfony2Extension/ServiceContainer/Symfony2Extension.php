@@ -15,6 +15,7 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Behat\Gherkin\ServiceContainer\GherkinExtension;
 use Behat\Symfony2Extension\ServiceContainer\Driver\SymfonyFactory;
 use Behat\Testwork\EventDispatcher\ServiceContainer\EventDispatcherExtension;
+use Behat\Testwork\ServiceContainer\Exception\ProcessingException;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\Specification\ServiceContainer\SpecificationExtension;
@@ -33,6 +34,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class Symfony2Extension implements ExtensionInterface
 {
     const KERNEL_ID = 'symfony2_extension.kernel';
+    const DEFAULT_KERNEL_BOOTSTRAP = 'app/autoload.php';
 
     /**
      * {@inheritdoc}
@@ -69,7 +71,7 @@ class Symfony2Extension implements ExtensionInterface
                 ->arrayNode('kernel')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('bootstrap')->defaultValue('app/autoload.php')->end()
+                        ->scalarNode('bootstrap')->defaultValue(self::DEFAULT_KERNEL_BOOTSTRAP)->end()
                         ->scalarNode('path')->defaultValue('app/AppKernel.php')->end()
                         ->scalarNode('class')->defaultValue('AppKernel')->end()
                         ->scalarNode('env')->defaultValue('test')->end()
@@ -124,6 +126,10 @@ class Symfony2Extension implements ExtensionInterface
                 require_once($bootstrap);
             } elseif (file_exists($bootstrapPath)) {
                 require_once($bootstrapPath);
+            } elseif ($bootstrapPath !== self::DEFAULT_KERNEL_BOOTSTRAP) {
+                throw new ProcessingException(
+                    'Could not load bootstrap file. Please check your configuration at "kernel.bootstrap"'
+                );
             }
         }
 

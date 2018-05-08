@@ -12,11 +12,13 @@
 namespace FOS\RestBundle\Tests\Context;
 
 use FOS\RestBundle\Context\Context;
+use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
-class ContextTest extends \PHPUnit_Framework_TestCase
+class ContextTest extends TestCase
 {
     protected $context;
 
@@ -28,7 +30,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testDefaultValues()
     {
         $this->assertEquals([], $this->context->getAttributes());
-        $this->assertEquals(null, $this->context->getGroups());
+        $this->assertNull($this->context->getGroups());
     }
 
     public function testAttributes()
@@ -96,6 +98,17 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     {
         $this->context->setSerializeNull(true);
 
-        $this->assertEquals(true, $this->context->getSerializeNull());
+        $this->assertTrue($this->context->getSerializeNull());
+    }
+
+    public function testExclusionStrategy()
+    {
+        $strategy1 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
+        $strategy2 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
+
+        $this->context->addExclusionStrategy($strategy1);
+        $this->context->addExclusionStrategy($strategy2);
+
+        $this->assertEquals([$strategy1, $strategy2], $this->context->getExclusionStrategies());
     }
 }

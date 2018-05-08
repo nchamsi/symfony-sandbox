@@ -15,13 +15,12 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new AppBundle\AppBundle(),
-            //-------------------------------------------------------------------
-            // SYMFONY STANDARD EDITION
+
+            // ADDITIONAL BUNDLES
 
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            //new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             // DOCTRINE
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
@@ -42,10 +41,10 @@ class AppKernel extends Kernel
             // new SimpleThings\EntityAudit\SimpleThingsEntityAuditBundle(),
             // API
             new FOS\RestBundle\FOSRestBundle(),
-            new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            //new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
-            
+
             new JMS\SerializerBundle\JMSSerializerBundle($this),
 
             // SONATA FOUNDATION
@@ -56,10 +55,10 @@ class AppKernel extends Kernel
             //new Sonata\CacheBundle\SonataCacheBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
             new Sonata\ClassificationBundle\SonataClassificationBundle(),
-            new Sonata\NotificationBundle\SonataNotificationBundle(),
+            //new Sonata\NotificationBundle\SonataNotificationBundle(),
             new Sonata\DatagridBundle\SonataDatagridBundle(),
             //
-			new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
             // another bundles
             // FOS Js Routing Bundle
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
@@ -73,7 +72,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             // Anothers util bundles
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-            new Shtumi\UsefulBundle\ShtumiUsefulBundle(),
+            //new Shtumi\UsefulBundle\ShtumiUsefulBundle(),
             new DataDog\AuditBundle\DataDogAuditBundle(),
             //new Genemu\Bundle\FormBundle\GenemuFormBundle(),
             // Captcha bundles
@@ -81,27 +80,23 @@ class AppKernel extends Kernel
             # JWT Authorization
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
             new Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle(),
-            /*
-             * application sonata bundles
-             */
-            new Application\FOS\UserBundle\ApplicationFOSUserBundle('FOSUserBundle'),
-            new Application\Sonata\AdminBundle\ApplicationSonataAdminBundle('SonataAdminBundle'),
-            new Application\Sonata\UserBundle\ApplicationSonataUserBundle('SonataUserBundle'),
-            new Application\Sonata\ClassificationBundle\ApplicationSonataClassificationBundle('SonataClassificationBundle'),
-            new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle('SonataMediaBundle'),
-            //new Application\Sonata\NotificationBundle\ApplicationSonataNotificationBundle('SonataNotificationBundle'),
-            //new Application\Sonata\PageBundle\ApplicationSonataPageBundle('SonataPageBundle'),
-            new Application\DataDog\AuditBundle\ApplicationDataDogAuditBundle('DataDogAuditBundle'),
-            //-------------------------------------------------------------------,
-            new Application\Api\SecurityBundle\ApplicationApiSecurityBundle(),
-            //-------------------------------------------------------------------,
-        ];
+
+            //-------------------------------------------------------------------
+
+            new AppBundle\AppBundle(),
+
+            //-------------------------------------------------------------------
+	];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+
+            if ('dev' === $this->getEnvironment()) {
+                $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+                $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
+            }
         }
 
         return $bundles;
@@ -114,16 +109,16 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
     }
 
     public function getLogDir()
     {
-        return dirname(__DIR__).'/var/logs';
+        return dirname(__DIR__) . '/var/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }

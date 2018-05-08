@@ -32,9 +32,11 @@ Feature: Ignore unknown attributes
       "relatedDummy": null,
       "relatedDummies": [],
       "jsonData": [],
+      "arrayData": [],
       "name_converted": null,
       "id": 1,
       "name": "Not existing",
-      "alias": null
+      "alias": null,
+      "foo": null
     }
     """

@@ -135,7 +135,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         foreach ($collection as $route) {
             $names[] = $route->getPath();
         }
-        $this->assertEquals(count($names), count(array_unique($names)));
+        $this->assertCount(count($names), array_unique($names));
     }
 
     public function testForwardOptionsRequirementsAndDefaults()
@@ -202,7 +202,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * Tests that we can use "controller as service" even if the controller is registered in the
      * container by its class name.
      *
-     * @link https://github.com/FriendsOfSymfony/FOSRestBundle/issues/604#issuecomment-40284026
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/604#issuecomment-40284026
      */
     public function testControllerAsServiceWithClassName()
     {

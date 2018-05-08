@@ -7,10 +7,9 @@ doctrine:
             default:
                 mappings:
                     SonataMediaBundle: ~
-                    ApplicationSonataMediaBundle: ~
 
         resolve_target_entities:
-            Sonata\MediaBundle\Entity\BaseMedia: Application\Sonata\MediaBundle\Entity\Media\Media
+            Sonata\MediaBundle\Entity\BaseMedia: AppBundle\Entity\Media\Media
 
 #liip_doctrine_cache:
 #    namespaces:
@@ -59,12 +58,17 @@ liip_imagine:
                 relative_resize: { heighten: 600 }
                 #thumbnail: { size: [610, 600], mode: outbound }
 
+twig:
+    form_themes:
+            # other files
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+
 sonata_media:
     class:
-        media:             Application\Sonata\MediaBundle\Entity\Media\Media
-        gallery:           Application\Sonata\MediaBundle\Entity\Media\Gallery
-        gallery_has_media: Application\Sonata\MediaBundle\Entity\Media\GalleryHasMedia
-        category:          Application\Sonata\ClassificationBundle\Entity\Classification\Category
+        media:             AppBundle\Entity\Media\Media
+        gallery:           AppBundle\Entity\Media\Gallery
+        gallery_has_media: AppBundle\Entity\Media\GalleryHasMedia
+        category:          AppBundle\Entity\Classification\Category
 
     db_driver:       doctrine_orm # | doctrine_mongodb
     default_context: default
@@ -89,7 +93,7 @@ sonata_media:
 
             formats:
                 admin:    { width: 75, quality: 75}
-                abstract: { width: 100, quality: 100}
+                avatar: { width: 100, quality: 100}
                 small:    { width: 300, quality: 100}
                 large:    { width: 750, quality: 100}
                 wide:     { width: 820, quality: 100}

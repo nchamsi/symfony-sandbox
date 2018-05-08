@@ -9,12 +9,15 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Tests\Metadata\Resource\Factory;
 
 use ApiPlatform\Core\Metadata\Resource\Factory\CachedResourceNameCollectionFactory;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\ResourceNameCollection;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\Dummy;
+use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -22,7 +25,7 @@ use Psr\Cache\CacheItemPoolInterface;
 /**
  * @author Baptiste Meyer <baptiste.meyer@gmail.com>
  */
-class CachedResourceNameCollectionFactoryTest extends \PHPUnit_Framework_TestCase
+class CachedResourceNameCollectionFactoryTest extends TestCase
 {
     public function testCreateWithItemHit()
     {
@@ -39,7 +42,10 @@ class CachedResourceNameCollectionFactoryTest extends \PHPUnit_Framework_TestCas
         $resultedResourceNameCollection = $cachedResourceNameCollectionFactory->create();
 
         $this->assertInstanceOf(ResourceNameCollection::class, $resultedResourceNameCollection);
-        $this->assertEquals(new ResourceNameCollection([Dummy::class]), $resultedResourceNameCollection);
+
+        $expectedResult = new ResourceNameCollection([Dummy::class]);
+        $this->assertEquals($expectedResult, $resultedResourceNameCollection);
+        $this->assertEquals($expectedResult, $cachedResourceNameCollectionFactory->create(), 'Trigger the local cache');
     }
 
     public function testCreateWithItemNotHit()
@@ -61,7 +67,10 @@ class CachedResourceNameCollectionFactoryTest extends \PHPUnit_Framework_TestCas
         $resultedResourceNameCollection = $cachedResourceNameCollectionFactory->create();
 
         $this->assertInstanceOf(ResourceNameCollection::class, $resultedResourceNameCollection);
-        $this->assertEquals(new ResourceNameCollection([Dummy::class]), $resultedResourceNameCollection);
+
+        $expectedResult = new ResourceNameCollection([Dummy::class]);
+        $this->assertEquals($expectedResult, $resultedResourceNameCollection);
+        $this->assertEquals($expectedResult, $cachedResourceNameCollectionFactory->create(), 'Trigger the local cache');
     }
 
     public function testCreateWithGetCacheItemThrowsCacheException()
@@ -79,6 +88,9 @@ class CachedResourceNameCollectionFactoryTest extends \PHPUnit_Framework_TestCas
         $resultedResourceNameCollection = $cachedResourceNameCollectionFactory->create();
 
         $this->assertInstanceOf(ResourceNameCollection::class, $resultedResourceNameCollection);
-        $this->assertEquals(new ResourceNameCollection([Dummy::class]), $resultedResourceNameCollection);
+
+        $expectedResult = new ResourceNameCollection([Dummy::class]);
+        $this->assertEquals($expectedResult, $resultedResourceNameCollection);
+        $this->assertEquals($expectedResult, $cachedResourceNameCollectionFactory->create(), 'Trigger the local cache');
     }
 }

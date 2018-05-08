@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\FosUser;
 
-use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
@@ -41,9 +41,7 @@ final class EventListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
-        try {
-            RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (!RequestAttributesExtractor::extractAttributes($request)) {
             return;
         }
 
@@ -53,11 +51,10 @@ final class EventListener
         }
 
         switch ($request->getMethod()) {
-            case Request::METHOD_DELETE:
+            case 'DELETE':
                 $this->userManager->deleteUser($user);
                 $event->setControllerResult(null);
                 break;
-
             default:
                 $this->userManager->updateUser($user);
                 break;

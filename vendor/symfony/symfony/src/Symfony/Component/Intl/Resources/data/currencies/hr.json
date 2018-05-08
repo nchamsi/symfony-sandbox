@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.28.79",
+    "Version": "2.1.37.1",
     "Names": {
         "ADP": [
             "ADP",
@@ -260,6 +260,10 @@
         "CLP": [
             "CLP",
             "čileanski pezo"
+        ],
+        "CNH": [
+            "CNH",
+            "kineski juan (offshore)"
         ],
         "CNX": [
             "CNX",
@@ -779,11 +783,11 @@
         ],
         "PEN": [
             "PEN",
-            "peruanski novi sol"
+            "peruanski sol"
         ],
         "PES": [
             "PES",
-            "peruanski sol"
+            "peruanski sol (1863–1965)"
         ],
         "PGK": [
             "PGK",

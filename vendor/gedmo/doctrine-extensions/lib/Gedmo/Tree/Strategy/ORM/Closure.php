@@ -3,8 +3,8 @@
 namespace Gedmo\Tree\Strategy\ORM;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Version;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Tree\Strategy;
@@ -403,11 +403,11 @@ class Closure implements Strategy
     /**
      * Update node and closures
      *
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param object        $node
      * @param object        $oldParent
      */
-    public function updateNode(EntityManager $em, $node, $oldParent)
+    public function updateNode(EntityManagerInterface $em, $node, $oldParent)
     {
         $wrapped = AbstractWrapper::wrap($node, $em);
         $meta = $wrapped->getMetadata();
@@ -435,12 +435,8 @@ class Closure implements Strategy
             $subQuery .= " JOIN {$table} c2 ON c1.descendant = c2.descendant";
             $subQuery .= " WHERE c1.ancestor = :nodeId AND c2.depth > c1.depth";
 
-            $ids = $conn->fetchAll($subQuery, compact('nodeId'));
-            if ($ids) {
-                $ids = array_map(function ($el) {
-                    return $el['id'];
-                }, $ids);
-            
+            $ids = $conn->executeQuery($subQuery, compact('nodeId'))->fetchAll(\PDO::FETCH_COLUMN);
+            if ($ids) {            
                 // using subquery directly, sqlite acts unfriendly
                 $query = "DELETE FROM {$table} WHERE id IN (".implode(', ', $ids).")";
                 if (!empty($ids) && !$conn->executeQuery($query)) {

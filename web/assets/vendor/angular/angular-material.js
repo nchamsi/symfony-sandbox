@@ -4365,7 +4365,7 @@ angular.module('material.core.meta', [])
    *
    * @param {object=} scope Scope within the current context
    * @param {object=} element The element the ripple effect should be applied to
-   * @param {object=} options (Optional) Configuration options to override the default ripple configuration
+   * @param {object=} options (Optional) Variable options to override the default ripple configuration
    */
 
   MdButtonInkRipple.$inject = ["$mdInkRipple"];
@@ -4415,7 +4415,7 @@ angular.module('material.core.meta', [])
    *
    * @param {object=} scope Scope within the current context
    * @param {object=} element The element the ripple effect should be applied to
-   * @param {object=} options (Optional) Configuration options to override the defaultripple configuration
+   * @param {object=} options (Optional) Variable options to override the defaultripple configuration
    */
 
   MdCheckboxInkRipple.$inject = ["$mdInkRipple"];
@@ -4454,7 +4454,7 @@ angular.module('material.core.meta', [])
    *
    * @param {object=} scope Scope within the current context
    * @param {object=} element The element the ripple effect should be applied to
-   * @param {object=} options (Optional) Configuration options to override the defaultripple configuration
+   * @param {object=} options (Optional) Variable options to override the defaultripple configuration
    */
 
   MdListInkRipple.$inject = ["$mdInkRipple"];
@@ -4597,7 +4597,7 @@ function InkRippleProvider () {
        *
        * @param {object=} scope Scope within the current context
        * @param {object=} element The element the ripple effect should be applied to
-       * @param {object=} options (Optional) Configuration options to override the defaultRipple configuration
+       * @param {object=} options (Optional) Variable options to override the defaultRipple configuration
        * * `center` -  Whether the ripple should start from the center of the container element
        * * `dimBackground` - Whether the background should be dimmed with the ripple color
        * * `colorElement` - The element the ripple should take its color from, defined by css property `color`
@@ -4962,7 +4962,7 @@ function attrNoDirective () {
    *
    * @param {object=} scope Scope within the current context
    * @param {object=} element The element the ripple effect should be applied to
-   * @param {object=} options (Optional) Configuration options to override the defaultripple configuration
+   * @param {object=} options (Optional) Variable options to override the defaultripple configuration
    */
 
   MdTabInkRipple.$inject = ["$mdInkRipple"];
@@ -14029,7 +14029,7 @@ angular
  * @description
  * Positions the panel relative to a specific element.
  *
- * @param {string|!Element|!angular.JQLite} element Query selector, DOM element,
+ * @param {string|!Element|!angular.JQLite} element DataModel selector, DOM element,
  *     or angular element to position the panel with respect to.
  * @returns {!MdPanelPosition}
  */
@@ -14360,7 +14360,7 @@ function MdPanelService($rootElement, $rootScope, $injector, $window) {
 
 /**
  * Creates a panel with the specified options.
- * @param {!Object=} config Configuration object for the panel.
+ * @param {!Object=} config Variable object for the panel.
  * @returns {!MdPanelRef}
  */
 MdPanelService.prototype.create = function(config) {
@@ -14389,7 +14389,7 @@ MdPanelService.prototype.create = function(config) {
 
 /**
  * Creates and opens a panel with the specified options.
- * @param {!Object=} config Configuration object for the panel.
+ * @param {!Object=} config Variable object for the panel.
  * @returns {!angular.$q.Promise<!MdPanelRef>} The panel created from create.
  */
 MdPanelService.prototype.open = function(config) {
@@ -14482,7 +14482,7 @@ function MdPanelRef(config, $injector) {
   /** @private @const {!angular.$window} */
   this._$window = $injector.get('$window');
 
-  /** @private @const {!Function} */
+  /** @private @const {!FieldFunction} */
   this._$$rAF = $injector.get('$$rAF');
 
   // Public variables.
@@ -15525,7 +15525,7 @@ MdPanelPosition.prototype.center = function() {
 
 /**
  * Sets element for relative positioning.
- * @param {string|!Element|!angular.JQLite} element Query selector, DOM element,
+ * @param {string|!Element|!angular.JQLite} element DataModel selector, DOM element,
  *     or angular element to set the panel relative to.
  * @returns {!MdPanelPosition}
  */
@@ -27017,13 +27017,13 @@ function MdContactChips($mdTheming, $mdUtil) {
    *     using a numeral system other than [1, 2, 3...].
    * @property {(Array<string>)=} firstDayOfWeek The first day of the week. Sunday = 0, Monday = 1,
    *    etc.
-   * @property {(function(string): Date)=} parseDate Function to parse a date object from a string.
-   * @property {(function(Date): string)=} formatDate Function to format a date object to a string.
-   * @property {(function(Date): string)=} monthHeaderFormatter Function that returns the label for
+   * @property {(function(string): Date)=} parseDate FieldFunction to parse a date object from a string.
+   * @property {(function(Date): string)=} formatDate FieldFunction to format a date object to a string.
+   * @property {(function(Date): string)=} monthHeaderFormatter FieldFunction that returns the label for
    *     a month given a date.
-   * @property {(function(Date): string)=} monthFormatter Function that returns the full name of a month
+   * @property {(function(Date): string)=} monthFormatter FieldFunction that returns the full name of a month
    *     for a giben date.
-   * @property {(function(number): string)=} weekNumberFormatter Function that returns a label for
+   * @property {(function(number): string)=} weekNumberFormatter FieldFunction that returns a label for
    *     a week given the week number.
    * @property {(string)=} msgCalendar Translation of the label "Calendar" for the current locale.
    * @property {(string)=} msgOpenCalendar Translation of the button label "Open calendar" for the
@@ -27105,7 +27105,7 @@ function MdContactChips($mdTheming, $mdUtil) {
       this.firstDayOfWeek = 0;
 
       /**
-       * Function that converts the date portion of a Date to a string.
+       * FieldFunction that converts the date portion of a Date to a string.
        * @type {(function(Date): string)}
        */
       this.formatDate = null;
@@ -27117,19 +27117,19 @@ function MdContactChips($mdTheming, $mdUtil) {
       this.parseDate = null;
 
       /**
-       * Function that formats a Date into a month header string.
+       * FieldFunction that formats a Date into a month header string.
        * @type {function(Date): string}
        */
       this.monthHeaderFormatter = null;
 
       /**
-       * Function that formats a week number into a label for the week.
+       * FieldFunction that formats a week number into a label for the week.
        * @type {function(number): string}
        */
       this.weekNumberFormatter = null;
 
       /**
-       * Function that formats a date into a long aria-label that is read
+       * FieldFunction that formats a date into a long aria-label that is read
        * when the focused date changes.
        * @type {function(Date): string}
        */
@@ -27646,7 +27646,7 @@ function MdContactChips($mdTheming, $mdUtil) {
    * @param {expression=} ng-blur Expression evaluated when focus is removed from the input or the calendar is closed.
    * @param {Date=} md-min-date Expression representing a min date (inclusive).
    * @param {Date=} md-max-date Expression representing a max date (inclusive).
-   * @param {(function(Date): boolean)=} md-date-filter Function expecting a date and returning a boolean whether it can be selected or not.
+   * @param {(function(Date): boolean)=} md-date-filter FieldFunction expecting a date and returning a boolean whether it can be selected or not.
    * @param {String=} md-placeholder The date input placeholder value.
    * @param {String=} md-open-on-focus When present, the calendar will be opened when the input is focused.
    * @param {Boolean=} md-is-open Expression that can be used to open the datepicker's calendar on-demand.
@@ -29065,7 +29065,7 @@ MdIconProvider.prototype = {
 };
 
 /**
- *  Configuration item stored in the Icon registry; used for lookups
+ *  Variable item stored in the Icon registry; used for lookups
  *  to load if not already cached in the `loaded` cache
  */
 function ConfigurationItem(url, viewBoxSize) {

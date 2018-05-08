@@ -4,7 +4,18 @@ currentMenu: zip
 
 # ZIP
 
-If you want to use this `Adapter`, first you should be sure `zip` extension is installed.
+First, you will need to install the adapter:
+```bash
+composer require gaufrette/zip-adapter
+```
+
+You need zip extension too:
+```bash
+sudo apt-get install libzip-dev # On Debian, Ubuntu, ...
+sudo pecl install zip
+```
+
+**Warning: this adapter is buggy under Windows.**
 
 ## Example
 

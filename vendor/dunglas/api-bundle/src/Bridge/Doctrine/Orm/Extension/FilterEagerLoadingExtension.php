@@ -9,9 +9,14 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace ApiPlatform\Core\Bridge\Doctrine\Orm\Extension;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\EagerLoadingTrait;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryBuilderHelper;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -20,12 +25,11 @@ use Doctrine\ORM\QueryBuilder;
  * Fixes filters on OneToMany associations
  * https://github.com/api-platform/core/issues/944.
  */
-final class FilterEagerLoadingExtension implements QueryCollectionExtensionInterface
+final class FilterEagerLoadingExtension implements ContextAwareQueryCollectionExtensionInterface
 {
-    private $resourceMetadataFactory;
-    private $forceEager;
+    use EagerLoadingTrait;
 
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, $forceEager = true)
+    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, bool $forceEager = true)
     {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->forceEager = $forceEager;
@@ -34,9 +38,16 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
     /**
      * {@inheritdoc}
      */
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass = null, string $operationName = null, array $context = [])
     {
-        if (false === $this->forceEager || false === $this->isForceEager($resourceClass, ['collection_operation_name' => $operationName])) {
+        if (null === $resourceClass) {
+            throw new InvalidArgumentException('The "$resourceClass" parameter must not be null');
+        }
+
+        $em = $queryBuilder->getEntityManager();
+        $classMetadata = $em->getClassMetadata($resourceClass);
+
+        if (!$this->shouldOperationForceEager($resourceClass, ['collection_operation_name' => $operationName]) && !$this->hasFetchEagerAssociation($em, $classMetadata)) {
             return;
         }
 
@@ -48,14 +59,40 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
         }
 
         $joinParts = $queryBuilder->getDQLPart('join');
+        $originAlias = $queryBuilder->getRootAliases()[0];
 
-        if (!$joinParts || !isset($joinParts['o'])) {
+        if (!$joinParts || !isset($joinParts[$originAlias])) {
             return;
         }
 
         $queryBuilderClone = clone $queryBuilder;
         $queryBuilderClone->resetDQLPart('where');
-        $queryBuilderClone->andWhere($queryBuilderClone->expr()->in('o', $this->getQueryBuilderWithNewAliases($queryBuilder, $queryNameGenerator)->getDQL()));
+        $changedWhereClause = false;
+
+        if (!$classMetadata->isIdentifierComposite) {
+            $replacementAlias = $queryNameGenerator->generateJoinAlias($originAlias);
+            $in = $this->getQueryBuilderWithNewAliases($queryBuilder, $queryNameGenerator, $originAlias, $replacementAlias);
+            $in->select($replacementAlias);
+            $queryBuilderClone->andWhere($queryBuilderClone->expr()->in($originAlias, $in->getDQL()));
+            $changedWhereClause = true;
+        } else {
+            // Because Doctrine doesn't support WHERE ( foo, bar ) IN () (https://github.com/doctrine/doctrine2/issues/5238), we are building as many subqueries as they are identifiers
+            foreach ($classMetadata->getIdentifier() as $identifier) {
+                if (!$classMetadata->hasAssociation($identifier)) {
+                    continue;
+                }
+
+                $replacementAlias = $queryNameGenerator->generateJoinAlias($originAlias);
+                $in = $this->getQueryBuilderWithNewAliases($queryBuilder, $queryNameGenerator, $originAlias, $replacementAlias);
+                $in->select("IDENTITY($replacementAlias.$identifier)");
+                $queryBuilderClone->andWhere($queryBuilderClone->expr()->in("$originAlias.$identifier", $in->getDQL()));
+                $changedWhereClause = true;
+            }
+        }
+
+        if (false === $changedWhereClause) {
+            return;
+        }
 
         $queryBuilder->resetDQLPart('where');
         $queryBuilder->add('where', $queryBuilderClone->getDQLPart('where'));
@@ -65,14 +102,15 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
      * Returns a clone of the given query builder where everything gets re-aliased.
      *
      * @param QueryBuilder                $queryBuilder
-     * @param QueryNameGeneratorInterface $queryBuilder
-     * @param string                      $originAlias  - the base alias
-     * @param string                      $replacement  - the replacement for the base alias, will change the from alias
+     * @param QueryNameGeneratorInterface $queryNameGenerator
+     * @param string                      $originAlias        the base alias
+     * @param string                      $replacement        the replacement for the base alias, will change the from alias
+     *
+     * @return QueryBuilder
      */
     private function getQueryBuilderWithNewAliases(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $originAlias = 'o', string $replacement = 'o_2')
     {
         $queryBuilderClone = clone $queryBuilder;
-        $queryBuilderClone->select($replacement);
 
         $joinParts = $queryBuilder->getDQLPart('join');
         $wherePart = $queryBuilder->getDQLPart('where');
@@ -80,6 +118,9 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
         //reset parts
         $queryBuilderClone->resetDQLPart('join');
         $queryBuilderClone->resetDQLPart('where');
+        $queryBuilderClone->resetDQLPart('orderBy');
+        $queryBuilderClone->resetDQLPart('groupBy');
+        $queryBuilderClone->resetDQLPart('having');
 
         //Change from alias
         $from = $queryBuilderClone->getDQLPart('from')[0];
@@ -91,37 +132,19 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
 
         //Change join aliases
         foreach ($joinParts[$originAlias] as $joinPart) {
+            /** @var Join $joinPart */
+            $joinString = str_replace($aliases, $replacements, $joinPart->getJoin());
+            $pos = strpos($joinString, '.');
+            $alias = substr($joinString, 0, $pos);
+            $association = substr($joinString, $pos + 1);
+            $condition = str_replace($aliases, $replacements, $joinPart->getCondition());
+            $newAlias = QueryBuilderHelper::addJoinOnce($queryBuilderClone, $queryNameGenerator, $alias, $association, $joinPart->getJoinType(), $joinPart->getConditionType(), $condition, $originAlias);
             $aliases[] = "{$joinPart->getAlias()}.";
-            $alias = $queryNameGenerator->generateJoinAlias($joinPart->getAlias());
-            $replacements[] = "$alias.";
-            $join = new Join($joinPart->getJoinType(), str_replace($aliases, $replacements, $joinPart->getJoin()), $alias, $joinPart->getConditionType(), $joinPart->getCondition(), $joinPart->getIndexBy());
-
-            $queryBuilderClone->add('join', [$join], true);
+            $replacements[] = "$newAlias.";
         }
 
         $queryBuilderClone->add('where', str_replace($aliases, $replacements, (string) $wherePart));
 
         return $queryBuilderClone;
-    }
-
-    /**
-     * Does an operation force eager?
-     *
-     * @param string $resourceClass
-     * @param array  $options
-     *
-     * @return bool
-     */
-    private function isForceEager(string $resourceClass, array $options): bool
-    {
-        $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
-
-        if (isset($options['collection_operation_name'])) {
-            $forceEager = $resourceMetadata->getCollectionOperationAttribute($options['collection_operation_name'], 'force_eager', null, true);
-        } else {
-            $forceEager = $resourceMetadata->getAttribute('force_eager');
-        }
-
-        return is_bool($forceEager) ? $forceEager : $this->forceEager;
     }
 }

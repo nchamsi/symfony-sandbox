@@ -19,23 +19,28 @@ while ($dir !== $lastDir) {
 
     if (file_exists($dir.'/autoload.php')) {
         require_once $dir.'/autoload.php';
+
         break;
     }
 
     if (file_exists($dir.'/autoload.php.dist')) {
         require_once $dir.'/autoload.php.dist';
+
         break;
     }
 
     if (file_exists($dir.'/vendor/autoload.php')) {
         require_once $dir.'/vendor/autoload.php';
+
         break;
     }
 
     $dir = dirname($dir);
 }
 
+use Psr\Log\NullLogger;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -92,6 +97,9 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->rootConfig);
+        $loader->load(function (ContainerBuilder $container) {
+            $container->register('logger', NullLogger::class);
+        });
     }
 
     public function serialize()
