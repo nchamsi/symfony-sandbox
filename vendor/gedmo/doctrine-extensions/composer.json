@@ -47,14 +47,17 @@
         "doctrine/orm": ">=2.5.0",
         "doctrine/common": ">=2.5.0",
         "symfony/yaml": "~2.6|~3.0|~4.0",
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "^4.8.35|^5.7|^6.5"
+    },
+    "conflict": {
+        "doctrine/annotations": "<1.2"
     },
     "suggest": {
         "doctrine/mongodb-odm": "to use the extensions with the MongoDB ODM",
         "doctrine/orm": "to use the extensions with the ORM"
     },
     "autoload": {
-        "psr-0": { "Gedmo\\": "lib/" }
+        "psr-4": { "Gedmo\\": "lib/Gedmo" }
     },
     "config": {
         "bin-dir": "bin"

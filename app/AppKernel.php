@@ -41,7 +41,7 @@ class AppKernel extends Kernel
             // new SimpleThings\EntityAudit\SimpleThingsEntityAuditBundle(),
             // API
             new FOS\RestBundle\FOSRestBundle(),
-            new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            //new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
 

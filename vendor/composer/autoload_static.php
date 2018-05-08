@@ -35,7 +35,10 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         ),
         'W' => 
         array (
-            'WhiteOctober\\PagerfantaBundle\\' => 30,
+            'WhiteOctober\\PagerfantaBundle\\View\\' => 35,
+            'WhiteOctober\\PagerfantaBundle\\Twig\\' => 35,
+            'WhiteOctober\\PagerfantaBundle\\EventListener\\' => 44,
+            'WhiteOctober\\PagerfantaBundle\\DependencyInjection\\' => 50,
             'Webmozart\\Assert\\' => 17,
         ),
         'T' => 
@@ -148,6 +151,7 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
             'Goutte\\' => 7,
             'Google\\Authenticator\\' => 21,
             'Gesdinet\\JWTRefreshTokenBundle\\' => 31,
+            'Gedmo\\' => 6,
         ),
         'F' => 
         array (
@@ -190,7 +194,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
             'Behatch\\' => 8,
             'Behat\\Mink\\Driver\\' => 18,
             'Behat\\Mink\\' => 11,
-            'Bazinga\\Bundle\\HateoasBundle\\' => 29,
         ),
         'A' => 
         array (
@@ -215,9 +218,21 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-code/src',
         ),
-        'WhiteOctober\\PagerfantaBundle\\' => 
+        'WhiteOctober\\PagerfantaBundle\\View\\' => 
         array (
-            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle',
+            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle/View',
+        ),
+        'WhiteOctober\\PagerfantaBundle\\Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle/Twig',
+        ),
+        'WhiteOctober\\PagerfantaBundle\\EventListener\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle/EventListener',
+        ),
+        'WhiteOctober\\PagerfantaBundle\\DependencyInjection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle/DependencyInjection',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -547,6 +562,10 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             0 => __DIR__ . '/..' . '/gesdinet/jwt-refresh-token-bundle',
         ),
+        'Gedmo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gedmo/doctrine-extensions/lib/Gedmo',
+        ),
         'Fig\\Link\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/link-util/src',
@@ -657,10 +676,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         'Behat\\Mink\\' => 
         array (
             0 => __DIR__ . '/..' . '/behat/mink/src',
-        ),
-        'Bazinga\\Bundle\\HateoasBundle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/willdurand/hateoas-bundle',
         ),
         'Application\\' => 
         array (
@@ -791,19 +806,8 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
                 0 => __DIR__ . '/..' . '/imagine/imagine/lib',
             ),
         ),
-        'H' => 
-        array (
-            'Hateoas' => 
-            array (
-                0 => __DIR__ . '/..' . '/willdurand/hateoas/src',
-            ),
-        ),
         'G' => 
         array (
-            'Gedmo\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/gedmo/doctrine-extensions/lib',
-            ),
             'Gaufrette' => 
             array (
                 0 => __DIR__ . '/..' . '/knplabs/gaufrette/src',
@@ -1331,6 +1335,7 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
+        'WhiteOctober\\PagerfantaBundle\\WhiteOctoberPagerfantaBundle' => __DIR__ . '/..' . '/white-october/pagerfanta-bundle/WhiteOctoberPagerfantaBundle.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

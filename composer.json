@@ -58,7 +58,6 @@
         "sonata-project/classification-bundle": "^3.3",
         "sonata-project/easy-extends-bundle": "^2.2",
         "sonata-project/formatter-bundle": "^3.2",
-        "sonata-project/google-authenticator": "^1.0",
         "sonata-project/intl-bundle": "^2.3",
         "sonata-project/media-bundle": "^3.5",
         "sonata-project/notification-bundle": "^3.1",
@@ -71,8 +70,6 @@
         "symfony/symfony": "3.3.*",
         "twig/twig": "^1.0||^2.0",
         "white-october/pagerfanta-bundle": "^1.0",
-        "willdurand/hateoas": "^2.10",
-        "willdurand/hateoas-bundle": "^1.2",
         "willdurand/negotiation": "^2.2"
     },
     "require-dev": {

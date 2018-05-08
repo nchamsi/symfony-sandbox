@@ -27,8 +27,6 @@ return array(
     'JMS\\Serializer' => array($vendorDir . '/jms/serializer/src'),
     'JMS\\' => array($vendorDir . '/jms/parser-lib/src'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
-    'Hateoas' => array($vendorDir . '/willdurand/hateoas/src'),
-    'Gedmo\\' => array($vendorDir . '/gedmo/doctrine-extensions/lib'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),

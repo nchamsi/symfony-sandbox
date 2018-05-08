@@ -465,4 +465,5 @@ return array(
     'SqlFormatter' => $vendorDir . '/jdorn/sql-formatter/lib/SqlFormatter.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'TypeError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
+    'WhiteOctober\\PagerfantaBundle\\WhiteOctoberPagerfantaBundle' => $vendorDir . '/white-october/pagerfanta-bundle/WhiteOctoberPagerfantaBundle.php',
 );
