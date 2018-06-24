@@ -31,13 +31,13 @@ class Recorder
     /**
      * @param $object
      */
-    public function add($object)
+    public function add($object): void
     {
         $class = get_class($object);
 
         $identifier = $this->collectionIdentifiers->getIdentifier($object);
 
-        if ($identifier === false) {
+        if (false === $identifier) {
             return;
         }
 
@@ -53,7 +53,7 @@ class Recorder
     /**
      * Add a new elements into the stack.
      */
-    public function push()
+    public function push(): void
     {
         $this->stack[$this->current + 1] = $this->stack[$this->current];
 
@@ -80,7 +80,7 @@ class Recorder
         return $value;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->current = 0;
         $this->stack = [];

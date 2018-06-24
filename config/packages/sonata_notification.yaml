@@ -1,0 +1,6 @@
+sonata_notification:
+    consumers:
+        register_default: false
+    admin:
+        enabled: false
+

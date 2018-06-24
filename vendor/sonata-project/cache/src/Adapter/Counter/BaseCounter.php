@@ -21,7 +21,7 @@ abstract class BaseCounter implements CounterAdapterInterface
      *
      * @return Counter
      */
-    protected function transform($counter)
+    protected function transform($counter): Counter
     {
         if ($counter instanceof Counter) {
             return $counter;
@@ -37,9 +37,9 @@ abstract class BaseCounter implements CounterAdapterInterface
      *
      * @return Counter
      */
-    protected function handleIncrement($value, Counter $counter, $number)
+    protected function handleIncrement($value, Counter $counter, int $number): Counter
     {
-        if ($value === false) {
+        if (false === $value) {
             $counter = $this->set(Counter::create($counter->getName(), $counter->getValue() + $number));
         } else {
             $counter = Counter::create($counter->getName(), $value);
@@ -55,9 +55,9 @@ abstract class BaseCounter implements CounterAdapterInterface
      *
      * @return Counter
      */
-    protected function handleDecrement($value, Counter $counter, $number)
+    protected function handleDecrement($value, Counter $counter, int $number): Counter
     {
-        if ($value === false) {
+        if (false === $value) {
             $counter = $this->set(Counter::create($counter->getName(), $counter->getValue() + (-1 * $number)));
         } else {
             $counter = Counter::create($counter->getName(), $value);

@@ -12,6 +12,7 @@
 namespace Sonata\Cache\Adapter\Cache;
 
 use Sonata\Cache\CacheElement;
+use Sonata\Cache\CacheElementInterface;
 
 class MongoCache extends BaseCacheHandler
 {
@@ -27,7 +28,7 @@ class MongoCache extends BaseCacheHandler
      * @param $database
      * @param $collection
      */
-    public function __construct(array $servers, $database, $collection)
+    public function __construct(array $servers, string $database, string $collection)
     {
         $this->servers = $servers;
         $this->databaseName = $database;
@@ -37,7 +38,7 @@ class MongoCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flushAll()
+    public function flushAll(): bool
     {
         return $this->flush([]);
     }
@@ -45,19 +46,19 @@ class MongoCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flush(array $keys = [])
+    public function flush(array $keys = []): bool
     {
         $result = $this->getCollection()->remove($keys, [
             'w' => 1,
         ]);
 
-        return $result['ok'] == 1 && $result['err'] === null;
+        return 1 == $result['ok'] && null === $result['err'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function has(array $keys)
+    public function has(array $keys): bool
     {
         $keys['_timeout'] = ['$gt' => time()];
 
@@ -81,7 +82,7 @@ class MongoCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function set(array $keys, $data, $ttl = CacheElement::DAY, array $contextualKeys = [])
+    public function set(array $keys, $data, int $ttl = CacheElement::DAY, array $contextualKeys = []): CacheElementInterface
     {
         $time = time();
 
@@ -100,7 +101,7 @@ class MongoCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function get(array $keys)
+    public function get(array $keys): CacheElementInterface
     {
         $record = $this->getRecord($keys);
 
@@ -110,7 +111,7 @@ class MongoCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function isContextual()
+    public function isContextual(): bool
     {
         return true;
     }
@@ -118,7 +119,7 @@ class MongoCache extends BaseCacheHandler
     /**
      * @return \MongoCollection
      */
-    private function getCollection()
+    private function getCollection(): \MongoCollection
     {
         if (!$this->collection) {
             $class = self::getMongoClass();

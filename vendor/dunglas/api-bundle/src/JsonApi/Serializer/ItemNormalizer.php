@@ -60,12 +60,14 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        $context['cache_key'] = $this->getJsonApiCacheKey($format, $context);
+        if (!isset($context['cache_key'])) {
+            $context['cache_key'] = $this->getJsonApiCacheKey($format, $context);
+        }
 
         // Get and populate attributes data
         $objectAttributesData = parent::normalize($object, $format, $context);
 
-        if (!is_array($objectAttributesData)) {
+        if (!\is_array($objectAttributesData)) {
             return $objectAttributesData;
         }
 
@@ -145,7 +147,7 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     protected function setAttributeValue($object, $attribute, $value, $format = null, array $context = [])
     {
-        parent::setAttributeValue($object, $attribute, is_array($value) && array_key_exists('data', $value) ? $value['data'] : $value, $format, $context);
+        parent::setAttributeValue($object, $attribute, \is_array($value) && array_key_exists('data', $value) ? $value['data'] : $value, $format, $context);
     }
 
     /**
@@ -162,7 +164,7 @@ final class ItemNormalizer extends AbstractItemNormalizer
             return $this->serializer->denormalize($value, $className, $format, $context);
         }
 
-        if (!is_array($value) || !isset($value['id'], $value['type'])) {
+        if (!\is_array($value) || !isset($value['id'], $value['type'])) {
             throw new InvalidArgumentException('Only resource linkage supported currently, see: http://jsonapi.org/format/#document-resource-object-linkage.');
         }
 
@@ -221,8 +223,10 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     private function getComponents($object, string $format = null, array $context)
     {
-        if (isset($this->componentsCache[$context['cache_key']])) {
-            return $this->componentsCache[$context['cache_key']];
+        $cacheKey = \get_class($object).'-'.$context['cache_key'];
+
+        if (isset($this->componentsCache[$cacheKey])) {
+            return $this->componentsCache[$cacheKey];
         }
 
         $attributes = parent::getAttributes($object, $format, $context);
@@ -267,7 +271,11 @@ final class ItemNormalizer extends AbstractItemNormalizer
             $components['relationships'][] = $relation;
         }
 
-        return $this->componentsCache[$context['cache_key']] = $components;
+        if (false !== $context['cache_key']) {
+            $this->componentsCache[$cacheKey] = $components;
+        }
+
+        return $components;
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sonata Project package.
  *
@@ -11,7 +13,7 @@
 
 class Users
 {
-    public function __construct($file = '../users.dat')
+    public function __construct(string $file = '../users.dat')
     {
         $this->userFile = $file;
 
@@ -28,7 +30,7 @@ class Users
         return false;
     }
 
-    public function storeData(User $user)
+    public function storeData(User $user): void
     {
         $this->users[$user->getUsername()] = $user->getData();
         file_put_contents($this->userFile, json_encode($this->users));
@@ -61,26 +63,26 @@ class User
         return false;
     }
 
-    public function startSession()
+    public function startSession(): void
     {
         $_SESSION['username'] = $this->user;
     }
 
-    public function doLogin()
+    public function doLogin(): void
     {
         session_regenerate_id();
         $_SESSION['loggedin'] = true;
         $_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
     }
 
-    public function doOTP()
+    public function doOTP(): void
     {
         $_SESSION['OTP'] = true;
     }
 
     public function isOTP()
     {
-        if (isset($_SESSION['OTP']) && $_SESSION['OTP'] == true) {
+        if (isset($_SESSION['OTP']) && true == $_SESSION['OTP']) {
             return true;
         }
 
@@ -89,7 +91,7 @@ class User
 
     public function isLoggedIn()
     {
-        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true &&
+        if (isset($_SESSION['loggedin']) && true == $_SESSION['loggedin'] &&
             isset($_SESSION['ua']) && $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']
         ) {
             return $_SESSION['username'];
@@ -126,7 +128,7 @@ class User
         return $this->data;
     }
 
-    public function setOTPCookie()
+    public function setOTPCookie(): void
     {
         $time = floor(time() / (3600 * 24)); // get day number
         //about using the user agent: It's easy to fake it, but it increases the barrier for stealing and reusing cookies nevertheless

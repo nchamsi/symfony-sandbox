@@ -1,0 +1,14 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+{% include "@FOSUser/Registration/register_content.html.twig" %}
+{% endblock fos_user_content %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).on('change','#{{form.email.vars.id}}',function(event){
+            $('#{{form.username.vars.id}}').val($(this).val());
+        })
+    </script>
+{% endblock javascripts %}    

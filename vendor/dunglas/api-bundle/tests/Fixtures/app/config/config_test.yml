@@ -21,6 +21,9 @@ doctrine:
         auto_generate_proxy_classes:   '%kernel.debug%'
         auto_mapping:                  true
 
+twig:
+    strict_variables: '%kernel.debug%'
+
 api_platform:
     title:                             'My Dummy API'
     description:                       'This is a test API.'
@@ -73,6 +76,8 @@ fos_user:
 parameters:
     container.autowiring.strict_mode: true
     container.dumper.inline_class_loader: true
+    # Enable the metadata cache to speedup the builds
+    api_platform.metadata_cache: true
 
 services:
     contain_non_resource.item_data_provider:
@@ -150,7 +155,7 @@ services:
 
     app.my_dummy_resource.exists_filter:
         parent:    'api_platform.doctrine.orm.exists_filter'
-        arguments: [ { 'description': ~, 'relatedDummy.name': ~, 'dummyBoolean': ~ } ]
+        arguments: [ { 'description': ~, 'relatedDummy.name': ~, 'dummyBoolean': ~, 'relatedDummy': ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'my_dummy.exists' } ]
 
     app.my_dummy_resource.property_filter:
@@ -202,7 +207,7 @@ services:
 
     app.related_dummy_to_friend_resource.search_filter:
         parent:    'api_platform.doctrine.orm.search_filter'
-        arguments: [ { 'name': 'ipartial' } ]
+        arguments: [ { 'name': 'ipartial', 'description': 'ipartial' } ]
         tags:      [ { name: 'api_platform.filter', id: 'related_to_dummy_friend.name' } ]
 
     logger:

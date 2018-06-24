@@ -12,11 +12,10 @@
 namespace FOS\JsRoutingBundle\Tests\Extractor;
 
 use FOS\JsRoutingBundle\Extractor\ExposedRoutesExtractor;
-use FOS\JsRoutingBundle\Extractor\ExtractedRoute;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * ExposedRoutesExtractorTest class.
@@ -38,65 +37,45 @@ class ExposedRoutesExtractorTest extends TestCase
 
     public function testGetRoutes()
     {
-        $router = $this->getRouter(array(
-            'literal' => new Route('/literal'),
-            'blog_post' => new Route('/blog-post/{slug}'),
-            'list' => new Route('/list/{page}', array('page' => 1), array('page' => '\d+')),
-        ));
+        $expected = new RouteCollection();
+        $expected->add('literal', new Route('/literal'));
+        $expected->add('blog_post', new Route('/blog-post/{slug}'));
+        $expected->add('list', new Route('/literal'));
 
-        if (defined('Symfony\Component\HttpKernel\Kernel::VERSION') && version_compare(Kernel::VERSION, '2.2', '>=')) {
-            $expected = array(
-                'literal'   => new ExtractedRoute(array(array('text', '/literal')), array(), array()),
-                'blog_post' => new ExtractedRoute(array(array('variable', '/', '[^/]++', 'slug'), array('text', '/blog-post')), array(), array()),
-                'list'      => new ExtractedRoute(array(array('variable', '/', '\d+', 'page'), array('text', '/list')), array('page' => 1), array('page' => '\d+'))
-            );
-        } elseif (defined('Symfony\Component\HttpKernel\Kernel::VERSION_ID') && version_compare(Kernel::VERSION_ID, '20100', '>=')) {
-            $expected = array(
-                'literal'   => new ExtractedRoute(array(array('text', '/literal')), array(), array()),
-                'blog_post' => new ExtractedRoute(array(array('variable', '/', '[^/]+', 'slug'), array('text', '/blog-post')), array(), array()),
-                'list'      => new ExtractedRoute(array(array('variable', '/', '\d+', 'page'), array('text', '/list')), array('page' => 1), array('page' => '\d+'))
-            );
-        } else {
-            $expected = array(
-                'literal'   => new ExtractedRoute(array(array('text', '/literal')), array(), array()),
-                'blog_post' => new ExtractedRoute(array(array('variable', '/', '[^/]+?', 'slug'), array('text', '/blog-post')), array(), array()),
-                'list'      => new ExtractedRoute(array(array('variable', '/', '\d+', 'page'), array('text', '/list')), array('page' => 1), array('page' => '\d+'))
-            );
-        }
-
+        $router = $this->getRouter($expected);
         $extractor = new ExposedRoutesExtractor($router, array('.*'), $this->cacheDir, array());
         $this->assertEquals($expected, $extractor->getRoutes());
     }
 
     public function testGetRoutesWithPatterns()
     {
-        $router = $this->getRouter(array(
-            // Not exposed
-            'hello_you'     => new Route('/foo', array('_controller' => '')),
-            'hello_123'     => new Route('/foo', array('_controller' => '')),
-            'hello_world'   => new Route('/foo', array('_controller' => '')),
-        ));
+        $expected = new RouteCollection();
+        $expected->add('hello_you', new Route('/foo', array('_controller' => '')));
+        $expected->add('hello_123', new Route('/foo', array('_controller' => '')));
+        $expected->add('hello_world', new Route('/foo', array('_controller' => '')));
+
+        $router = $this->getRouter($expected);
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_.*'), $this->cacheDir, array());
-        $this->assertEquals(3, count($extractor->getRoutes()), '3 routes match the pattern: "hello_.*"');
+        $this->assertCount(3, $extractor->getRoutes(), '3 routes match the pattern: "hello_.*"');
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_[0-9]{3}'), $this->cacheDir, array());
-        $this->assertEquals(1, count($extractor->getRoutes()), '1 routes match the pattern: "hello_[0-9]{3}"');
+        $this->assertCount(1, $extractor->getRoutes(), '1 routes match the pattern: "hello_[0-9]{3}"');
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_[0-9]{4}'), $this->cacheDir, array());
-        $this->assertEquals(0, count($extractor->getRoutes()), '1 routes match the pattern: "hello_[0-9]{4}"');
+        $this->assertCount(0, $extractor->getRoutes(), '1 routes match the pattern: "hello_[0-9]{4}"');
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_.+o.+'), $this->cacheDir, array());
-        $this->assertEquals(2, count($extractor->getRoutes()), '2 routes match the pattern: "hello_.+o.+"');
+        $this->assertCount(2, $extractor->getRoutes(), '2 routes match the pattern: "hello_.+o.+"');
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_.+o.+', 'hello_123'), $this->cacheDir, array());
-        $this->assertEquals(3, count($extractor->getRoutes()), '3 routes match patterns: "hello_.+o.+" and "hello_123"');
+        $this->assertCount(3, $extractor->getRoutes(), '3 routes match patterns: "hello_.+o.+" and "hello_123"');
 
         $extractor = new ExposedRoutesExtractor($router, array('hello_.+o.+', 'hello_$'), $this->cacheDir, array());
-        $this->assertEquals(2, count($extractor->getRoutes()), '2 routes match patterns: "hello_.+o.+" and "hello_"');
+        $this->assertCount(2, $extractor->getRoutes(), '2 routes match patterns: "hello_.+o.+" and "hello_"');
 
         $extractor = new ExposedRoutesExtractor($router, array(), $this->cacheDir, array());
-        $this->assertEquals(0, count($extractor->getRoutes()), 'No patterns so no matched routes');
+        $this->assertCount(0, $extractor->getRoutes(), 'No patterns so no matched routes');
     }
 
     public function testGetCachePath()
@@ -127,6 +106,10 @@ class ExposedRoutesExtractorTest extends TestCase
 
         $this->assertEquals($expected, $extractor->getHost());
     }
+
+    /**
+     * @return array
+     */
     public function provideTestGetHostOverHttp()
     {
         return array(
@@ -153,6 +136,10 @@ class ExposedRoutesExtractorTest extends TestCase
 
         $this->assertEquals($expected, $extractor->getHost());
     }
+
+    /**
+     * @return array
+     */
     public function provideTestGetHostOverHttps()
     {
         return array(
@@ -162,26 +149,19 @@ class ExposedRoutesExtractorTest extends TestCase
     }
 
     /**
-     * Get a mock object which represents a Router.
+     * Get a mock object which represents a Router
+     *
      * @return \Symfony\Component\Routing\Router
      */
-    private function getRouter(array $routes)
+    private function getRouter(RouteCollection $routes)
     {
-        $routeCollection = $this->getMockBuilder('Symfony\\Component\\Routing\\RouteCollection')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $routeCollection
-            ->expects($this->atLeastOnce())
-            ->method('all')
-            ->will($this->returnValue($routes));
-
         $router = $this->getMockBuilder('Symfony\\Component\\Routing\\Router')
             ->disableOriginalConstructor()
             ->getMock();
         $router
             ->expects($this->atLeastOnce())
             ->method('getRouteCollection')
-            ->will($this->returnValue($routeCollection));
+            ->will($this->returnValue($routes));
 
         return $router;
     }

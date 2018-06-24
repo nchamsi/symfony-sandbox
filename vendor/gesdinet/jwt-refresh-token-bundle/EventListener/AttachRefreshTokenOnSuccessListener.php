@@ -12,26 +12,61 @@
 namespace Gesdinet\JWTRefreshTokenBundle\EventListener;
 
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
-use Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken;
 use Gesdinet\JWTRefreshTokenBundle\Request\RequestRefreshToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class AttachRefreshTokenOnSuccessListener
 {
-    protected $userRefreshTokenManager;
+    /**
+     * @var RefreshTokenManagerInterface
+     */
+    protected $refreshTokenManager;
+
+    /**
+     * @var int
+     */
     protected $ttl;
+
+    /**
+     * @var ValidatorInterface
+     */
     protected $validator;
+
+    /**
+     * @var RequestStack
+     */
     protected $requestStack;
 
-    public function __construct(RefreshTokenManagerInterface $refreshTokenManager, $ttl, ValidatorInterface $validator, RequestStack $requestStack)
-    {
+    /**
+     * @var string
+     */
+    protected $userIdentityField;
+
+    /**
+     * AttachRefreshTokenOnSuccessListener constructor.
+     *
+     * @param RefreshTokenManagerInterface $refreshTokenManager
+     * @param int                          $ttl
+     * @param ValidatorInterface           $validator
+     * @param RequestStack                 $requestStack
+     * @param string                       $userIdentityField
+     */
+    public function __construct(
+        RefreshTokenManagerInterface $refreshTokenManager,
+        $ttl,
+        ValidatorInterface $validator,
+        RequestStack $requestStack,
+        $userIdentityField
+    ) {
         $this->refreshTokenManager = $refreshTokenManager;
         $this->ttl = $ttl;
         $this->validator = $validator;
         $this->requestStack = $requestStack;
+        $this->userIdentityField = $userIdentityField;
     }
 
     public function attachRefreshToken(AuthenticationSuccessEvent $event)
@@ -53,7 +88,11 @@ class AttachRefreshTokenOnSuccessListener
             $datetime->modify('+'.$this->ttl.' seconds');
 
             $refreshToken = $this->refreshTokenManager->create();
-            $refreshToken->setUsername($user->getUsername());
+
+            $accessor = new PropertyAccessor();
+            $userIdentityFieldValue = $accessor->getValue($user, $this->userIdentityField);
+
+            $refreshToken->setUsername($userIdentityFieldValue);
             $refreshToken->setRefreshToken();
             $refreshToken->setValid($datetime);
 

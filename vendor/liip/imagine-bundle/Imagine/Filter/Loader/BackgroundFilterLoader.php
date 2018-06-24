@@ -31,7 +31,7 @@ class BackgroundFilterLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         $background = $image->palette()->color(
             isset($options['color']) ? $options['color'] : '#fff',
@@ -62,16 +62,8 @@ class BackgroundFilterLoader implements LoaderInterface
                     $x = 0;
                     $y = ($height - $image->getSize()->getHeight()) / 2;
                     break;
-                case 'centerright':
-                    $x = $width - $image->getSize()->getWidth();
-                    $y = ($height - $image->getSize()->getHeight()) / 2;
-                    break;
                 case 'center':
                     $x = ($width - $image->getSize()->getWidth()) / 2;
-                    $y = ($height - $image->getSize()->getHeight()) / 2;
-                    break;
-                case 'centerleft':
-                    $x = 0;
                     $y = ($height - $image->getSize()->getHeight()) / 2;
                     break;
                 case 'right':

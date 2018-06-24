@@ -14,7 +14,7 @@ namespace Liip\ImagineBundle\Imagine\Filter\PostProcessor;
 use Liip\ImagineBundle\Binary\BinaryInterface;
 use Liip\ImagineBundle\Model\Binary;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * pngquant post-processor, for optimal, web-safe, lossy png compression
@@ -25,18 +25,23 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @author Alex Wilson <a@ax.gy>
  */
-class PngquantPostProcessor implements PostProcessorInterface, ConfigurablePostProcessorInterface
+class PngquantPostProcessor implements PostProcessorInterface
 {
-    /** @var string Path to pngquant binary */
+    /**
+     * @var string Path to pngquant binary
+     */
     protected $pngquantBin;
 
-    /** @var string Quality to pass to pngquant */
+    /**
+     * @var string Quality to pass to pngquant
+     */
     protected $quality;
 
     /**
      * Constructor.
      *
      * @param string $pngquantBin Path to the pngquant binary
+     * @param string $quality
      */
     public function __construct($pngquantBin = '/usr/bin/pngquant', $quality = '80-100')
     {
@@ -63,42 +68,28 @@ class PngquantPostProcessor implements PostProcessorInterface, ConfigurablePostP
      *
      * @return BinaryInterface
      */
-    public function process(BinaryInterface $binary)
+    public function process(BinaryInterface $binary, array $options = []): BinaryInterface
     {
-        return $this->processWithConfiguration($binary, array());
-    }
-
-    /**
-     * @param BinaryInterface $binary
-     * @param array           $options
-     *
-     * @throws ProcessFailedException
-     *
-     * @return BinaryInterface
-     */
-    public function processWithConfiguration(BinaryInterface $binary, array $options)
-    {
-        $type = strtolower($binary->getMimeType());
-        if (!in_array($type, array('image/png'))) {
+        $type = mb_strtolower($binary->getMimeType());
+        if (!in_array($type, ['image/png'], true)) {
             return $binary;
         }
 
-        $pb = new ProcessBuilder(array($this->pngquantBin));
+        $processArguments = [$this->pngquantBin];
 
         // Specify quality.
         $tranformQuality = array_key_exists('quality', $options) ? $options['quality'] : $this->quality;
-        $pb->add('--quality');
-        $pb->add($tranformQuality);
+        $processArguments[] = '--quality';
+        $processArguments[] = $tranformQuality;
 
         // Read to/from stdout to save resources.
-        $pb->add('-');
-        $pb->setInput($binary->getContent());
-
-        $proc = $pb->getProcess();
+        $processArguments[] = '-';
+        $proc = new Process($processArguments);
+        $proc->setInput($binary->getContent());
         $proc->run();
 
         // 98 and 99 are "quality too low" to compress current current image which, while isn't ideal, is not a failure
-        if (!in_array($proc->getExitCode(), array(0, 98, 99))) {
+        if (!in_array($proc->getExitCode(), [0, 98, 99], true)) {
             throw new ProcessFailedException($proc);
         }
 

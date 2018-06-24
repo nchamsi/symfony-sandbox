@@ -1,0 +1,68 @@
+fos_user:
+    db_driver:      orm # can be orm or odm
+    firewall_name:  main
+
+    from_email:
+        address:        noreply@example.com
+        sender_name:    Symfony App
+
+    # if you change the class configuration, please also alter the sonata_user.yml file
+    user_class:        'App\Entity\User\User'
+
+    service:
+        user_manager: sonata.user.orm.user_manager
+
+    group:
+        group_class:   'App\Entity\User\Group'
+        group_manager: sonata.user.orm.group_manager
+
+    registration:
+        confirmation:
+            enabled:    true
+            #template:   FOSUserBundle:Registration:email.txt.twig
+            from_email:
+                address:        no-reply@symfony.com
+                sender_name:    webmaster
+        form:
+            #type: application_sonata_user_registration
+            type: App\Form\User\Type\RegistrationFormType
+            # if you are using Symfony < 2.8 you should use the type name instead
+            # type: app_user_registration
+
+    profile:
+        form:
+            type: App\Form\User\Type\ProfileFormType
+
+    resetting:
+        email:
+            #template:   FOSUserBundle:Resetting:email.txt.twig
+            from_email:
+                address:        no-reply@symfony.com
+                sender_name:    webmaster
+
+services:
+
+# User
+
+#    application_user.registration.form.type:
+#        class: App\Form\User\Type\RegistrationFormType
+#        arguments: ['%fos_user.model.user.class%']
+#        tags:
+#            - { name: form.type, alias: application_user_registration }
+#
+#    # Custom Profile Form Type and Form Handler
+#
+#    application_user.profile.form.type:
+#        class: App\Form\User\Type\ProfileFormType
+#        arguments: ['%fos_user.model.user.class%']
+#        tags:
+#            - { name: form.type, alias: application_user_profile }
+#
+#    # Custom Profile Authentication Form Type
+#
+#    application_sonata_user.profile.authentication.form.type:
+#        class: App\Form\User\Type\ProfileAuthenticationFormType
+#        arguments: ['%fos_user.model.user.class%']
+#        tags:
+#            - { name: form.type, alias: application_user_profile_authentication }
+

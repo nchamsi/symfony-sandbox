@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/whiteoctober/Pagerfanta.png?branch=master)](https://travis-ci.org/whiteoctober/Pagerfanta) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/whiteoctober/Pagerfanta/badges/quality-score.png?s=1ee480491644c07812b5206cf07d33a5035d0118)](https://scrutinizer-ci.com/g/whiteoctober/Pagerfanta/) [![Code Coverage](https://scrutinizer-ci.com/g/whiteoctober/Pagerfanta/badges/coverage.png?s=284be0616a9ba0439ee1123bcaf5fb3f6bfb0e50)](https://scrutinizer-ci.com/g/whiteoctober/Pagerfanta/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/9e710230-b088-4904-baef-5f5e2d62e681/mini.png)](https://insight.sensiolabs.com/projects/9e710230-b088-4904-baef-5f5e2d62e681) [![Latest Stable Version](https://poser.pugx.org/pagerfanta/pagerfanta/v/stable.png)](https://packagist.org/packages/pagerfanta/pagerfanta) [![Total Downloads](https://poser.pugx.org/pagerfanta/pagerfanta/downloads.png)](https://packagist.org/packages/pagerfanta/pagerfanta)
 
-Pagination for PHP >= 5.3
+This project is for PHP >= 7.0.
+If you need support for PHP < 7, use [Release v1.1.0](https://github.com/whiteoctober/Pagerfanta/releases/tag/v1.1.0).
 
 ## Usage
 
@@ -32,6 +33,8 @@ $pagerfanta->hasPreviousPage();
 $pagerfanta->getPreviousPage();
 $pagerfanta->hasNextPage();
 $pagerfanta->getNextPage();
+$pagerfanta->getCurrentPageOffsetStart();
+$pagerfanta->getCurrentPageOffsetEnd();
 ```
 
 The `->setMaxPerPage()` and `->setCurrentPage()` methods implement
@@ -64,6 +67,9 @@ All of them extend from `Pagerfanta\Exception\NotValidCurrentPageException`.
 `->setCurrentPage()` throws an out ot range exception depending on the
 max per page, so if you are going to modify the max per page, you should do it
 before setting the current page.
+
+(If you want to use Pagerfanta in a Symfony project, see
+[https://github.com/whiteoctober/WhiteOctoberPagerfantaBundle](https://github.com/whiteoctober/WhiteOctoberPagerfantaBundle).)
 
 ## Adapters
 
@@ -263,7 +269,7 @@ $adapter = new DoctrineSelectableAdapter($comments, $criteria);
 Note that you should never use this adapter with a
 PersistentCollection which is not set to use the EXTRA_LAZY fetch mode.
 
-*Be carefull when using the `count()` method, currently Doctrine2
+*Be careful when using the `count()` method, currently Doctrine2
 needs to fetch all the records to count the number of elements.*
 
 ### ElasticaAdapter
@@ -287,6 +293,11 @@ $query = new Query::create(new Term(array(
 
 $adapter = new ElasticaAdapter($searchable, $query);
 ```
+
+*Be careful when paginating a huge set of documents. By default, offset + limit
+can't exceed 10000. You can mitigate this by setting the `$maxResults`
+parameter when constructing the `ElasticaAdapter`. For more information, see:
+[#213](https://github.com/whiteoctober/Pagerfanta/pull/213#issue-87631892).*
 
 ### PropelAdapter
 
@@ -343,6 +354,19 @@ $nbResults = 5;
 $results = array(/* ... */);
 
 $adapter = new FixedAdapter($nbResults, $results);
+```
+
+### ConcatenationAdapter
+
+Concatenates the results of other adapter instances into a single adapter.
+It keeps the order of sub adapters and the order of their results.
+
+```php
+<?php
+
+use Pagerfanta\Adapter\ConcatenationAdapter;
+
+$superAdapter = new ConcatenationAdapter(array($adapter1, $adapter2 /* ... */));
 ```
 
 ## Views
@@ -565,6 +589,15 @@ $pagerfantaHtml = $myView2->render($pagerfanta, $routeGenerator);
 // overwriting default options
 $pagerfantaHtml = $myView2->render($pagerfanta, $routeGenerator, array('next_message' => 'Siguiente!!'));
 ```
+
+## Contributing
+
+We welcome contributions to this project, including pull requests and issues (and discussions on existing issues).
+
+If you'd like to contribute code but aren't sure what, the [issues list](https://github.com/whiteoctober/pagerfanta/issues) is a good place to start.
+If you're a first-time code contributor, you may find Github's guide to [forking projects](https://guides.github.com/activities/forking/) helpful.
+
+All contributors (whether contributing code, involved in issue discussions, or involved in any other way) must abide by our [code of conduct](code_of_conduct.md).
 
 ## Acknowledgements
 

@@ -2,12 +2,13 @@
 
 namespace Knp\Bundle\GaufretteBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class KnpGaufretteExtension extends Extension
 {
-    private $factories = null;
+    private $factories;
 
     /**
      * Loads the extension
@@ -27,8 +28,7 @@ class KnpGaufretteExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $processor = new Processor();
-        $config = $processor->processConfiguration($this->getConfiguration($configs, $container), $configs);
+        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('gaufrette.xml');
@@ -45,6 +45,7 @@ class KnpGaufretteExtension extends Extension
         }
 
         $container->getDefinition('knp_gaufrette.filesystem_map')
+            ->setPublic(true)
             ->replaceArgument(0, $map);
 
         if (isset($config['stream_wrapper'])) {
@@ -55,11 +56,9 @@ class KnpGaufretteExtension extends Extension
 
     public function getConfiguration(array $configs, ContainerBuilder $container)
     {
-        $processor = new Processor();
-
         // first assemble the adapter factories
         $factoryConfig = new FactoryConfiguration();
-        $config        = $processor->processConfiguration($factoryConfig, $configs);
+        $config        = $this->processConfiguration($factoryConfig, $configs);
         $factories     = $this->createAdapterFactories($config, $container);
 
         // then normalize the configs
@@ -93,14 +92,18 @@ class KnpGaufretteExtension extends Extension
         $adapter = $adapters[$config['adapter']];
         $id      = sprintf('gaufrette.%s_filesystem', $name);
 
+        $definition = class_exists('\Symfony\Component\DependencyInjection\ChildDefinition')
+            ? new ChildDefinition('knp_gaufrette.filesystem')
+            : new DefinitionDecorator('knp_gaufrette.filesystem');
+
         $container
-            ->setDefinition($id, new DefinitionDecorator('knp_gaufrette.filesystem'))
+            ->setDefinition($id, $definition)
             ->replaceArgument(0, new Reference($adapter))
         ;
 
         if (!empty($config['alias'])) {
             $container->getDefinition($id)->setPublic(false);
-            $container->setAlias($config['alias'], $id);
+            $container->setAlias($config['alias'], new Alias($id, true));
         }
 
         return new Reference($id);

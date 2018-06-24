@@ -11,20 +11,57 @@
 
 namespace FOS\JsRoutingBundle\Command;
 
+use FOS\JsRoutingBundle\Extractor\ExposedRoutesExtractorInterface;
 use FOS\JsRoutingBundle\Response\RoutesResponse;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Dumps routes to the filesystem.
  *
  * @author Benjamin Dulau <benjamin.dulau@anonymation.com>
  */
-class DumpCommand extends ContainerAwareCommand
+class DumpCommand extends Command
 {
+    protected static $defaultName = 'fos:js-routing:dump';
+
+    /**
+     * @var string
+     */
     private $targetPath;
+
+    /**
+     * @var ExposedRoutesExtractorInterface
+     */
+    private $extractor;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var string
+     */
+    private $requestContextBaseUrl;
+
+    public function __construct(ExposedRoutesExtractorInterface $extractor, SerializerInterface $serializer, $rootDir, $requestContextBaseUrl = null)
+    {
+        $this->extractor = $extractor;
+        $this->serializer = $serializer;
+        $this->rootDir = $rootDir;
+        $this->requestContextBaseUrl = $requestContextBaseUrl;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -39,51 +76,52 @@ class DumpCommand extends ContainerAwareCommand
                 'fos.Router.setData'
             )
             ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Format to output routes in. js to wrap the response in a callback, json for raw json output. Callback is ignored when format is json',
+                'js'
+            )
+            ->addOption(
                 'target',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Override the target directory to dump routes in.'
             )
             ->addOption(
-               'locale',
+                'locale',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Set locale to be used with JMSI18nRoutingBundle.',
                 ''
             )
+            ->addOption(
+                'pretty-print',
+                'p',
+                InputOption::VALUE_NONE,
+                'Pretty print the JSON.'
+            )
         ;
-    }
-
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        parent::initialize($input, $output);
-
-        $this->targetPath = $input->getOption('target') ?:
-            sprintf('%s/../web/js/fos_js_routes.js', $this->getContainer()->getParameter('kernel.root_dir'));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if(!in_array($input->getOption('format'), array('js', 'json'))) {
+            $output->writeln('<error>Invalid format specified. Use js or json.</error>');
+            return 1;
+        }
+
+        $callback = $input->getOption('callback');
+        if(empty($callback)) {
+            $output->writeln('<error>If you include --callback it must not be empty. Do you perhaps want --format=json</error>');
+            return 1;
+        }
+
         $output->writeln('Dumping exposed routes.');
         $output->writeln('');
 
         $this->doDump($input, $output);
-    }
-
-    /**
-     * @return \FOS\JsRoutingBundle\Extractor\ExposedRoutesExtractorInterface
-     */
-    protected function getExposedRoutesExtractor()
-    {
-        return $this->getContainer()->get('fos_js_routing.extractor');
-    }
-
-    /**
-     * @return \Symfony\Component\Serializer\Serializer
-     */
-    protected function getSerializer()
-    {
-        return $this->getContainer()->get('fos_js_routing.serializer');
+        return 0;
     }
 
     /**
@@ -94,35 +132,53 @@ class DumpCommand extends ContainerAwareCommand
      */
     private function doDump(InputInterface $input, OutputInterface $output)
     {
-        if (!is_dir($dir = dirname($this->targetPath))) {
+        $extractor = $this->extractor;
+        $serializer = $this->serializer;
+        $targetPath = $input->getOption('target') ?:
+            sprintf(
+                '%s/../web/js/fos_js_routes.%s',
+                $this->rootDir,
+                $input->getOption('format')
+            );
+        
+        if (!is_dir($dir = dirname($targetPath))) {
             $output->writeln('<info>[dir+]</info>  ' . $dir);
             if (false === @mkdir($dir, 0777, true)) {
                 throw new \RuntimeException('Unable to create directory ' . $dir);
             }
         }
 
-        $output->writeln('<info>[file+]</info> ' . $this->targetPath);
+        $output->writeln('<info>[file+]</info> ' . $targetPath);
 
-        $baseUrl = $this->getContainer()->hasParameter('fos_js_routing.request_context_base_url') ?
-            $this->getContainer()->getParameter('fos_js_routing.request_context_base_url') :
-            $this->getExposedRoutesExtractor()->getBaseUrl()
+        $baseUrl = null !== $this->requestContextBaseUrl ?
+            $this->requestContextBaseUrl :
+            $this->extractor->getBaseUrl()
         ;
 
-        $content = $this->getSerializer()->serialize(
+        if ($input->getOption('pretty-print')) {
+            $params = array('json_encode_options' => JSON_PRETTY_PRINT);
+        } else {
+            $params = array();
+        }
+
+        $content = $serializer->serialize(
             new RoutesResponse(
                 $baseUrl,
-                $this->getExposedRoutesExtractor()->getRoutes(),
-                $this->getExposedRoutesExtractor()->getPrefix($input->getOption('locale')),
-                $this->getExposedRoutesExtractor()->getHost(),
-                $this->getExposedRoutesExtractor()->getScheme()
+                $extractor->getRoutes(),
+                $extractor->getPrefix($input->getOption('locale')),
+                $extractor->getHost(),
+                $extractor->getScheme()
             ),
-            'json'
+            'json',
+            $params
         );
 
-        $content = sprintf("%s(%s);", $input->getOption('callback'), $content);
+        if('js' == $input->getOption('format')) {
+            $content = sprintf("%s(%s);", $input->getOption('callback'), $content);
+        }
 
-        if (false === @file_put_contents($this->targetPath, $content)) {
-            throw new \RuntimeException('Unable to write file ' . $this->targetPath);
+        if (false === @file_put_contents($targetPath, $content)) {
+            throw new \RuntimeException('Unable to write file ' . $targetPath);
         }
     }
 }

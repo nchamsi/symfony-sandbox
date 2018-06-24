@@ -12,6 +12,7 @@
 namespace Sonata\Cache\Adapter\Cache;
 
 use Sonata\Cache\CacheElement;
+use Sonata\Cache\CacheElementInterface;
 
 class MemcachedCache extends BaseCacheHandler
 {
@@ -25,7 +26,7 @@ class MemcachedCache extends BaseCacheHandler
      * @param $prefix
      * @param array $servers
      */
-    public function __construct($prefix, array $servers)
+    public function __construct(string $prefix, array $servers)
     {
         $this->prefix = $prefix;
         $this->servers = $servers;
@@ -34,7 +35,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flushAll()
+    public function flushAll(): bool
     {
         return $this->getCollection()->flush();
     }
@@ -42,7 +43,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flush(array $keys = [])
+    public function flush(array $keys = []): bool
     {
         return $this->getCollection()->delete($this->computeCacheKeys($keys));
     }
@@ -50,15 +51,15 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function has(array $keys)
+    public function has(array $keys): bool
     {
-        return $this->getCollection()->get($this->computeCacheKeys($keys)) !== false;
+        return false !== $this->getCollection()->get($this->computeCacheKeys($keys));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set(array $keys, $data, $ttl = CacheElement::DAY, array $contextualKeys = [])
+    public function set(array $keys, $data, int $ttl = CacheElement::DAY, array $contextualKeys = []): CacheElementInterface
     {
         $cacheElement = new CacheElement($keys, $data, $ttl);
 
@@ -78,7 +79,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function get(array $keys)
+    public function get(array $keys): CacheElementInterface
     {
         return $this->handleGet($keys, $this->getCollection()->get($this->computeCacheKeys($keys)));
     }
@@ -86,7 +87,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function isContextual()
+    public function isContextual(): bool
     {
         return false;
     }
@@ -94,7 +95,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    private function getCollection()
+    private function getCollection(): \Memcached
     {
         if (!$this->collection) {
             $this->collection = new \Memcached();
@@ -110,7 +111,7 @@ class MemcachedCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    private function computeCacheKeys(array $keys)
+    private function computeCacheKeys(array $keys): string
     {
         ksort($keys);
 

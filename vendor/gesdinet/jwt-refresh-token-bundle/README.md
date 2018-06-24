@@ -14,7 +14,9 @@ The purpose of this bundle is manage refresh tokens with JWT (Json Web Tokens) i
 Prerequisites
 -------------
 
-This bundle requires Symfony 2.5+ and supports Symfony 3 too.
+This bundle requires Symfony 3.3+ or 4.0+.
+
+If you want to use this bundle with previous Symfony versions, please use 0.2.x releases.
 
 **Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS.
 
@@ -110,6 +112,15 @@ gesdinet_jwt_refresh_token:
     ttl: 2592000
 ```
 
+### Config User identity field
+
+You can change user identity field. Make sure that your model user has `getter` for this field. Default value is `username`. You can change this value by adding this line to your config.yml file:
+
+```yaml
+gesdinet_jwt_refresh_token:
+    user_identity_field: email
+```
+
 ### Config TTL update
 
 You can expand Refresh Token TTL on refresh. Default value is false. You can change this value adding this line to your config.yml file:
@@ -149,7 +160,7 @@ Create the entity class extending `Gesdinet\JWTRefreshTokenBundle\Entity\Refresh
 ```php
 namespace MyBundle;
 
-use Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken as BaseRefreshToken;
+use Gesdinet\JWTRefreshTokenBundle\Entity\AbstractRefreshToken;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -160,8 +171,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Gesdinet\JWTRefreshTokenBundle\Entity\RefreshTokenRepository")
  * @UniqueEntity("refreshToken")
  */
-class JwtRefreshToken extends BaseRefreshToken
+class JwtRefreshToken extends AbstractRefreshToken
 {
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        $this->id;
+    }
 }
 ```
 
@@ -233,4 +260,45 @@ If you want to revoke a single token you can use this:
 
 ```bash
 php app/console gesdinet:jwt:revoke TOKEN
+```
+
+### Events
+
+If you want to do something when token is refreshed you can listen for `gesdinet.refresh_token` event.
+
+For example:
+
+```php
+<?php
+
+namespace AppBundle\EventListener;
+
+use Gesdinet\JWTRefreshTokenBundle\Event\RefreshEvent;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class LogListener implements EventSubscriberInterface
+{
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function log(RefreshEvent $event)
+    {
+        $refreshToken = $event->getRefreshToken()->getRefreshToken();
+        $user = $event->getPreAuthenticatedToken()->getUser()->getUsername();
+        
+        $this->logger->debug(sprintf('User "%s" has refreshed it\'s JWT token with refresh token "%s".', $user, $refreshToken));
+    }
+    
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'gesdinet.refresh_token' => 'log',
+        );
+    }
+}
 ```

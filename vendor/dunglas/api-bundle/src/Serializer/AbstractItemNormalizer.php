@@ -18,10 +18,12 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Api\ResourceClassResolverInterface;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Core\Exception\InvalidValueException;
 use ApiPlatform\Core\Exception\ItemNotFoundException;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
+use ApiPlatform\Core\Util\ClassInfoTrait;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -37,6 +39,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
  */
 abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
 {
+    use ClassInfoTrait;
     use ContextTrait;
 
     protected $propertyNameCollectionFactory;
@@ -74,13 +77,7 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
             return false;
         }
 
-        try {
-            $this->resourceClassResolver->getResourceClass($data);
-        } catch (InvalidArgumentException $e) {
-            return false;
-        }
-
-        return true;
+        return $this->resourceClassResolver->isResourceClass($this->getObjectClass($data));
     }
 
     /**
@@ -161,7 +158,7 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
     protected function setAttributeValue($object, $attribute, $value, $format = null, array $context = [])
     {
         if (!\is_string($attribute)) {
-            throw new InvalidArgumentException('Invalid value provided (invalid IRI?).');
+            throw new InvalidValueException('Invalid value provided (invalid IRI?).');
         }
 
         $propertyMetadata = $this->propertyMetadataFactory->create($context['resource_class'], $attribute, $this->getFactoryOptions($context));
@@ -308,7 +305,13 @@ abstract class AbstractItemNormalizer extends AbstractObjectNormalizer
             $context['resource_class'] = $className;
             $context['api_allow_update'] = true;
 
-            return $this->serializer->denormalize($value, $className, $format, $context);
+            try {
+                return $this->serializer->denormalize($value, $className, $format, $context);
+            } catch (InvalidValueException $e) {
+                if (!$this->allowPlainIdentifiers || null === $this->itemDataProvider) {
+                    throw $e;
+                }
+            }
         }
 
         if (!\is_array($value)) {

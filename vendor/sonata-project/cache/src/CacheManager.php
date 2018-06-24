@@ -46,7 +46,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addCacheService($name, CacheAdapterInterface $cacheManager)
+    public function addCacheService(string $name, CacheAdapterInterface $cacheManager): void
     {
         $this->cacheServices[$name] = $cacheManager;
     }
@@ -54,7 +54,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCacheService($name)
+    public function getCacheService(string $name): CacheAdapterInterface
     {
         if (!$this->hasCacheService($name)) {
             throw new \RuntimeException(sprintf('The cache service %s does not exist.', $name));
@@ -66,7 +66,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCacheServices()
+    public function getCacheServices(): array
     {
         return $this->cacheServices;
     }
@@ -74,7 +74,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function hasCacheService($id)
+    public function hasCacheService(string $id): bool
     {
         return isset($this->cacheServices[$id]) ? true : false;
     }
@@ -82,7 +82,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidate(array $keys)
+    public function invalidate(array $keys): void
     {
         $this->cacheInvalidation->invalidate($this->getCacheServices(), $keys);
     }
@@ -90,7 +90,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecorder(Recorder $recorder)
+    public function setRecorder(Recorder $recorder): void
     {
         $this->recorder = $recorder;
     }
@@ -98,7 +98,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecorder()
+    public function getRecorder(): Recorder
     {
         return $this->recorder;
     }

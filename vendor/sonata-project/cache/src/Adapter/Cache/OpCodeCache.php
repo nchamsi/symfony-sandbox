@@ -12,6 +12,7 @@
 namespace Sonata\Cache\Adapter\Cache;
 
 use Sonata\Cache\CacheElement;
+use Sonata\Cache\CacheElementInterface;
 use Sonata\Cache\Exception\UnsupportedException;
 
 /**
@@ -59,7 +60,7 @@ class OpCodeCache extends BaseCacheHandler
      * @param array  $servers An array of servers
      * @param array  $timeout An array of timeout options
      */
-    public function __construct($url, $prefix, array $servers, array $timeout = [])
+    public function __construct(string $url, string $prefix, array $servers, array $timeout = [])
     {
         $this->url = $url;
         $this->prefix = $prefix;
@@ -77,7 +78,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * @param bool $bool
      */
-    public function setCurrentOnly($bool)
+    public function setCurrentOnly($bool): void
     {
         $this->currentOnly = $bool;
     }
@@ -85,7 +86,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flushAll()
+    public function flushAll(): bool
     {
         if ($this->currentOnly) {
             if (version_compare(PHP_VERSION, '5.5.0', '>=') && function_exists('opcache_reset')) {
@@ -102,7 +103,7 @@ class OpCodeCache extends BaseCacheHandler
         $result = true;
 
         foreach ($this->servers as $server) {
-            if (count(explode('.', $server['ip'])) == 4) {
+            if (4 == count(explode('.', $server['ip']))) {
                 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
             } else {
                 $socket = socket_create(AF_INET6, SOCK_STREAM, SOL_TCP);
@@ -133,7 +134,7 @@ class OpCodeCache extends BaseCacheHandler
             } while (!empty($buffer));
 
             if ($result) {
-                $result = substr($content, -2) == 'ok';
+                $result = 'ok' == substr($content, -2);
             }
         }
 
@@ -143,7 +144,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function flush(array $keys = [])
+    public function flush(array $keys = []): bool
     {
         if ($this->currentOnly) {
             $this->checkApc();
@@ -157,7 +158,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function has(array $keys)
+    public function has(array $keys): bool
     {
         $this->checkApc();
 
@@ -167,7 +168,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function set(array $keys, $data, $ttl = CacheElement::DAY, array $contextualKeys = [])
+    public function set(array $keys, $data, int $ttl = CacheElement::DAY, array $contextualKeys = []): CacheElementInterface
     {
         $this->checkApc();
 
@@ -185,7 +186,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function get(array $keys)
+    public function get(array $keys): CacheElementInterface
     {
         $this->checkApc();
 
@@ -195,7 +196,7 @@ class OpCodeCache extends BaseCacheHandler
     /**
      * {@inheritdoc}
      */
-    public function isContextual()
+    public function isContextual(): bool
     {
         return false;
     }

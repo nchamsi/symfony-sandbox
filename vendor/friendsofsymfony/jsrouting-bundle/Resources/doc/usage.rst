@@ -1,13 +1,13 @@
 Usage
 =====
 
-Add these two lines in your layout:
+In applications not using webpack add these two lines in your layout:
 
 .. configuration-block::
 
     .. code-block:: html+twig
 
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
     .. code-block:: html+php
@@ -17,8 +17,27 @@ Add these two lines in your layout:
 
 .. note::
 
-    If you are not using Twig, then it is no problem. What you need is to add
+    If you are not using Twig, then it is no problem. What you need is
     the two JavaScript files above loaded at some point in your web page.
+
+
+If you are using webpack and Encore to package your assets you will need to use the dump command
+and export your routes to json:
+
+.. code-block:: bash
+
+    bin/console fos:js-routing:dump --format=json
+
+Then within your JavaScript development you can use:
+
+.. code-block:: javascript
+
+    const routes = require('../../web/js/fos_js_routes.json');
+    import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+
+    Routing.setRoutingData(routes);
+    Routing.generate('rep_log_list');
+
 
 Generating URIs
 ---------------
@@ -122,6 +141,18 @@ You can prevent to expose a route by configuring it as below:
         defaults: { _controller: HelloBundle:Admin:index }
         options:
             expose: false
+
+Router service
+--------------
+
+By default, this bundle exports routes from the default service `router`. You
+can configure a different router service if needed:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_js_routing:
+        router: my_router_service
 
 HTTP Caching
 ------------

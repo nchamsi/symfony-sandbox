@@ -28,7 +28,7 @@ class MongoCounter extends BaseCounter
      * @param $database
      * @param $collection
      */
-    public function __construct(array $servers, $database, $collection)
+    public function __construct(array $servers, string $database, string $collection)
     {
         $this->servers = $servers;
         $this->databaseName = $database;
@@ -38,7 +38,7 @@ class MongoCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function increment($counter, $number = 1)
+    public function increment(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
@@ -49,13 +49,13 @@ class MongoCounter extends BaseCounter
             ['new' => true]
         );
 
-        return $this->handleIncrement(count($result) === 0 ? false : $result['value'], $counter, $number);
+        return $this->handleIncrement(0 === count($result) ? false : $result['value'], $counter, $number);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function decrement($counter, $number = 1)
+    public function decrement(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
@@ -66,13 +66,13 @@ class MongoCounter extends BaseCounter
             ['new' => true]
         );
 
-        return $this->handleDecrement(count($result) === 0 ? false : $result['value'], $counter, $number);
+        return $this->handleDecrement(0 === count($result) ? false : $result['value'], $counter, $number);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set(Counter $counter)
+    public function set(Counter $counter): Counter
     {
         $result = $this->getCollection()->findAndModify(
             ['counter' => $counter->getName()],
@@ -87,7 +87,7 @@ class MongoCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get(string $name): Counter
     {
         $result = $this->getCollection()->findOne(['counter' => $name]);
 
@@ -97,7 +97,7 @@ class MongoCounter extends BaseCounter
     /**
      * @return \MongoCollection
      */
-    private function getCollection()
+    private function getCollection(): \MongoCollection
     {
         if (!$this->collection) {
             $class = MongoCache::getMongoClass();

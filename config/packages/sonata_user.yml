@@ -1,0 +1,50 @@
+#
+# more information can be found here https://sonata-project.org/bundles/user
+#
+# Enable Doctrine to map the provided entities
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                mappings:
+                    SonataUserBundle: ~
+                    FOSUserBundle: ~
+
+        resolve_target_entities:
+            Sonata\UserBundle\Entity\BaseUser: App\Entity\User\User
+            Sonata\UserBundle\Entity\BaseGroup: App\Entity\User\Group
+
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+# if you change the class configuration, please also alter the fos_user.yml file
+sonata_user:
+    class:
+        user:  'App\Entity\User\User'
+        group: 'App\Entity\User\Group'
+
+    security_acl:             false
+    table:
+        user_group:     'users_users_groups'
+
+#    impersonating:
+#        route:                page_slug
+#        parameters:           { path: / }
+
+    #google_authenticator:
+    #    server:               '%sonata_user.google_authenticator.server%'
+    #    enabled:              false
+
+    manager_type:             orm
+
+    admin:                  # Admin Classes
+        user:
+            class:          'App\Admin\User\UserAdmin'
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          'App\Admin\User\GroupAdmin'
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle

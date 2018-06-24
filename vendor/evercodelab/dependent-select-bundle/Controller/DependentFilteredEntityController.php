@@ -5,21 +5,19 @@ namespace Evercode\DependentSelectBundle\Controller;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 class DependentFilteredEntityController extends Controller
 {
     const DQL_PARAMETER_PREFIX = 'param_';
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
-    public function getOptionsAction(Request $request)
+    public function getOptionsAction()
     {
+        $request = $this->getRequest();
         $translator = $this->get('translator');
 
         $entity_alias = $request->get('entity_alias');
@@ -45,7 +43,7 @@ class DependentFilteredEntityController extends Controller
         }
 
         if ($entity_inf['role'] !== 'IS_AUTHENTICATED_ANONYMOUSLY') {
-            if (false === $this->get('security.authorization_checker')->isGranted($entity_inf['role'])) {
+            if (false === $this->get('security.context')->isGranted($entity_inf['role'])) {
                 throw new AccessDeniedException();
             }
         }
@@ -178,14 +176,13 @@ class DependentFilteredEntityController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
-    public function getJSONAction(Request $request)
+    public function getJSONAction()
     {
         /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->get('doctrine.orm.entity_manager');
+        $request = $this->get('request');
 
         $entity_alias = $request->get('entity_alias');
         $parent_id = $request->get('parent_id');
@@ -194,7 +191,7 @@ class DependentFilteredEntityController extends Controller
         $entity_inf = $entities[$entity_alias];
 
         if ($entity_inf['role'] !== 'IS_AUTHENTICATED_ANONYMOUSLY') {
-            if (false === $this->get('security.authorization_checker')->isGranted($entity_inf['role'])) {
+            if (false === $this->get('security.context')->isGranted($entity_inf['role'])) {
                 throw new AccessDeniedException();
             }
         }

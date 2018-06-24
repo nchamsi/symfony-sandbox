@@ -8,7 +8,7 @@ Provides a [Gaufrette][gaufrette-homepage] integration for your Symfony projects
 About Gaufrette
 ===============
 
-Gaufrette is a PHP 5.3+ library providing a filesystem abstraction layer.
+Gaufrette is a PHP 5.6+ library providing a filesystem abstraction layer.
 This abstraction layer allows you to develop applications without needing to know where all their media files will be stored or how.
 
 Documentation is available the [official page of Gaufrette][gaufrette-homepage].
@@ -18,17 +18,15 @@ Installation
 
 ## Prerequisites
 
-As this bundle is an integration for Symfony of the [Gaufrette][gaufrette-homepage] library, it requires you to first install [Gaufrette][gaufrette-homepage] in a Symfony project.
+As this bundle is an integration for Symfony of the [Gaufrette][gaufrette-homepage] library, it requires you to first install [Gaufrette][gaufrette-homepage] in your project.
+
+Note that, you need to install separately the adapters you want to use. You can find more details about these packages [here](https://github.com/KnpLabs/Gaufrette#metapackages-for-adapters), 
+and the full list adapters [on packagist](https://packagist.org/packages/gaufrette/).
 
 ## With composer
 
-This bundle can be installed using [composer](http://getcomposer.org) by adding the following in the `require` section of your `composer.json` file:
-
-``` json
-    "require": {
-        ...
-        "knplabs/knp-gaufrette-bundle": "~0.3"
-    },
+```bash
+composer require knplabs/knp-gaufrette-bundle:~0.5
 ```
 
 ## Register the bundle
@@ -76,7 +74,7 @@ The defined adapters are then used to create the filesystems.
 
 You can use on of these adapters:
 * [Local Adapter](Resources/docs/adapters/local.md)
-* [Safe Local Adapter](docs/safe_local.md)
+* [Safe Local Adapter](Resources/docs/adapters/safe_local.md)
 * [Service](Resources/docs/adapters/service.md)
 * [In Memory](Resources/docs/adapters/memory.md)
 * [Azure Blob Storage](Resources/docs/adapters/azure.md)
@@ -124,4 +122,14 @@ $container->get('knp_gaufrette.filesystem_map')->get('bar');
 
 Returns the `bar` instance of `Gaufrette\Filesystem`.
 
+Use cases
+==================
+
+[Check out](https://github.com/KnpLabs/KnpGaufretteBundle/blob/master/Resources/docs/use-case-examples.md) basic examples of the library.
+
 [gaufrette-homepage]: https://github.com/KnpLabs/Gaufrette
+
+## Maintainers
+
+- [@NiR-](https://github.com/NiR-)
+- [@nicolasmure](https://github.com/nicolasmure)

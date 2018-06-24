@@ -1,0 +1,5 @@
+admin:
+    dashboard:
+        menu:
+            admin:
+                label: 'Administración'
