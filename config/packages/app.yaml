@@ -68,13 +68,4 @@ services:
 
 # App
 
-    app.admin.post:
-        class: App\Admin\PostAdmin
-        arguments: [~, App\Entity\Post, SonataAdminBundle:CRUD]
-        tags:
-            - name: sonata.admin
-              manager_type: orm
-              group: admin
-              label: Post
-        public: true
 
