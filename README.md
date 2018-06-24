@@ -1,6 +1,6 @@
 Update dependencies
 
-    composr -vvv update
+    composer -vvv update
  
 Create an entity
 
