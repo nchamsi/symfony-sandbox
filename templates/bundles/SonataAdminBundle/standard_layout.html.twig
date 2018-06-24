@@ -1,0 +1,109 @@
+{% extends "@!SonataAdmin/standard_layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        span.control-label__text {
+            margin-left: 5px;
+        }
+
+        td.control-group[class^="sonata-ba-td-"][class*="-_delete"] div.checkbox span.control-label__text {
+            display: none;
+        }
+
+        .breadcrumb > .active {
+            color: #211819;
+        }
+
+        .sonata-ba-form-actions > button[type="submit"] {
+            margin-bottom: 5px;
+        }
+
+        .field-short-description {
+            min-height: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block logo %}
+    {% spaceless %}
+        <a class="logo" href="{{ path('sonata_admin_dashboard') }}">
+            {% if 'single_image' == sonata_admin.adminPool.getOption('title_mode') or 'both' == sonata_admin.adminPool.getOption('title_mode') %}
+                <img src="{{ asset(sonata_admin.adminPool.titlelogo) }}" alt="{{ sonata_admin.adminPool.title }}">
+            {% endif %}
+            {% if 'single_text' == sonata_admin.adminPool.getOption('title_mode') or 'both' == sonata_admin.adminPool.getOption('title_mode') %}
+                <span>{{ sonata_admin.adminPool.title }}</span>
+            {% endif %}
+        </a>
+    {% endspaceless %}
+{% endblock %}
+
+{# Skin Color [black, blue, green, purple, red, yellow] #}
+{% block body_attributes %}class="sonata-bc skin-{{ sonata_admin_skin }} fixed"{% endblock %}
+
+{% block sonata_sidebar_search %}
+    {% if sonata_admin.adminPool.getOption('search') %}
+        <form action="{{ path('sonata_admin_search') }}" method="GET" class="sidebar-form" role="search">
+            <div class="input-group custom-search-form">
+                <input type="text" name="q" value="{{ app.request.get('q') }}" class="form-control"
+                       placeholder="{{ 'search_placeholder'|trans({}, 'SonataAdminBundle') }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-flat" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
+    {% endif %}
+{% endblock sonata_sidebar_search %}
+			    
+			    
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        {% if _breadcrumb is not empty or action is defined %}
+            <ol class="nav navbar-top-links breadcrumb">
+                {% if _breadcrumb is empty %}
+                    {% if action is defined %}
+                        {% for menu in breadcrumbs_builder.breadcrumbs(admin, action) %}
+                            {%- set translation_domain = menu.extra('translation_domain', 'messages') -%}
+                            {%- set label = menu.label -%}
+                            {%- if translation_domain is not same as(false) -%}
+                                {%- set label = label|trans(menu.extra('translation_params', {}), translation_domain) -%}
+                            {%- endif -%}
+
+                            {% if not loop.last %}
+                                <li>
+                                    {% if menu.uri is not empty %}
+                                        <a href="{{ menu.uri }}">
+                                            {% if menu.extra('safe_label', true) %}
+                                                {{- label|raw -}}
+                                            {% else %}
+                                                {{- label -}}
+                                            {% endif %}
+                                        </a>
+                                    {% else %}
+                                        <span>{{ label }}</span>
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li class="active"><span>{{ label }}</span></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    {{ _breadcrumb|raw }}
+                {% endif %}
+            </ol>
+        {% endif %}
+    </div>
+{% endblock sonata_breadcrumb %}
+			    
+
+ {% block javascripts %}
+     {{ parent() }}
+     <script>
+         $(document).ready(function () {
+             // custom js code here
+         });
+     </script>
+ {% endblock javascripts %}

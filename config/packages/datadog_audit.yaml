@@ -1,0 +1,28 @@
+# Enable Doctrine to map the provided entities
+doctrine:
+    orm:
+        resolve_target_entities:
+            DataDog\AuditBundle\Entity\AuditLog: App\Entity\Audit\DataDogAuditLog
+
+services:
+
+# Audit
+
+    datadog.logout.handler.session:
+        class: App\Event\Audit\Handler\DataDogSessionLogoutHandler
+        public: false
+        arguments: ["@security.context","@service_container"]
+
+    twig.audit.extension:
+        class: App\Twig\Extension\Audit\DataDogAuditExtension
+        tags:
+          - { name: twig.extension }
+
+    data_dog_audit.admin.audit_log:
+        class: App\Admin\Audit\DataDogAuditLogAdmin
+        arguments: [~, DataDog\AuditBundle\Entity\AuditLog, SonataAdminBundle:CRUD]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: datadog_admin, label: System Logs, label_catalogue: DataDogAuditBundle, label_translator_strategy: sonata.admin.label.strategy.underscore}
+        calls:
+            - [ setTranslationDomain, [DataDogAuditBundle]]
+

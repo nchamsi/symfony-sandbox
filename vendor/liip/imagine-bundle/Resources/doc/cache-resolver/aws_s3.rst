@@ -59,7 +59,8 @@ Create Resolver from a Factory
                             key:    "%amazon.s3.key%"
                             secret: "%amazon.s3.secret%"
                         region: "%amazon.s3.region%"
-                        bucket: "%amazon.s3.cache_bucket%"
+                        version: "2006-03-01"
+                    bucket: "%amazon.s3.bucket%"
                     get_options:
                         Scheme: https
                     put_options:
@@ -81,7 +82,7 @@ Create Resolver from a Factory
                     key:    "%amazon.s3.key%"
                     secret: "%amazon.s3.secret%"
                     region: "%amazon.s3.region%"
-                    bucket: "%amazon.s3.cache_bucket%"
+                    bucket: "%amazon.s3.bucket%"
 
 Create Resolver as a Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,8 +96,7 @@ You have to set up the services required:
     services:
         acme.amazon_s3:
             class: Aws\S3\S3Client
-            factory_class: Aws\S3\S3Client
-            factory_method: factory
+            factory: [Aws\S3\S3Client, factory]
             arguments:
                 -
                     credentials: { key: "%amazon.s3.key%", secret: "%amazon.s3.secret%" }
@@ -129,6 +129,13 @@ You have to set up the services required:
                         secret: "%amazon.s3.secret%"
                         region: "%amazon.s3.region%"
 
+        acme.amazon_s3:
+            class: Aws\S3\S3Client
+            factory: [Aws\S3\S3Client, factory]
+            arguments:
+                -
+                    credentials: { key: %amazon.s3.key%, secret: %amazon.s3.secret% }
+                    region: %amazon.s3.region%
 
 Usage
 -----

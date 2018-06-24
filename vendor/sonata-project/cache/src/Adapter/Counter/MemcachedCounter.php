@@ -25,7 +25,7 @@ class MemcachedCounter extends BaseCounter
      * @param $prefix
      * @param array $servers
      */
-    public function __construct($prefix, array $servers)
+    public function __construct(string $prefix, array $servers)
     {
         $this->prefix = $prefix;
         $this->servers = $servers;
@@ -34,31 +34,31 @@ class MemcachedCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function increment($counter, $number = 1)
+    public function increment(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
         $value = $this->getCollection()->increment($this->prefix.'.'.$counter->getName(), $number);
 
-        return $this->handleIncrement($this->getCollection()->getResultCode() !== 0 ? false : $value, $counter, $number);
+        return $this->handleIncrement(0 !== $this->getCollection()->getResultCode() ? false : $value, $counter, $number);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function decrement($counter, $number = 1)
+    public function decrement(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
         $value = $this->getCollection()->decrement($this->prefix.'.'.$counter->getName(), $number);
 
-        return $this->handleDecrement($this->getCollection()->getResultCode() !== 0 ? false : $value, $counter, $number);
+        return $this->handleDecrement(0 !== $this->getCollection()->getResultCode() ? false : $value, $counter, $number);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set(Counter $counter)
+    public function set(Counter $counter): Counter
     {
         $this->getCollection()->add($this->prefix.'.'.$counter->getName(), $counter->getValue());
 
@@ -68,7 +68,7 @@ class MemcachedCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get(string $name): Counter
     {
         return Counter::create($name, (int) $this->getCollection()->get($this->prefix.'.'.$name));
     }
@@ -76,7 +76,7 @@ class MemcachedCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    private function getCollection()
+    private function getCollection(): \Memcached
     {
         if (!$this->collection) {
             $this->collection = new \Memcached();

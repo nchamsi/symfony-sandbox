@@ -1,0 +1,16 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Api Docs
+            description: Documentation for api features!
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+
+#    authentication:
+#        delivery: http
+#        type:     bearer  #basic
+#    request_format:
+#        method: accept_header
+

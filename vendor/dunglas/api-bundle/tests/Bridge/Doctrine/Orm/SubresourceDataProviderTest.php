@@ -16,6 +16,8 @@ namespace ApiPlatform\Core\Tests\Bridge\Doctrine\Orm;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\SubresourceDataProvider;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
@@ -100,12 +102,11 @@ class SubresourceDataProviderTest extends TestCase
         return $managerRegistryProphecy->reveal();
     }
 
-    /**
-     * @expectedException \ApiPlatform\Core\Exception\ResourceClassNotSupportedException
-     * @expectedExceptionMessage The given resource class is not a subresource.
-     */
     public function testNotASubresource()
     {
+        $this->expectException(ResourceClassNotSupportedException::class);
+        $this->expectExceptionMessage('The given resource class is not a subresource.');
+
         $identifiers = ['id'];
         list($propertyNameCollectionFactory, $propertyMetadataFactory) = $this->getMetadataProphecies([Dummy::class => $identifiers]);
         $queryBuilder = $this->prophesize(QueryBuilder::class)->reveal();
@@ -143,6 +144,7 @@ class SubresourceDataProviderTest extends TestCase
         $classMetadataProphecy = $this->prophesize(ClassMetadata::class);
         $classMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
         $classMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $classMetadataProphecy->hasAssociation('relatedDummies')->willReturn(true)->shouldBeCalled();
         $classMetadataProphecy->getAssociationMapping('relatedDummies')->shouldBeCalled()->willReturn(['type' => ClassMetadata::MANY_TO_MANY]);
 
         $managerProphecy->getClassMetadata(Dummy::class)->shouldBeCalled()->willReturn($classMetadataProphecy->reveal());
@@ -202,6 +204,7 @@ class SubresourceDataProviderTest extends TestCase
         $classMetadataProphecy = $this->prophesize(ClassMetadata::class);
         $classMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
         $classMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $classMetadataProphecy->hasAssociation('relatedDummies')->willReturn(true)->shouldBeCalled();
         $classMetadataProphecy->getAssociationMapping('relatedDummies')->shouldBeCalled()->willReturn(['type' => ClassMetadata::MANY_TO_MANY]);
 
         $dummyManagerProphecy = $this->prophesize(EntityManager::class);
@@ -229,6 +232,7 @@ class SubresourceDataProviderTest extends TestCase
         $rClassMetadataProphecy = $this->prophesize(ClassMetadata::class);
         $rClassMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
         $rClassMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $rClassMetadataProphecy->hasAssociation('thirdLevel')->shouldBeCalled()->willReturn(true);
         $rClassMetadataProphecy->getAssociationMapping('thirdLevel')->shouldBeCalled()->willReturn(['type' => ClassMetadata::MANY_TO_ONE]);
 
         $rDummyManagerProphecy = $this->prophesize(EntityManager::class);
@@ -290,6 +294,7 @@ class SubresourceDataProviderTest extends TestCase
         $classMetadataProphecy = $this->prophesize(ClassMetadata::class);
         $classMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
         $classMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $classMetadataProphecy->hasAssociation('relatedDummies')->willReturn(true)->shouldBeCalled();
         $classMetadataProphecy->getAssociationMapping('relatedDummies')->shouldBeCalled()->willReturn(['type' => ClassMetadata::MANY_TO_MANY]);
 
         $managerProphecy->getClassMetadata(Dummy::class)->shouldBeCalled()->willReturn($classMetadataProphecy->reveal());
@@ -328,12 +333,11 @@ class SubresourceDataProviderTest extends TestCase
         $this->assertEquals([], $dataProvider->getSubresource(RelatedDummy::class, ['id' => 1], $context));
     }
 
-    /**
-     * @expectedException \ApiPlatform\Core\Exception\RuntimeException
-     * @expectedExceptionMessage The repository class must have a "createQueryBuilder" method.
-     */
     public function testCannotCreateQueryBuilder()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The repository class must have a "createQueryBuilder" method.');
+
         $identifiers = ['id'];
         $repositoryProphecy = $this->prophesize(ObjectRepository::class);
 
@@ -349,11 +353,10 @@ class SubresourceDataProviderTest extends TestCase
         $dataProvider->getSubresource(Dummy::class, ['id' => 1], []);
     }
 
-    /**
-     * @expectedException \ApiPlatform\Core\Exception\ResourceClassNotSupportedException
-     */
     public function testThrowResourceClassNotSupportedException()
     {
+        $this->expectException(ResourceClassNotSupportedException::class);
+
         $identifiers = ['id'];
         $managerRegistryProphecy = $this->prophesize(ManagerRegistry::class);
         $managerRegistryProphecy->getManagerForClass(Dummy::class)->willReturn(null)->shouldBeCalled();
@@ -362,5 +365,97 @@ class SubresourceDataProviderTest extends TestCase
 
         $dataProvider = new SubresourceDataProvider($managerRegistryProphecy->reveal(), $propertyNameCollectionFactory, $propertyMetadataFactory);
         $dataProvider->getSubresource(Dummy::class, ['id' => 1], []);
+    }
+
+    public function testGetSubresourceCollectionItem()
+    {
+        $managerRegistryProphecy = $this->prophesize(ManagerRegistry::class);
+        $identifiers = ['id'];
+        $funcProphecy = $this->prophesize(Func::class);
+        $func = $funcProphecy->reveal();
+
+        // First manager (Dummy)
+        $dummyDQL = 'dql';
+
+        $qb = $this->prophesize(QueryBuilder::class);
+        $qb->select('relatedDummies_a3')->shouldBeCalled()->willReturn($qb);
+        $qb->from(Dummy::class, 'id_a2')->shouldBeCalled()->willReturn($qb);
+        $qb->innerJoin('id_a2.relatedDummies', 'relatedDummies_a3')->shouldBeCalled()->willReturn($qb);
+        $qb->andWhere('id_a2.id = :id_p2')->shouldBeCalled()->willReturn($qb);
+
+        $dummyFunc = new Func('in', ['any']);
+
+        $dummyExpProphecy = $this->prophesize(Expr::class);
+        $dummyExpProphecy->in('relatedDummies_a1', $dummyDQL)->willReturn($dummyFunc)->shouldBeCalled();
+
+        $qb->expr()->shouldBeCalled()->willReturn($dummyExpProphecy->reveal());
+
+        $qb->getDQL()->shouldBeCalled()->willReturn($dummyDQL);
+
+        $classMetadataProphecy = $this->prophesize(ClassMetadata::class);
+        $classMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
+        $classMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $classMetadataProphecy->hasAssociation('relatedDummies')->willReturn(true)->shouldBeCalled();
+        $classMetadataProphecy->getAssociationMapping('relatedDummies')->shouldBeCalled()->willReturn(['type' => ClassMetadata::MANY_TO_MANY]);
+
+        $dummyManagerProphecy = $this->prophesize(EntityManager::class);
+        $dummyManagerProphecy->createQueryBuilder()->shouldBeCalled()->willReturn($qb->reveal());
+        $dummyManagerProphecy->getClassMetadata(Dummy::class)->shouldBeCalled()->willReturn($classMetadataProphecy->reveal());
+        $this->assertIdentifierManagerMethodCalls($dummyManagerProphecy);
+
+        $managerRegistryProphecy->getManagerForClass(Dummy::class)->shouldBeCalled()->willReturn($dummyManagerProphecy->reveal());
+
+        // Second manager (RelatedDummy)
+        $relatedDQL = 'relateddql';
+
+        $rqb = $this->prophesize(QueryBuilder::class);
+        $rqb->select('relatedDummies_a1')->shouldBeCalled()->willReturn($rqb);
+        $rqb->from(RelatedDummy::class, 'relatedDummies_a1')->shouldBeCalled()->willReturn($rqb);
+        $rqb->andWhere('relatedDummies_a1.id = :id_p1')->shouldBeCalled()->willReturn($rqb);
+        $rqb->andWhere($dummyFunc)->shouldBeCalled()->willReturn($rqb);
+        $rqb->getDQL()->shouldBeCalled()->willReturn($relatedDQL);
+
+        $relatedExpProphecy = $this->prophesize(Expr::class);
+        $relatedExpProphecy->in('o', $relatedDQL)->willReturn($func)->shouldBeCalled();
+
+        $rqb->expr()->shouldBeCalled()->willReturn($relatedExpProphecy->reveal());
+
+        $rClassMetadataProphecy = $this->prophesize(ClassMetadata::class);
+        $rClassMetadataProphecy->getIdentifier()->shouldBeCalled()->willReturn($identifiers);
+        $rClassMetadataProphecy->getTypeOfField('id')->shouldBeCalled()->willReturn('integer');
+        $rClassMetadataProphecy->hasAssociation('id')->shouldBeCalled()->willReturn(false);
+        $rClassMetadataProphecy->isIdentifier('id')->shouldBeCalled()->willReturn(true);
+
+        $rDummyManagerProphecy = $this->prophesize(EntityManager::class);
+        $rDummyManagerProphecy->createQueryBuilder()->shouldBeCalled()->willReturn($rqb->reveal());
+        $rDummyManagerProphecy->getClassMetadata(RelatedDummy::class)->shouldBeCalled()->willReturn($rClassMetadataProphecy->reveal());
+        $this->assertIdentifierManagerMethodCalls($rDummyManagerProphecy);
+
+        $managerRegistryProphecy->getManagerForClass(RelatedDummy::class)->shouldBeCalled()->willReturn($rDummyManagerProphecy->reveal());
+
+        $result = new \StdClass();
+        $queryProphecy = $this->prophesize(AbstractQuery::class);
+        $queryProphecy->getOneOrNullResult()->shouldBeCalled()->willReturn($result);
+
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+
+        $queryBuilder->andWhere($func)->shouldBeCalled()->willReturn($queryBuilder);
+
+        $queryBuilder->getQuery()->shouldBeCalled()->willReturn($queryProphecy->reveal());
+        $queryBuilder->setParameter('id_p1', 2)->shouldBeCalled()->willReturn($queryBuilder);
+        $queryBuilder->setParameter('id_p2', 1)->shouldBeCalled()->willReturn($queryBuilder);
+
+        $repositoryProphecy = $this->prophesize(EntityRepository::class);
+        $repositoryProphecy->createQueryBuilder('o')->shouldBeCalled()->willReturn($queryBuilder->reveal());
+
+        $rDummyManagerProphecy->getRepository(RelatedDummy::class)->shouldBeCalled()->willReturn($repositoryProphecy->reveal());
+
+        list($propertyNameCollectionFactory, $propertyMetadataFactory) = $this->getMetadataProphecies([Dummy::class => $identifiers, RelatedDummy::class => $identifiers]);
+
+        $dataProvider = new SubresourceDataProvider($managerRegistryProphecy->reveal(), $propertyNameCollectionFactory, $propertyMetadataFactory);
+
+        $context = ['property' => 'id', 'identifiers' => [['id', Dummy::class, true], ['relatedDummies', RelatedDummy::class, true]], 'collection' => false];
+
+        $this->assertEquals($result, $dataProvider->getSubresource(RelatedDummy::class, ['id' => 1, 'relatedDummies' => 2], $context));
     }
 }

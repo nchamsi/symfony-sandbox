@@ -23,7 +23,14 @@ use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenInterface;
  */
 class RefreshTokenProvider implements UserProviderInterface
 {
+    /**
+     * @var RefreshTokenManagerInterface
+     */
     protected $refreshTokenManager;
+
+    /**
+     * @var UserProviderInterface
+     */
     protected $customUserProvider;
 
     public function __construct(RefreshTokenManagerInterface $refreshTokenManager)
@@ -44,12 +51,12 @@ class RefreshTokenProvider implements UserProviderInterface
             return $refreshToken->getUsername();
         }
 
-        return;
+        return null;
     }
 
     public function loadUserByUsername($username)
     {
-        if ($this->customUserProvider != null) {
+        if (null !== $this->customUserProvider) {
             return $this->customUserProvider->loadUserByUsername($username);
         } else {
             return new User(
@@ -62,7 +69,7 @@ class RefreshTokenProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        if ($this->customUserProvider != null) {
+        if (null !== $this->customUserProvider) {
             return $this->customUserProvider->refreshUser($user);
         } else {
             throw new UnsupportedUserException();
@@ -71,7 +78,7 @@ class RefreshTokenProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        if ($this->customUserProvider != null) {
+        if (null !== $this->customUserProvider) {
             return $this->customUserProvider->supportsClass($class);
         } else {
             return 'Symfony\Component\Security\Core\User\User' === $class;

@@ -1,0 +1,119 @@
+security:
+
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        # Disabling the security for the web debug toolbar, the profiler and Assetic.
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # -> custom firewall for the admin area of the URL
+        admin:
+            pattern:            /admin(.*)
+            context:            user
+            form_login:
+                provider:       fos_userbundle
+                login_path:     /admin/login
+                use_forward:    false
+                check_path:     /admin/login_check
+                failure_path:   null
+            logout:
+                path:           /admin/logout
+                target:         /admin/login
+            anonymous:          true
+
+        # -> end custom configuration
+
+        # default login area for standard users
+
+        # This firewall is used to handle the public login area
+        # This part is handled by the FOS User Bundle
+        main:
+            pattern:             .*
+            context:             user
+            form_login:
+                provider:       fos_userbundle
+                login_path:     /login
+                use_forward:    false
+                check_path:     /login_check
+                failure_path:   null
+            logout:             true
+            anonymous:          true
+
+    role_hierarchy:
+        SONATA:
+            - ROLE_SONATA_PAGE_ADMIN_PAGE_EDIT  # if you are using acl then this line must be commented
+        # sonata generated roles
+
+        ROLE_SONATA_ADMIN:
+            - ROLE_SONATA_USER_ADMIN_USER_VIEW
+            - ROLE_SONATA_USER_ADMIN_USER_EDIT
+
+#        ROLE_SONATA_USER_GROUP_ADMIN:
+#            - ROLE_SONATA_USER_ADMIN_GROUP_LIST
+#            - ROLE_SONATA_USER_ADMIN_GROUP_VIEW
+#            - ROLE_SONATA_USER_ADMIN_GROUP_CREATE
+#            - ROLE_SONATA_USER_ADMIN_GROUP_EDIT
+#            - ROLE_SONATA_USER_ADMIN_GROUP_DELETE
+#            - ROLE_SONATA_USER_ADMIN_GROUP_EXPORT
+
+        ROLE_AUDIT_LOGS_ADMIN:
+            - ROLE_DATA_DOG_AUDIT_ADMIN_AUDIT_LOG_LIST
+            - ROLE_DATA_DOG_AUDIT_ADMIN_AUDIT_LOG_VIEW
+
+        # those are the roles for real use (less verbose)
+
+        ROLE_USER:
+            - ROLE_API
+            - ROLE_SONATA_ADMIN
+
+        ROLE_ADMIN:
+            - ROLE_USER
+#            - ROLE_SONATA_ADMIN
+#            - ROLE_SONATA_USER_ADMIN_USER_LIST
+#            - ROLE_SONATA_USER_ADMIN_USER_VIEW
+#            - ROLE_SONATA_USER_ADMIN_USER_CREATE
+#            - ROLE_SONATA_USER_ADMIN_USER_EDIT
+            #- ROLE_SONATA_USER_ADMIN_USER_DELETE
+            #- ROLE_SONATA_USER_ADMIN_USER_EXPORT
+            - ROLE_AUDIT_LOGS_ADMIN
+
+        ROLE_SUPER_ADMIN:
+            # -it s not necessary indicate roles for ROLE_SUPER_ADMIN
+            - ROLE_USER
+            - ROLE_ADMIN
+#            - ROLE_SONATA_ADMIN
+#            - ROLE_SONATA_USER_USER_ADMIN
+#            - ROLE_SONATA_USER_GROUP_ADMIN
+            - ROLE_AUDIT_LOGS_ADMIN
+            - ROLE_ALLOWED_TO_SWITCH
+#            - ROLE_SONATA_PAGE_ADMIN_PAGE_EDIT
+#            - ROLE_SONATA_PAGE_ADMIN_BLOCK_EDIT
+
+#        ROLE_APP_ADMIN_ENTITY:
+#
+#            - ROLE_APP_ADMIN_ENTITY_LIST
+#            - ROLE_APP_ADMIN_ENTITY_VIEW
+#            - ROLE_APP_ADMIN_ENTITY_CREATE
+#            - ROLE_APP_ADMIN_ENTITY_EDIT
+#            - ROLE_APP_ADMIN_ENTITY_DELETE
+#            - ROLE_APP_ADMIN_ENTITY_EXPORT
+
+    access_control:
+        # Admin login page needs to be accessed without credential
+        - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/login_check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        # Secured part of the site
+        # This config requires being logged for the whole site and having the admin role for the admin part.
+        # Change these rules to adapt them to your needs
+        - { path: ^/admin/, role: [ROLE_ADMIN, ROLE_SONATA_ADMIN] }
+        - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }

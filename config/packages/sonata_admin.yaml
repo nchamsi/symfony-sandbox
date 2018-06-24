@@ -1,0 +1,268 @@
+#
+# more information can be found here https://sonata-project.org/bundles/admin
+#
+twig:
+    #base_template_class: Sonata\CacheBundle\Twig\TwigTemplate14
+
+    form_themes:
+        - '@SonataCore/Form/datepicker.html.twig'
+
+#    form:
+#        resources:
+#            - 'SonataFormatterBundle:Form:formatter.html.twig'
+#            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+#            - 'SonataCoreBundle:Form:datepicker.html.twig'
+#            - 'ShtumiUsefulBundle::fields.html.twig'
+
+    globals:
+        sonata_admin_short_title: 'Symfony'
+        sonata_admin_skin: 'blue' # [black, blue, green, purple, red, yellow]
+
+doctrine:
+    dbal:
+        types:
+            json: Sonata\Doctrine\Types\JsonType
+
+sonata_block:
+
+    #default_contexts: [sonata_page_bundle]
+
+    http_cache:
+        listener: true
+
+    menus:
+        #"SonataDemoBundle:Builder:mainMenu": "Main Menu"
+
+    blocks:
+        sonata.admin.block.stats:
+            contexts:   [admin]
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+        sonata.admin.block.search_result:
+            contexts:   [admin]
+
+        #sonata.admin_doctrine_orm.block.audit:
+        #    contexts:   [admin]
+
+        # Builtin Block
+        sonata.block.service.text:
+        sonata.block.service.container:
+        sonata.block.service.rss:
+        sonata.block.service.menu:
+        sonata.block.service.template:
+
+        # Audit SimpleThings
+        #sonata.admin_doctrine_orm.block.audit
+
+        # PageBundle's Blocks
+        sonata.page.block.container:
+            # cache: sonata.cache.memcached
+            # cache: sonata.cache.predis
+            # cache: sonata.page.cache.esi # if you are using the PageBundle
+            # cache: sonata.block.cache.esi # if you are using the BlockBundle without the PageBundle
+        sonata.page.block.children_pages:
+        sonata.page.block.ajax:
+        sonata.page.block.context_manager:
+        sonata.page.block.breadcrumb:
+        sonata.page.block.shared_block:
+        sonata.page.block.pagelist:
+
+        # MediaBundle's Blocks
+        sonata.media.block.media:
+        sonata.media.block.gallery:
+        sonata.media.block.feature_media:
+        sonata.media.block.gallery_list:
+
+        # UserBundle's Blocks
+        sonata.user.block.account:
+            cache: sonata.page.cache.js_async
+            #cache: sonata.page.cache.esi
+            contexts: [user,sonata_page_bundle]
+        sonata.user.block.menu:
+            contexts: [user,sonata_page_bundle]
+        sonata.user.block.breadcrumb_index:
+        sonata.user.block.breadcrumb_profile:
+
+        # SeoBundle's Blocks
+        sonata.seo.block.email.share_button:
+        sonata.seo.block.facebook.like_box:
+        sonata.seo.block.facebook.like_button:
+        sonata.seo.block.facebook.send_button:
+        sonata.seo.block.facebook.share_button:
+        sonata.seo.block.pinterest.pin_button:
+        sonata.seo.block.twitter.share_button:
+        sonata.seo.block.twitter.follow_button:
+        sonata.seo.block.twitter.hashtag_button:
+        sonata.seo.block.twitter.mention_button:
+        sonata.seo.block.twitter.embed:
+
+        #sonata.demo.block.newsletter:
+
+        # Formatter
+        sonata.formatter.block.formatter:
+
+        sonata.seo.block.breadcrumb.homepage:
+
+sonata_admin:
+
+    title:      "Symfony"
+    title_logo: "logo.png"
+
+    persist_filters: true
+
+    options:
+        title_mode:  both     # "single_text"; "single_image"; "both"
+        html5_validate: true  # use html5 validation
+        pager_links: 5        # pager max links to display
+        # another options
+        sort_admins:          false
+        confirm_exit:         true
+        use_select2:          true
+        use_icheck:           true
+        use_bootlint:         false
+        use_stickyforms:      true
+        form_type:            standard
+        dropdown_number_groups_per_colums:  2
+        # Enable locking when editing an object, if the corresponding object manager supports it.
+        lock_protection:      true
+
+    # default value, change it to sonata.admin.security.handler.acl to use ACL
+    security:
+        handler: sonata.admin.security.handler.role
+
+        # acl security information
+    #    information:
+    #        GUEST:    [VIEW, LIST]
+    #        STAFF:    [EDIT, LIST, CREATE]
+    #        EDITOR:   [OPERATOR, EXPORT]
+    #        ADMIN:    [MASTER]
+        # permissions not related to an object instance and also to be available when objects do not exist
+        # the DELETE admin permission means the user is allowed to batch delete objects
+    #    admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER]
+        # permission related to the objects
+    #    object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER]
+
+    templates:
+        # default global templates
+        # the layout template include javascript/stylesheet to the formatter bundle,
+        # if you don't need it use the default one: SonataAdminBundle::standard_layout.html.twig
+        #layout:  '@SonataAdmin/standard_layout.html.twig'
+        #ajax:    @SonataAdmin/ajax_layout.html.twig'
+
+        # default value if done set, actions templates, should extends a global templates
+        #list:    '@SonataAdmin/CRUD/list.html.twig'
+        #show:    '@SonataAdmin/CRUD/show.html.twig'
+        #edit:    '@SonataAdmin/CRUD/edit.html.twig'
+
+        #base_list_field:    SonataAdminBundle:CRUD:base_list_field.html.twig
+
+    assets:
+        stylesheets:
+            # Default admin assets
+            - bundles/sonatacore/vendor/bootstrap/dist/css/bootstrap.min.css
+            - bundles/sonatacore/vendor/components-font-awesome/css/font-awesome.min.css
+            - bundles/sonatacore/vendor/ionicons/css/ionicons.min.css
+            - bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
+            - bundles/sonatacore/vendor/select2/select2.css
+            - bundles/sonatacore/vendor/select2/select2-bootstrap.css
+            - bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css
+            - bundles/sonataadmin/vendor/jqueryui/themes/flick/jquery-ui.min.css
+            - bundles/sonataadmin/vendor/admin-lte/dist/css/AdminLTE.css
+            - bundles/sonataadmin/vendor/iCheck/skins/square/blue.css
+            - bundles/sonataadmin/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css
+            - bundles/sonataadmin/css/styles.css
+            - bundles/sonataadmin/css/layout.css
+            - bundles/sonataadmin/css/tree.css
+
+            # Formatter assets
+            #- bundles/sonataformatter/markitup/skins/sonata/style.css
+            #- bundles/sonataformatter/markitup/sets/markdown/style.css
+            #- bundles/sonataformatter/markitup/sets/html/style.css
+            #- bundles/sonataformatter/markitup/sets/textile/style.css
+
+            # Custom assets
+            #- bundles/sonataadmin/vendor/admin-lte/dist/css/skins/skin-black.min.css
+            # Skin Color [black, blue, green, purple, red, yellow]
+            - bundles/sonataadmin/vendor/admin-lte/dist/css/skins/_all-skins.min.css
+            - assets/vendor/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css
+            - assets/vendor/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css
+
+        javascripts:
+            # Default admin assets
+            - bundles/sonatacore/vendor/jquery/dist/jquery.js
+            - bundles/sonatacore/vendor/moment/min/moment.min.js
+            - bundles/sonatacore/vendor/bootstrap/dist/js/bootstrap.js
+            - bundles/sonatacore/vendor/select2/select2.js
+            - bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js
+            - bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js
+            - bundles/sonataadmin/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js
+            - bundles/sonataadmin/vendor/jquery-form/jquery.form.js
+            - bundles/sonataadmin/jquery/jquery.confirmExit.js
+            - bundles/sonataadmin/vendor/jquery.scrollTo/jquery.scrollTo.js
+            - bundles/sonataadmin/vendor/waypoints/lib/jquery.waypoints.min.js
+            - bundles/sonataadmin/vendor/waypoints/lib/shortcuts/sticky.min.js
+            #- bundles/sonataadmin/vendor/waypoints/lib/noframework.waypoints.min.js
+            #- bundles/sonataadmin/vendor/waypoints/lib/zepto.waypoints.min.js
+            - bundles/sonataadmin/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js
+            - bundles/sonataadmin/vendor/iCheck/icheck.min.js
+            - bundles/sonataadmin/vendor/slimScroll/jquery.slimscroll.min.js
+            - bundles/sonataadmin/vendor/admin-lte/dist/js/app.min.js
+            - bundles/sonataadmin/Admin.js
+            - bundles/sonataadmin/treeview.js
+
+            # Formatter assets
+            #- bundles/sonataformatter/vendor/markitup-markitup/markitup/jquery.markitup.js
+            #- bundles/sonataformatter/markitup/sets/markdown/set.js
+            #- bundles/sonataformatter/markitup/sets/html/set.js
+            #- bundles/sonataformatter/markitup/sets/textile/set.js
+
+    dashboard:
+
+        blocks:
+            -
+                position: left
+                type: sonata.admin.block.admin_list
+                settings:
+                    groups: [sonata.group.security]
+
+        groups:
+
+            sonata.group.security:
+                label:           sonata_group_security_label
+                label_catalogue: SonataAdminBundle
+                icon: '<i class="glyphicon glyphicon-user"></i>'
+                items:
+                    - sonata.user.admin.user
+                    - sonata.user.admin.group
+                    - data_dog_audit.admin.audit_log
+
+#            sonata.admin.group.site_builder:
+#                label:           sonata_page
+#                label_catalogue: SonataPageBundle
+#                icon:            '<i class="fa fa-puzzle-piece"></i>'
+#                items:
+#                    #- sonata.page.admin.site
+#                    #- sonata.page.admin.snapshot
+#                    #- sonata.page.admin.page
+#                    #- sonata.page.admin.shared_block
+#
+#            sonata.admin.group.classification:
+#                label:           sonata_classification
+#                label_catalogue: SonataClassificationBundle
+#                icon:            '<i class="fa fa-sitemap"></i>'
+#                items:
+#                    - sonata.classification.admin.category
+#                    - sonata.classification.admin.tag
+#                    - sonata.classification.admin.collection
+#                    - sonata.classification.admin.context
+#
+#            sonata.admin.group.content:
+#                label:           sonata_media
+#                label_catalogue: SonataMediaBundle
+#                icon:            '<i class="fa fa-th"></i>'
+#                items:
+#                    - sonata.media.admin.media
+#                    - sonata.media.admin.gallery
+
+
+

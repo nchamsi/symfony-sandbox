@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sonata Project package.
  *
@@ -9,11 +11,10 @@
  * file that was distributed with this source code.
  */
 
-include_once __DIR__.'/../src/Google/Authenticator/FixedBitNotation.php';
-include_once __DIR__.'/../src/Google/Authenticator/GoogleAuthenticator.php';
+include_once __DIR__.'/../src/FixedBitNotation.php';
+include_once __DIR__.'/../src/GoogleAuthenticator.php';
 
 $secret = 'XVQ2UIGO75XRUKJO';
-$time = floor(time() / 30);
 $code = '846474';
 
 $g = new \Google\Authenticator\GoogleAuthenticator();
@@ -35,5 +36,5 @@ $secret = $g->generateSecret();
 echo "Get a new Secret: $secret \n";
 echo "The QR Code for this secret (to scan with the Google Authenticator App: \n";
 
-echo $g->getURL('chregu', 'example.org', $secret);
+echo \Google\Authenticator\GoogleQrUrl::generate('chregu', $secret, 'GoogleAuthenticatorExample');
 echo "\n";

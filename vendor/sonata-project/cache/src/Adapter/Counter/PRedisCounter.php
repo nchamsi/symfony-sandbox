@@ -35,11 +35,11 @@ class PRedisCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function increment($counter, $number = 1)
+    public function increment(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
-        if ($this->getClient()->get($counter->getName()) === null) {
+        if (null === $this->getClient()->get($counter->getName())) {
             $this->getClient()->set($counter->getName(), $value = $counter->getValue() + $number);
         } else {
             $value = $this->getClient()->incrby($counter->getName(), $number);
@@ -51,11 +51,11 @@ class PRedisCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function decrement($counter, $number = 1)
+    public function decrement(Counter $counter, int $number = 1): Counter
     {
         $counter = $this->transform($counter);
 
-        if ($this->getClient()->get($counter->getName()) === null) {
+        if (null === $this->getClient()->get($counter->getName())) {
             $this->getClient()->set($counter->getName(), $value = $counter->getValue() - $number);
         } else {
             $value = $this->getClient()->decrby($counter->getName(), $number);
@@ -67,7 +67,7 @@ class PRedisCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function set(Counter $counter)
+    public function set(Counter $counter): Counter
     {
         $this->getClient()->set($counter->getName(), $counter->getValue());
 
@@ -77,7 +77,7 @@ class PRedisCounter extends BaseCounter
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get(string $name): Counter
     {
         return Counter::create($name, (int) $this->getClient()->get($name));
     }
@@ -85,7 +85,7 @@ class PRedisCounter extends BaseCounter
     /**
      * @return Client
      */
-    private function getClient()
+    private function getClient(): Client
     {
         if (!$this->client) {
             $this->client = new Client($this->parameters, $this->options);

@@ -63,6 +63,10 @@ final class CollectionResolverFactory implements ResolverFactoryInterface
     public function __invoke(string $resourceClass = null, string $rootClass = null, string $operationName = null): callable
     {
         return function ($source, $args, $context, ResolveInfo $info) use ($resourceClass, $rootClass) {
+            if (null === $resourceClass) {
+                return null;
+            }
+
             if ($this->requestStack && null !== $request = $this->requestStack->getCurrentRequest()) {
                 $request->attributes->set(
                     '_graphql_collections_args',
@@ -73,9 +77,9 @@ final class CollectionResolverFactory implements ResolverFactoryInterface
             $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
             $dataProviderContext = $resourceMetadata->getGraphqlAttribute('query', 'normalization_context', [], true);
             $dataProviderContext['attributes'] = $this->fieldsToAttributes($info);
-            $dataProviderContext['filters'] = $args;
+            $dataProviderContext['filters'] = $this->getNormalizedFilters($args);
 
-            if (isset($source[$rootProperty = $info->fieldName], $source[ItemNormalizer::ITEM_KEY])) {
+            if (isset($rootClass, $source[$rootProperty = $info->fieldName], $source[ItemNormalizer::ITEM_KEY])) {
                 $rootResolvedFields = $this->identifiersExtractor->getIdentifiersFromItem(unserialize($source[ItemNormalizer::ITEM_KEY]));
                 $subresource = $this->getSubresource($rootClass, $rootResolvedFields, array_keys($rootResolvedFields), $rootProperty, $resourceClass, true, $dataProviderContext);
                 $collection = $subresource ?? [];
@@ -84,13 +88,6 @@ final class CollectionResolverFactory implements ResolverFactoryInterface
             }
 
             $this->canAccess($this->resourceAccessChecker, $resourceMetadata, $resourceClass, $info, $collection, 'query');
-
-            if (null !== $this->resourceAccessChecker) {
-                $isGranted = $resourceMetadata->getGraphqlAttribute('query', 'access_control', null, true);
-                if (null !== $isGranted && !$this->resourceAccessChecker->isGranted($resourceClass, $isGranted, ['object' => $collection])) {
-                    throw Error::createLocatedError('Access Denied.', $info->fieldNodes, $info->path);
-                }
-            }
 
             if (!$this->paginationEnabled) {
                 $data = [];
@@ -159,5 +156,23 @@ final class CollectionResolverFactory implements ResolverFactoryInterface
             'identifiers' => $resolvedIdentifiers,
             'collection' => $isCollection,
         ]);
+    }
+
+    private function getNormalizedFilters(array $args): array
+    {
+        $filters = $args;
+        foreach ($filters as $name => $value) {
+            if (\is_array($value)) {
+                $filters[$name] = $this->getNormalizedFilters($value);
+                continue;
+            }
+
+            if (strpos($name, '_')) {
+                // Gives a chance to relations/nested fields.
+                $filters[str_replace('_', '.', $name)] = $value;
+            }
+        }
+
+        return $filters;
     }
 }

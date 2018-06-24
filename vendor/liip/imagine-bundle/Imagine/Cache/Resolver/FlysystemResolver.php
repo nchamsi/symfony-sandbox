@@ -92,25 +92,6 @@ class FlysystemResolver implements ResolverInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getFilePath($path, $filter)
-    {
-        return $this->getFileUrl($path, $filter);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFileUrl($path, $filter)
-    {
-        // crude way of sanitizing URL scheme ("protocol") part
-        $path = str_replace('://', '---', $path);
-
-        return $this->cachePrefix.'/'.$filter.'/'.ltrim($path, '/');
-    }
-
-    /**
      * Resolves filtered path for rendering in the browser.
      *
      * @param string $path   The path where the original file is expected to be
@@ -141,7 +122,7 @@ class FlysystemResolver implements ResolverInterface
         $this->flysystem->put(
             $this->getFilePath($path, $filter),
             $binary->getContent(),
-            array('visibility' => $this->visibility)
+            ['visibility' => $this->visibility]
         );
     }
 
@@ -171,5 +152,24 @@ class FlysystemResolver implements ResolverInterface
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilePath($path, $filter)
+    {
+        return $this->getFileUrl($path, $filter);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFileUrl($path, $filter)
+    {
+        // crude way of sanitizing URL scheme ("protocol") part
+        $path = str_replace('://', '---', $path);
+
+        return $this->cachePrefix.'/'.$filter.'/'.ltrim($path, '/');
     }
 }

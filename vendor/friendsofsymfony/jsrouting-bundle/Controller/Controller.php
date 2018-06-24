@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Controller class.
@@ -69,29 +68,27 @@ class Controller
      */
     public function indexAction(Request $request, $_format)
     {
-        if (version_compare(strtolower(Kernel::VERSION), '2.1.0-dev', '<')) {
-            if (null !== $session = $request->getSession()) {
-                // keep current flashes for one more request
-                $session->setFlashes($session->getFlashes());
-            }
-        } else {
-            $session = $request->getSession();
+        $session = $request->getSession();
 
-            if ($request->hasPreviousSession() && $session->getFlashBag() instanceof AutoExpireFlashBag) {
-                // keep current flashes for one more request if using AutoExpireFlashBag
-                $session->getFlashBag()->setAll($session->getFlashBag()->peekAll());
-            }
+        if ($request->hasPreviousSession() && $session->getFlashBag() instanceof AutoExpireFlashBag) {
+            // keep current flashes for one more request if using AutoExpireFlashBag
+            $session->getFlashBag()->setAll($session->getFlashBag()->peekAll());
         }
 
         $cache = new ConfigCache($this->exposedRoutesExtractor->getCachePath($request->getLocale()), $this->debug);
 
         if (!$cache->isFresh()) {
-            $exposedRoutes = $this->exposedRoutesExtractor->getRoutes();
+            $exposedRoutes    = $this->exposedRoutesExtractor->getRoutes();
             $serializedRoutes = $this->serializer->serialize($exposedRoutes, 'json');
             $cache->write($serializedRoutes, $this->exposedRoutesExtractor->getResources());
         } else {
-            $serializedRoutes = file_get_contents(method_exists($cache, 'getPath') ? $cache->getPath() : (string) $cache);
-            $exposedRoutes = json_decode($serializedRoutes, true);
+            $path = method_exists($cache, 'getPath') ? $cache->getPath() : (string) $cache;
+            $serializedRoutes = file_get_contents($path);
+            $exposedRoutes    = $this->serializer->deserialize(
+                $serializedRoutes,
+                'Symfony\Component\Routing\RouteCollection',
+                'json'
+            );
         }
 
         $routesResponse = new RoutesResponse(
@@ -99,7 +96,8 @@ class Controller
             $exposedRoutes,
             $this->exposedRoutesExtractor->getPrefix($request->getLocale()),
             $this->exposedRoutesExtractor->getHost(),
-            $this->exposedRoutesExtractor->getScheme()
+            $this->exposedRoutesExtractor->getScheme(),
+            $request->getLocale()
         );
 
         $content = $this->serializer->serialize($routesResponse, 'json');

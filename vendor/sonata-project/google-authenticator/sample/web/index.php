@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 ob_start(); //i'm too lazy to check when is sent what ;)
 //set session cookie to be read only via http and not by JavaScript
 ini_set('session.cookie_httponly', 1);
 
-include_once __DIR__.'/../../src/Google/Authenticator/GoogleAuthenticator.php';
+include_once __DIR__.'/../../src/GoogleAuthenticator.php';
+include_once __DIR__.'/../../src/GoogleQrUrl.php';
 include_once 'Users.php';
 
 ?>
@@ -37,7 +38,7 @@ if ($username = $users->hasSession()) {
             include __DIR__.'/../tmpl/show-qr.php';
         }
     }
-        //if the user is in the OTP phase and submit the OTP.
+    //if the user is in the OTP phase and submit the OTP.
     else {
         if ($user->isOTP() && isset($_POST['otp'])) {
             $g = new \Google\Authenticator\GoogleAuthenticator();
@@ -51,13 +52,13 @@ if ($username = $users->hasSession()) {
                 }
                 include __DIR__.'/../tmpl/loggedin.php';
             }
-                //if the OTP is wrong, destroy the session and tell the user to try again
+            //if the OTP is wrong, destroy the session and tell the user to try again
             else {
                 session_destroy();
                 include __DIR__.'/../tmpl/login-error.php';
             }
         }
-            // if the user is neither logged in nor in the OTP phase, show the login form
+        // if the user is neither logged in nor in the OTP phase, show the login form
         else {
             session_destroy();
             include __DIR__.'/../tmpl/login.php';
@@ -80,8 +81,8 @@ if ($username = $users->hasSession()) {
                     include __DIR__.'/../tmpl/loggedin.php';
                     $user->doLogin();
                 }
-                    // try to get the users' secret from the db,
-                    //  if he doesn't have one, generate one, store it and show it.
+                // try to get the users' secret from the db,
+                //  if he doesn't have one, generate one, store it and show it.
                 else {
                     if (!$user->getSecret()) {
                         include __DIR__.'/../tmpl/loggedin.php';
@@ -91,8 +92,8 @@ if ($username = $users->hasSession()) {
                         $user->doLogin();
                         include __DIR__.'/../tmpl/show-qr.php';
                     }
-                        // if the user neither has a valid OTP cookie nor it's the first login
-                        //  ask for the OTP
+                    // if the user neither has a valid OTP cookie nor it's the first login
+                    //  ask for the OTP
                     else {
                         $user->doOTP();
                         include __DIR__.'/../tmpl/ask-for-otp.php';

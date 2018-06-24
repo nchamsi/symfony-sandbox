@@ -44,6 +44,14 @@ class DependentFilteredEntityType extends AbstractType
     }
 
     /**
+     * @return string
+     */
+    public function getParent()
+    {
+        return 'form';
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
