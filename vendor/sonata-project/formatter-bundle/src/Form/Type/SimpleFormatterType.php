@@ -11,9 +11,16 @@
 
 namespace Sonata\FormatterBundle\Form\Type;
 
-use Ivory\CKEditorBundle\Model\ConfigManagerInterface;
-use Ivory\CKEditorBundle\Model\PluginManagerInterface;
-use Ivory\CKEditorBundle\Model\TemplateManagerInterface;
+use FOS\CKEditorBundle\Model\ConfigManagerInterface as FOSConfigManagerInterface;
+use FOS\CKEditorBundle\Model\PluginManagerInterface as FOSPluginManagerInterface;
+use FOS\CKEditorBundle\Model\StylesSetManagerInterface as FOSStylesSetManagerInterface;
+use FOS\CKEditorBundle\Model\TemplateManagerInterface as FOSTemplateManagerInterface;
+use FOS\CKEditorBundle\Model\ToolbarManagerInterface as FOSToolbarManagerInterface;
+use Ivory\CKEditorBundle\Model\ConfigManagerInterface as IvoryConfigManagerInterface;
+use Ivory\CKEditorBundle\Model\PluginManagerInterface as IvoryPluginManagerInterface;
+use Ivory\CKEditorBundle\Model\StylesSetManagerInterface as IvoryStylesSetManagerInterface;
+use Ivory\CKEditorBundle\Model\TemplateManagerInterface as IvoryTemplateManagerInterface;
+use Ivory\CKEditorBundle\Model\ToolbarManagerInterface as IvoryToolbarManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormInterface;
@@ -23,33 +30,108 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SimpleFormatterType extends AbstractType
 {
     /**
-     * @var ConfigManagerInterface
+     * @var FOSConfigManagerInterface|IvoryConfigManagerInterface
      */
     protected $configManager;
 
     /**
-     * @var PluginManagerInterface
+     * @var FOSPluginManagerInterface|IvoryPluginManagerInterface
      */
     protected $pluginManager;
 
     /**
-     * @var TemplateManagerInterface
+     * @var FOSStylesSetManagerInterface|IvoryStylesSetManagerInterface
+     */
+    private $stylesSetManager;
+
+    /**
+     * @var FOSTemplateManagerInterface|IvoryTemplateManagerInterface
      */
     private $templateManager;
 
     /**
-     * @param ConfigManagerInterface        $configManager   An Ivory CKEditor bundle configuration manager
-     * @param PluginManagerInterface|null   $pluginManager   An Ivory CKEditor bundle plugin manager
-     * @param TemplateManagerInterface|null $templateManager An Ivory CKEditor bundle template manager
+     * @var FOSToolbarManagerInterface|IvoryToolbarManagerInterface
+     */
+    private $toolbarManager;
+
+    /**
+     * @param FOSConfigManagerInterface|IvoryConfigManagerInterface
+     * $configManager   A CKEditor bundle configuration manager
+     * @param FOSPluginManagerInterface|IvoryPluginManagerInterface|null
+     * $pluginManager   A CKEditor bundle plugin manager
+     * @param FOSTemplateManagerInterface|IvoryTemplateManagerInterface|null
+     * $templateManager A CKEditor bundle template manager
+     * @param FOSStylesSetManagerInterface|IvoryStylesSetManagerInterface|null
+     * $stylesSetManager A CKEditor bundle styles set manager
+     * @param FOSToolbarManagerInterface|IvoryToolbarManagerInterface|null
+     * $toolbarManager A CKEditor bundle toolbar manager
      */
     public function __construct(
-        ConfigManagerInterface $configManager,
-        PluginManagerInterface $pluginManager = null,
-        TemplateManagerInterface $templateManager = null
+        $configManager,
+        $pluginManager = null,
+        $templateManager = null,
+        $stylesSetManager = null,
+        $toolbarManager = null
     ) {
+        if (!$configManager instanceof IvoryConfigManagerInterface
+            && !$configManager instanceof FOSConfigManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$configManager should be of type "%s" or "%s".',
+                FOSConfigManagerInterface::class,
+                IvoryConfigManagerInterface::class
+            ));
+        }
+
+        if ($pluginManager
+            && !$pluginManager instanceof IvoryPluginManagerInterface
+            && !$pluginManager instanceof FOSPluginManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$pluginManager should be of type "%s" or "%s".',
+                FOSPluginManagerInterface::class,
+                IvoryPluginManagerInterface::class
+            ));
+        }
+
+        if ($templateManager
+            && !$templateManager instanceof IvoryTemplateManagerInterface
+            && !$templateManager instanceof FOSTemplateManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$templateManager should be of type "%s" or "%s".',
+                FOSTemplateManagerInterface::class,
+                IvoryTemplateManagerInterface::class
+            ));
+        }
+
+        if ($stylesSetManager
+            && !$stylesSetManager instanceof IvoryStylesSetManagerInterface
+            && !$stylesSetManager instanceof FOSStylesSetManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$stylesSetManager should be of type "%s" or "%s".',
+                FOSStylesSetManagerInterface::class,
+                IvoryStylesSetManagerInterface::class
+            ));
+        }
+
+        if ($toolbarManager
+            && !$toolbarManager instanceof IvoryToolbarManagerInterface
+            && !$toolbarManager instanceof FOSToolbarManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$toolbarManager should be of type "%s" or "%s".',
+                FOSToolbarManagerInterface::class,
+                IvoryToolbarManagerInterface::class
+            ));
+        }
+
         $this->configManager = $configManager;
         $this->pluginManager = $pluginManager;
         $this->templateManager = $templateManager;
+        $this->stylesSetManager = $stylesSetManager;
+        $this->toolbarManager = $toolbarManager;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -75,10 +157,21 @@ class SimpleFormatterType extends AbstractType
             $options['ckeditor_templates'] = $this->templateManager->getTemplates();
         }
 
+        if (null !== $this->stylesSetManager && $this->stylesSetManager->hasStylesSets()) {
+            $options['ckeditor_style_sets'] = $this->stylesSetManager->getStylesSets();
+        } else {
+            $options['ckeditor_style_sets'] = [];
+        }
+
+        if (null !== $this->toolbarManager && is_string($ckeditorConfiguration['toolbar'])) {
+            $ckeditorConfiguration['toolbar'] = $this->toolbarManager->resolveToolbar($ckeditorConfiguration['toolbar']);
+        }
+
         $view->vars['ckeditor_configuration'] = $ckeditorConfiguration;
         $view->vars['ckeditor_basepath'] = $options['ckeditor_basepath'];
         $view->vars['ckeditor_plugins'] = $options['ckeditor_plugins'];
         $view->vars['ckeditor_templates'] = $options['ckeditor_templates'];
+        $view->vars['ckeditor_style_sets'] = $options['ckeditor_style_sets'];
 
         $view->vars['format'] = $options['format'];
     }

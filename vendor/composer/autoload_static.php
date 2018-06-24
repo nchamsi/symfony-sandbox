@@ -96,7 +96,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
-            'PhpAmqpLib\\' => 11,
             'PackageVersions\\' => 16,
         ),
         'N' => 
@@ -136,9 +135,7 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             'Ivory\\JsonBuilder\\' => 18,
             'Ivory\\CKEditorBundle\\' => 21,
-            'Interop\\Queue\\' => 14,
             'Interop\\Container\\' => 18,
-            'Interop\\Amqp\\' => 13,
             'Incenteev\\ParameterHandler\\' => 27,
         ),
         'G' => 
@@ -164,12 +161,11 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             'Exporter\\' => 9,
             'Evercode\\DependentSelectBundle\\' => 31,
-            'Enqueue\\AmqpTools\\' => 18,
-            'Enqueue\\AmqpLib\\' => 16,
         ),
         'D' => 
         array (
             'Doctrine\\ORM\\' => 13,
+            'Doctrine\\Migrations\\' => 20,
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\DBAL\\Migrations\\' => 25,
             'Doctrine\\Common\\Inflector\\' => 26,
@@ -426,10 +422,6 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'PhpAmqpLib\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
-        ),
         'PackageVersions\\' => 
         array (
             0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
@@ -514,17 +506,9 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             0 => __DIR__ . '/..' . '/egeloen/ckeditor-bundle',
         ),
-        'Interop\\Queue\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/queue-interop/queue-interop/src',
-        ),
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
-        'Interop\\Amqp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/queue-interop/amqp-interop/src',
         ),
         'Incenteev\\ParameterHandler\\' => 
         array (
@@ -590,17 +574,13 @@ class ComposerStaticInit3fd21fac427d03795682a3726ec16667
         array (
             0 => __DIR__ . '/..' . '/evercodelab/dependent-select-bundle',
         ),
-        'Enqueue\\AmqpTools\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/enqueue/amqp-tools',
-        ),
-        'Enqueue\\AmqpLib\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/enqueue/amqp-lib',
-        ),
         'Doctrine\\ORM\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/orm/lib/Doctrine/ORM',
+        ),
+        'Doctrine\\Migrations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/Migrations',
         ),
         'Doctrine\\Instantiator\\' => 
         array (

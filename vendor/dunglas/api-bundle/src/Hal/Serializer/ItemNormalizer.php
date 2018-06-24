@@ -16,6 +16,7 @@ namespace ApiPlatform\Core\Hal\Serializer;
 use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use ApiPlatform\Core\Serializer\ContextTrait;
+use Symfony\Component\Serializer\Mapping\AttributeMetadataInterface;
 
 /**
  * Converts between objects and array including HAL metadata.
@@ -43,7 +44,10 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        $context['cache_key'] = $this->getHalCacheKey($format, $context);
+        if (!isset($context['cache_key'])) {
+            $context['cache_key'] = $this->getHalCacheKey($format, $context);
+        }
+
         $resourceClass = $this->resourceClassResolver->getResourceClass($object, $context['resource_class'] ?? null, true);
         $context = $this->initContext($resourceClass, $context);
         $context['iri'] = $this->iriConverter->getIriFromItem($object);
@@ -99,8 +103,10 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     private function getComponents($object, string $format = null, array $context)
     {
-        if (false !== $context['cache_key'] && isset($this->componentsCache[$context['cache_key']])) {
-            return $this->componentsCache[$context['cache_key']];
+        $cacheKey = \get_class($object).'-'.$context['cache_key'];
+
+        if (isset($this->componentsCache[$cacheKey])) {
+            return $this->componentsCache[$cacheKey];
         }
 
         $attributes = parent::getAttributes($object, $format, $context);
@@ -142,7 +148,7 @@ final class ItemNormalizer extends AbstractItemNormalizer
         }
 
         if (false !== $context['cache_key']) {
-            $this->componentsCache[$context['cache_key']] = $components;
+            $this->componentsCache[$cacheKey] = $components;
         }
 
         return $components;
@@ -162,31 +168,43 @@ final class ItemNormalizer extends AbstractItemNormalizer
      */
     private function populateRelation(array $data, $object, string $format = null, array $context, array $components, string $type): array
     {
+        $class = \get_class($object);
+        $attributesMetadata = $this->classMetadataFactory ? $this->classMetadataFactory->getMetadataFor($object)->getAttributesMetadata() : null;
+
         $key = '_'.$type;
         foreach ($components[$type] as $relation) {
+            if (null !== $attributesMetadata && $this->isMaxDepthReached($attributesMetadata, $class, $relation['name'], $context)) {
+                continue;
+            }
+
             $attributeValue = $this->getAttributeValue($object, $relation['name'], $format, $context);
             if (empty($attributeValue)) {
                 continue;
             }
 
+            $relationName = $relation['name'];
+            if ($this->nameConverter) {
+                $relationName = $this->nameConverter->normalize($relationName);
+            }
+
             if ('one' === $relation['cardinality']) {
                 if ('links' === $type) {
-                    $data[$key][$relation['name']]['href'] = $this->getRelationIri($attributeValue);
+                    $data[$key][$relationName]['href'] = $this->getRelationIri($attributeValue);
                     continue;
                 }
 
-                $data[$key][$relation['name']] = $attributeValue;
+                $data[$key][$relationName] = $attributeValue;
                 continue;
             }
 
             // many
-            $data[$key][$relation['name']] = [];
+            $data[$key][$relationName] = [];
             foreach ($attributeValue as $rel) {
                 if ('links' === $type) {
                     $rel = ['href' => $this->getRelationIri($rel)];
                 }
 
-                $data[$key][$relation['name']][] = $rel;
+                $data[$key][$relationName][] = $rel;
             }
         }
 
@@ -221,5 +239,36 @@ final class ItemNormalizer extends AbstractItemNormalizer
             // The context cannot be serialized, skip the cache
             return false;
         }
+    }
+
+    /**
+     * Is the max depth reached for the given attribute?
+     *
+     * @param AttributeMetadataInterface[] $attributesMetadata
+     */
+    private function isMaxDepthReached(array $attributesMetadata, string $class, string $attribute, array &$context): bool
+    {
+        if (
+            !($context[static::ENABLE_MAX_DEPTH] ?? false) ||
+            !isset($attributesMetadata[$attribute]) ||
+            null === $maxDepth = $attributesMetadata[$attribute]->getMaxDepth()
+        ) {
+            return false;
+        }
+
+        $key = sprintf(static::DEPTH_KEY_PATTERN, $class, $attribute);
+        if (!isset($context[$key])) {
+            $context[$key] = 1;
+
+            return false;
+        }
+
+        if ($context[$key] === $maxDepth) {
+            return true;
+        }
+
+        ++$context[$key];
+
+        return false;
     }
 }

@@ -1,25 +1,10 @@
 <?php
 
-/*
- * Copyright 2011 Johannes M. Schmitt <schmittjoh@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 namespace JMS\SerializerBundle\Tests\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\SerializerBundle\JMSSerializerBundle;
 use JMS\SerializerBundle\Tests\DependencyInjection\Fixture\ObjectUsingExpressionLanguage;
 use JMS\SerializerBundle\Tests\DependencyInjection\Fixture\ObjectUsingExpressionProperties;
@@ -528,6 +513,22 @@ class JMSSerializerExtensionTest extends TestCase
             $container->getDefinition('jms_serializer.xml_serialization_visitor')->setPublic(true);
         });
         $this->assertTrue($container->get('jms_serializer.xml_serialization_visitor')->isFormatOutput());
+    }
+
+    public function testAutoconfigureSubscribers()
+    {
+        $container = $this->getContainerForConfig(array());
+
+        if (!method_exists($container, 'registerForAutoconfiguration')) {
+            $this->markTestSkipped(
+                'registerForAutoconfiguration method is not available in the container'
+            );
+        }
+
+        $autoconfigureInstance = $container->getAutoconfiguredInstanceof();
+
+        $this->assertTrue(array_key_exists(EventSubscriberInterface::class, $autoconfigureInstance));
+        $this->assertTrue($autoconfigureInstance[EventSubscriberInterface::class]->hasTag('jms_serializer.event_subscriber'));
     }
 
     private function getContainerForConfig(array $configs, callable $configurator = null)

@@ -29,6 +29,7 @@ use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SubresourceDataProviderInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
@@ -286,7 +287,7 @@ class ApiPlatformExtensionTest extends TestCase
                 return $arg;
             }
 
-            if (!in_array('foobar', $arg, true)) {
+            if (!\in_array('foobar', $arg, true)) {
                 throw new \Exception('"foobar" should be in "resource_class_directories"');
             }
 
@@ -297,24 +298,22 @@ class ApiPlatformExtensionTest extends TestCase
         $this->extension->load(array_merge_recursive(self::DEFAULT_CONFIG, ['api_platform' => ['resource_class_directories' => ['foobar']]]), $containerBuilder);
     }
 
-    /**
-     * @expectedException \ApiPlatform\Core\Exception\RuntimeException
-     * @expectedExceptionMessageRegExp /Unsupported mapping type in ".+", supported types are XML & Yaml\./
-     */
     public function testResourcesToWatchWithUnsupportedMappingType()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageRegExp('/Unsupported mapping type in ".+", supported types are XML & Yaml\\./');
+
         $this->extension->load(
             array_merge_recursive(self::DEFAULT_CONFIG, ['api_platform' => ['mapping' => ['paths' => [__FILE__]]]]),
             $this->getPartialContainerBuilderProphecy(false)->reveal()
         );
     }
 
-    /**
-     * @expectedException \ApiPlatform\Core\Exception\RuntimeException
-     * @expectedExceptionMessage Could not open file or directory "fake_file.xml".
-     */
     public function testResourcesToWatchWithNonExistentFile()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Could not open file or directory "fake_file.xml".');
+
         $this->extension->load(
             array_merge_recursive(self::DEFAULT_CONFIG, ['api_platform' => ['mapping' => ['paths' => ['fake_file.xml']]]]),
             $this->getPartialContainerBuilderProphecy()->reveal()
@@ -340,6 +339,20 @@ class ApiPlatformExtensionTest extends TestCase
 
         $config = self::DEFAULT_CONFIG;
         $config['api_platform']['http_cache']['invalidation']['varnish_urls'] = [];
+
+        $this->extension->load($config, $containerBuilder);
+    }
+
+    public function testDisabledDocsRemovesAddLinkHeaderService()
+    {
+        $containerBuilderProphecy = $this->getBaseContainerBuilderProphecy();
+        $containerBuilderProphecy->removeDefinition('api_platform.hydra.listener.response.add_link_header')->shouldBeCalled();
+        $containerBuilderProphecy->setParameter('api_platform.enable_docs', false)->shouldBeCalled();
+        $containerBuilderProphecy->setParameter('api_platform.enable_docs', true)->shouldNotBeCalled();
+        $containerBuilder = $containerBuilderProphecy->reveal();
+
+        $config = self::DEFAULT_CONFIG;
+        $config['api_platform']['enable_docs'] = false;
 
         $this->extension->load($config, $containerBuilder);
     }
@@ -457,6 +470,8 @@ class ApiPlatformExtensionTest extends TestCase
             'api_platform.filter_locator',
             'api_platform.filter_collection_factory',
             'api_platform.filters',
+            'api_platform.identifiers_extractor',
+            'api_platform.identifiers_extractor.cached',
             'api_platform.iri_converter',
             'api_platform.item_data_provider',
             'api_platform.listener.exception',
@@ -485,8 +500,6 @@ class ApiPlatformExtensionTest extends TestCase
             'api_platform.metadata.resource.metadata_factory.xml',
             'api_platform.metadata.resource.name_collection_factory.cached',
             'api_platform.metadata.resource.name_collection_factory.xml',
-            'api_platform.identifiers_extractor',
-            'api_platform.identifiers_extractor.cached',
             'api_platform.negotiator',
             'api_platform.operation_method_resolver',
             'api_platform.operation_path_resolver.custom',
@@ -695,6 +708,9 @@ class ApiPlatformExtensionTest extends TestCase
         foreach ($aliases as $alias => $service) {
             $containerBuilderProphecy->setAlias($alias, $service)->shouldBeCalled();
         }
+
+        $containerBuilderProphecy->hasParameter('api_platform.metadata_cache')->willReturn(true)->shouldBeCalled();
+        $containerBuilderProphecy->getParameter('api_platform.metadata_cache')->willReturn(true)->shouldBeCalled();
 
         return $containerBuilderProphecy;
     }

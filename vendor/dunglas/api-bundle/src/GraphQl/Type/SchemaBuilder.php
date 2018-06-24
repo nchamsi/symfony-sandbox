@@ -291,6 +291,13 @@ final class SchemaBuilder implements SchemaBuilderInterface
     private function convertFilterArgsToTypes(array $args): array
     {
         foreach ($args as $key => $value) {
+            if (strpos($key, '.')) {
+                // Declare relations/nested fields in a GraphQL compatible syntax.
+                $args[str_replace('.', '_', $key)] = $value;
+            }
+        }
+
+        foreach ($args as $key => $value) {
             if (!\is_array($value) || !isset($value['#name'])) {
                 continue;
             }
@@ -425,7 +432,7 @@ final class SchemaBuilder implements SchemaBuilderInterface
         }
 
         foreach ($this->propertyNameCollectionFactory->create($resourceClass) as $property) {
-            $propertyMetadata = $this->propertyMetadataFactory->create($resourceClass, $property);
+            $propertyMetadata = $this->propertyMetadataFactory->create($resourceClass, $property, ['graphql_operation_name' => $mutationName ?? 'query']);
             if (
                 null === ($propertyType = $propertyMetadata->getType())
                 || (!$input && null === $mutationName && false === $propertyMetadata->isReadable())

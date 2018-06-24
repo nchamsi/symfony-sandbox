@@ -32,18 +32,23 @@ class CustomHandlersPass implements CompilerPassInterface
 
                 foreach ($directions as $direction) {
                     $method = isset($attrs['method']) ? $attrs['method'] : HandlerRegistry::getDefaultMethod($direction, $attrs['type'], $attrs['format']);
+                    $priority = isset($attrs['priority']) ? intval($attrs['priority']) : 0;
+                    $ref = new Reference($id);
                     if (class_exists(ServiceLocatorTagPass::class) || $container->getDefinition($id)->isPublic()) {
-                        $handlerServices[$id] = new Reference($id);
-                        $handlers[$direction][$attrs['type']][$attrs['format']] = array($id, $method);
+                        $handlerServices[$id] = $ref;
+                        $handlers[] = array($direction, $attrs['type'], $attrs['format'], $priority, $id, $method);
                     } else {
-                        $handlers[$direction][$attrs['type']][$attrs['format']] = array(new Reference($id), $method);
+                        $handlers[] = array($direction, $attrs['type'], $attrs['format'], $priority, $ref, $method);
                     }
                 }
             }
         }
 
         foreach ($container->findTaggedServiceIds('jms_serializer.subscribing_handler') as $id => $tags) {
-            $class = $container->getDefinition($id)->getClass();
+
+            $def = $container->getDefinition($id);
+            $class = $def->getClass();
+
             $ref = new \ReflectionClass($class);
             if (!$ref->implementsInterface('JMS\Serializer\Handler\SubscribingHandlerInterface')) {
                 throw new \RuntimeException(sprintf('The service "%s" must implement the SubscribingHandlerInterface.', $id));
@@ -60,23 +65,66 @@ class CustomHandlersPass implements CompilerPassInterface
                 }
 
                 foreach ($directions as $direction) {
+                    $priority = isset($methodData['priority']) ? intval($methodData['priority']) : 0;
                     $method = isset($methodData['method']) ? $methodData['method'] : HandlerRegistry::getDefaultMethod($direction, $methodData['type'], $methodData['format']);
-                    if (class_exists(ServiceLocatorTagPass::class) || $container->getDefinition($id)->isPublic()) {
-                        $handlerServices[$id] = new Reference($id);
-                        $handlers[$direction][$methodData['type']][$methodData['format']] = array($id, $method);
+
+                    $ref = new Reference($id);
+                    if (class_exists(ServiceLocatorTagPass::class) || $def->isPublic()) {
+                        $handlerServices[$id] = $ref;
+                        $handlers[] = array($direction, $methodData['type'], $methodData['format'], $priority, $id, $method);
                     } else {
-                        $handlers[$direction][$methodData['type']][$methodData['format']] = array(new Reference($id), $method);
+                        $handlers[] = array($direction, $methodData['type'], $methodData['format'], $priority, $ref, $method);
                     }
                 }
             }
         }
+
+        $handlers = $this->sortAndFlattenHandlersList($handlers);
 
         $container->findDefinition('jms_serializer.handler_registry')
             ->addArgument($handlers);
 
         if (class_exists(ServiceLocatorTagPass::class)) {
             $serviceLocator = ServiceLocatorTagPass::register($container, $handlerServices);
-            $container->getDefinition('jms_serializer.handler_registry')->replaceArgument(0, $serviceLocator);
+            $container->findDefinition('jms_serializer.handler_registry')->replaceArgument(0, $serviceLocator);
         }
+    }
+
+    private function sortAndFlattenHandlersList(array $allHandlers)
+    {
+        $sorter = function ($a, $b) {
+            return $b[3] == $a[3] ? 0 : ($b[3] > $a[3] ? 1 : -1);
+        };
+        self::stable_uasort($allHandlers, $sorter);
+        $handlers = [];
+        foreach ($allHandlers as $handler) {
+            list ($direction, $type, $format, $priority, $service, $method) = $handler;
+            $handlers[$direction][$type][$format] = [$service, $method];
+        }
+
+        return $handlers;
+    }
+
+    /**
+     * Performs stable sorting. Copied from http://php.net/manual/en/function.uasort.php#121283
+     *
+     * @param array $array
+     * @param $value_compare_func
+     * @return bool
+     */
+    private static function stable_uasort(array &$array, $value_compare_func)
+    {
+        $index = 0;
+        foreach ($array as &$item) {
+            $item = array($index++, $item);
+        }
+        $result = uasort($array, function ($a, $b) use ($value_compare_func) {
+            $result = call_user_func($value_compare_func, $a[1], $b[1]);
+            return $result == 0 ? $a[0] - $b[0] : $result;
+        });
+        foreach ($array as &$item) {
+            $item = $item[1];
+        }
+        return $result;
     }
 }

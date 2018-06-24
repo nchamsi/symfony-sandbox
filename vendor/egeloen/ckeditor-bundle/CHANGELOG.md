@@ -1,5 +1,22 @@
 # CHANGELOG
 
+### 6.0.1 (2017-08-18)
+
+ * bdd7adc - Fixed CKEditorScriptHandler::install error
+ 
+### 6.0.0 (2017-07-14)
+
+ * a9fe512 - [UPGRADE] Add note about CKEditor source removing
+ * 4d59b54 - [Composer] Add a script handler installing CKEditor source
+ * 6a4fa8b - [README] Removing Symfony version
+ * 4bffdb9 - [Travis] Update docker UID
+ * 9d542f6 - [Travis] Add missing Symfony versions
+ * cbed42d - [Tests] Bump PHPUnit to 6.x
+ * 6c3cea4 - [Doc] Fix code block
+ * 83c5250 - [Doc] Fix CKEditor installation command link
+ * c9dfbcc - [Doc] Fix link to requirejs
+ * c86a147 - [License] Remove CKEditor source + Introduce a command to download/install it 
+ 
 ### 5.0.3 (2017-06-05)
 
  * 1515ca4 - Symfony Flex compatibility (namespaced syntax)

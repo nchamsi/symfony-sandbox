@@ -11,9 +11,14 @@
 
 namespace Sonata\FormatterBundle\Form\Type;
 
-use Ivory\CKEditorBundle\Model\ConfigManagerInterface;
-use Ivory\CKEditorBundle\Model\PluginManagerInterface;
-use Ivory\CKEditorBundle\Model\TemplateManagerInterface;
+use FOS\CKEditorBundle\Model\ConfigManagerInterface as FOSConfigManagerInterface;
+use FOS\CKEditorBundle\Model\PluginManagerInterface as FOSPluginManagerInterface;
+use FOS\CKEditorBundle\Model\TemplateManagerInterface as FOSTemplateManagerInterface;
+use FOS\CKEditorBundle\Model\ToolbarManagerInterface as FOSToolbarManagerInterface;
+use Ivory\CKEditorBundle\Model\ConfigManagerInterface as IvoryConfigManagerInterface;
+use Ivory\CKEditorBundle\Model\PluginManagerInterface as IvoryPluginManagerInterface;
+use Ivory\CKEditorBundle\Model\TemplateManagerInterface as IvoryTemplateManagerInterface;
+use Ivory\CKEditorBundle\Model\ToolbarManagerInterface as IvoryToolbarManagerInterface;
 use Sonata\FormatterBundle\Form\EventListener\FormatterListener;
 use Sonata\FormatterBundle\Formatter\Pool;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,37 +47,92 @@ class FormatterType extends AbstractType
     protected $translator;
 
     /**
-     * @var ConfigManagerInterface
+     * @var FOSConfigManagerInterface|IvoryConfigManagerInterface
      */
     protected $configManager;
 
     /**
-     * @var PluginManagerInterface
+     * @var FOSPluginManagerInterface|IvoryPluginManagerInterface
      */
     protected $pluginManager;
 
     /**
-     * @var TemplateManagerInterface
+     * @var FOSTemplateManagerInterface|IvoryTemplateManagerInterface
      */
     private $templateManager;
 
     /**
-     * @param ConfigManagerInterface|null   $configManager   An Ivory CKEditor bundle configuration manager
-     * @param PluginManagerInterface|null   $pluginManager   An Ivory CKEditor bundle plugin manager
-     * @param TemplateManagerInterface|null $templateManager An Ivory CKEditor bundle template manager
+     * @var FOSToolbarManagerInterface|IvoryToolbarManagerInterface
+     */
+    private $toolbarManager;
+
+    /**
+     * @param FOSConfigManagerInterface|IvoryConfigManagerInterface
+     * $configManager   A CKEditor bundle configuration manager
+     * @param FOSPluginManagerInterface|IvoryPluginManagerInterface|null
+     * $pluginManager   A CKEditor bundle plugin manager
+     * @param FOSTemplateManagerInterface|IvoryTemplateManagerInterface|null
+     * $templateManager A CKEditor bundle template manager
+     * @param FOSToolbarManagerInterface|IvoryToolbarManagerInterface|null
+     * $toolbarManager A CKEditor bundle toolbar manager
      */
     public function __construct(
         Pool $pool,
         TranslatorInterface $translator,
-        ConfigManagerInterface $configManager,
-        PluginManagerInterface $pluginManager = null,
-        TemplateManagerInterface $templateManager = null
+        $configManager,
+        $pluginManager = null,
+        $templateManager = null,
+        $toolbarManager = null
     ) {
+        if (!$configManager instanceof IvoryConfigManagerInterface
+            && !$configManager instanceof FOSConfigManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$configManager should be of type "%s" or "%s".',
+                FOSConfigManagerInterface::class,
+                IvoryConfigManagerInterface::class
+            ));
+        }
+
+        if ($pluginManager
+            && !$pluginManager instanceof IvoryPluginManagerInterface
+            && !$pluginManager instanceof FOSPluginManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$pluginManager should be of type "%s" or "%s".',
+                FOSPluginManagerInterface::class,
+                IvoryPluginManagerInterface::class
+            ));
+        }
+
+        if ($templateManager
+            && !$templateManager instanceof IvoryTemplateManagerInterface
+            && !$templateManager instanceof FOSTemplateManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$templateManager should be of type "%s" or "%s".',
+                FOSTemplateManagerInterface::class,
+                IvoryTemplateManagerInterface::class
+            ));
+        }
+
+        if ($toolbarManager
+            && !$toolbarManager instanceof IvoryToolbarManagerInterface
+            && !$toolbarManager instanceof FOSToolbarManagerInterface
+        ) {
+            throw new \InvalidArgumentException(sprintf(
+                '$toolbarManager should be of type "%s" or "%s".',
+                FOSToolbarManagerInterface::class,
+                IvoryToolbarManagerInterface::class
+            ));
+        }
+
         $this->pool = $pool;
         $this->translator = $translator;
         $this->configManager = $configManager;
         $this->pluginManager = $pluginManager;
         $this->templateManager = $templateManager;
+        $this->toolbarManager = $toolbarManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -179,6 +239,10 @@ class FormatterType extends AbstractType
 
         if (null !== $this->templateManager && $this->templateManager->hasTemplates()) {
             $options['ckeditor_templates'] = $this->templateManager->getTemplates();
+        }
+
+        if (null !== $this->toolbarManager && is_string($ckeditorConfiguration['toolbar'])) {
+            $ckeditorConfiguration['toolbar'] = $this->toolbarManager->resolveToolbar($ckeditorConfiguration['toolbar']);
         }
 
         $view->vars['ckeditor_configuration'] = $ckeditorConfiguration;

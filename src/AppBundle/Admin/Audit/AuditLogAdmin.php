@@ -109,7 +109,7 @@ class AuditLogAdmin extends Admin
         }
         $user = $value['value'];
         $queryBuilder->innerJoin($alias . '.blame', 'p')
-            ->andWhere('p.fk =' . $user->getId());
+            ->andWhere('p.fk = :user_id')->setParameter('user_id',$user->getId());
     }
 
     /*

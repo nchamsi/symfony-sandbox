@@ -4,7 +4,7 @@ namespace Doctrine\DBAL\Migrations;
 
 class MigrationsVersion
 {
-    private static $version = 'v1.7.0';
+    private static $version = 'v1.8.0';
 
     public static function VERSION()
     {

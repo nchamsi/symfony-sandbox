@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.2.7
+
+* Compatibility with Symfony 4.1
+* Compatibility with webonyx/graphql-php 0.12
+* Add missing `ApiPlatform\Core\EventListener\EventPriorities`'s `PRE_SERIALIZE` and `POST_SERIALIZE` constants
+* Disable eager loading when no groups are specified to avoid recursive joins
+* Fix embeddable entities eager loading with groups
+* Don't join the same association twice when eager loading
+* Fix max depth handling when using HAL
+* Check the value of `enable_max_depth` if defined
+* Minor performance and quality improvements
+
+## 2.2.6
+
+* Fix identifiers creation and update when using GraphQL
+* Fix nested properties support when using filters with GraphQL
+* Fix a bug preventing the `ExistFilter` to work properly with GraphQL
+* Fix a bug preventing to use a custom denormalization context when using GraphQL
+* Enforce the compliance with the JSONAPI spec by throwing a 400 error when using the "inclusion of related resources" feature
+* Update `ChainSubresourceDataProvider` to take into account `RestrictedDataProviderInterface`
+* Fix the cached identifiers extractor support for stringable identifiers
+* Allow a `POST` request to have an empty body
+* Fix a crash when the ExpressionLanguage component isn't installed
+* Enable item route on collection's subresources
+* Fix an issue with subresource filters, was incorrectly adding filters for the parent instead of the subresource
+* Throw when a subresources identifier is not found
+* Allow subresource items in the `IriConverter`
+* Don't send the `Link` HTTP header pointing to the Hydra documentation if docs are disabled
+* Fix relations denormalization with plain identifiers
+* Prevent the `OrderFilter` to trigger faulty deprecation notices
+* Respect the `fetchEager=false` directive on an association in the `EagerLoadingExtension`
+* Use the configured name converter (if any) for relations in the HAL's `ItemNormalizer`
+* Use the configured name converter (if any) in the `ConstraintViolationListNormalizer`
+* Dramatically improve the overall performance by fixing the normalizer's cache key generation
+* Improve the performance `CachedRouteNameResolver` and `CachedSubresourceOperationFactory` by adding a local memory cache layer
+* Improve the performance of access control checking when using GraphQL
+* Improve the performance by using `isResourceClass` when possible
+* Remove a useless `try/catch` in the `CachedTrait`
+* Forward the operation name to the `IriConverter`
+* Fix some more code quality issues
+
 ## 2.2.5
 
 * Fix a various issues preventing the metadata cache to work properly (performance fix)
