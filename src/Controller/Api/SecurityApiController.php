@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -15,21 +16,38 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * * @Route("/api")
  */
-class SecurityApiController
+class SecurityApiController extends Controller
 {
-
     /**
      *  Login into system.
      *
      * @Route("/_login_check", methods={"POST"})
      *
-     * @SWG\Response(response=200, description="Login into system.")
+     * @SWG\Post(
+     *         schemes={"http"},
+     *         produces={"application/json"},
+     *         consumes={"text/html","application/json"},
+     *         @SWG\Parameter(
+     *              name="body",
+     *              type="json",
+     *              in="body",
+     *              description="Login parameters",
+     *              default="{""username"":""user"",""password"":""pass""}",
+     *              @SWG\Schema(
+     *                 type="object",
+     *                 items={
+     *                     @SWG\Property(property="username", type="string"),
+     *                     @SWG\Property(property="password", type="string"),
+     *                 }
+     *              )
+     *          ),
      *
-     * @SWG\Parameter(name="username", in="body", schema={"default"})
-     * @SWG\Parameter(name="password", in="body", schema={"default"})
+     *          @SWG\Response(response=200, description="when login is successfully."),
      *
-     * @SWG\Tag(name="Security")
+     *          @SWG\Response(response=400, description="when username or password are wrong."),
      *
+     *          @SWG\Tag(name="Security"),
+     *    )
      */
     public function loginCheckAction(Request $request)
     {
@@ -41,9 +59,23 @@ class SecurityApiController
      *
      * @Route("/_token/refresh", methods={"POST"})
      *
+     * @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         description="Refresh Login token",
+     *         type="json",
+     *         default="{""refresh_token"":""refresh_token""}",
+     *         @SWG\Schema(
+     *             type="object",
+     *             items={
+     *                 @SWG\Property(property="refresh_token", type="string")
+     *             }
+     *         )
+     *     )
+     *
      * @SWG\Response(response=200, description="Returned when successful")
      *
-     * @SWG\Parameter(name="refresh_token", in="body", schema={"default"})
+     * @SWG\Response(response=400, description="Bad Request")
      *
      * @SWG\Tag(name="Security")
      *
@@ -51,7 +83,7 @@ class SecurityApiController
      */
     public function tokenRefreshAction(Request $request)
     {
-        return null;
+        return $this->get('gesdinet.jwtrefreshtoken')->refresh($request);
     }
 
 }

@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+@trigger_error(sprintf('The "%s" class is deprecated since version 2.5 and will be removed in 3.0. Use "%s" or create your own "%s" implementation instead.', DefaultJWSProvider::class, LcobucciJWSProvider::class, JWSProviderInterface::class), E_USER_DEPRECATED);
+
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
@@ -14,6 +16,8 @@ use Namshi\JOSE\JWS;
  * @final
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @deprecated since version 2.5, to be removed in 3.0
  */
 class DefaultJWSProvider implements JWSProviderInterface
 {
@@ -38,17 +42,27 @@ class DefaultJWSProvider implements JWSProviderInterface
     private $ttl;
 
     /**
+     * @var int
+     */
+    private $clockSkew;
+
+    /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
      * @param int                $ttl
+     * @param int                $clockSkew
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
     {
         if (null !== $ttl && !is_numeric($ttl)) {
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
+        }
+
+        if (null !== $clockSkew && !is_numeric($clockSkew)) {
+            throw new \InvalidArgumentException(sprintf('The clock skew should be a numeric value, got %s instead.', $clockSkew));
         }
 
         $cryptoEngine = 'openssl' == $cryptoEngine ? 'OpenSSL' : 'SecLib';
@@ -63,15 +77,17 @@ class DefaultJWSProvider implements JWSProviderInterface
         $this->cryptoEngine       = $cryptoEngine;
         $this->signatureAlgorithm = $signatureAlgorithm;
         $this->ttl                = $ttl;
+        $this->clockSkew          = $clockSkew;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload)
+    public function create(array $payload, array $header = [])
     {
-        $jws    = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
-        $claims = ['iat' => time()];
+        $header['alg'] = $this->signatureAlgorithm;
+        $jws           = new JWS($header, $this->cryptoEngine);
+        $claims        = ['iat' => time()];
 
         if (null !== $this->ttl) {
             $claims['exp'] = time() + $this->ttl;
@@ -96,7 +112,9 @@ class DefaultJWSProvider implements JWSProviderInterface
         return new LoadedJWS(
             $jws->getPayload(),
             $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm),
-            null !== $this->ttl
+            null !== $this->ttl,
+            $jws->getHeader(),
+            $this->clockSkew
         );
     }
 

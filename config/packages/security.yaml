@@ -28,6 +28,37 @@ security:
                 target:         /admin/login
             anonymous:          true
 
+        # -> custom firewall for the api area of the URL
+
+        api_docs:
+            pattern: ^/api/doc
+            anonymous: true
+
+        # login and api firewalls paths (/api/login_check and /api) must be configured to allow CORS requests.
+
+        api_login:
+            pattern:  ^/api/_login_check
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/_login_check
+                require_previous_session: false
+                username_parameter:       username
+                password_parameter:       password
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api_token_refresh:
+            pattern:  ^/api/_token/refresh
+            stateless: true
+            #anonymous: true
+            lexik_jwt: ~
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            lexik_jwt: ~
+
         # -> end custom configuration
 
         # default login area for standard users
@@ -116,4 +147,15 @@ security:
         # This config requires being logged for the whole site and having the admin role for the admin part.
         # Change these rules to adapt them to your needs
         - { path: ^/admin/, role: [ROLE_ADMIN, ROLE_SONATA_ADMIN] }
+
+        # Api access
+
+        - { path: ^/api/doc,   role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/_login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/_token/refresh, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api.*,   roles: [IS_AUTHENTICATED_FULLY, ROLE_API] }
+
+        # Public access
+
         - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }

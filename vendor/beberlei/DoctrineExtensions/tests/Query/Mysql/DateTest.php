@@ -3,13 +3,14 @@
 namespace DoctrineExtensions\Tests\Query\Mysql;
 
 use Doctrine\ORM\Version;
+use DoctrineExtensions\Tests\Query\MysqlTestCase;
 
-class DateTest extends \DoctrineExtensions\Tests\Query\MysqlTestCase
+class DateTest extends MysqlTestCase
 {
     public function testDateDiff()
     {
         $dql = "SELECT p FROM DoctrineExtensions\Tests\Entities\Date p WHERE DATEDIFF(CURRENT_TIME(), p.created) < 7";
-        $sql = "SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATEDIFF(CURRENT_TIME, d0_.created) < 7";
+        $sql = 'SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATEDIFF(CURRENT_TIME, d0_.created) < 7';
 
         $this->assertDqlProducesSql($dql, $sql);
     }
@@ -17,7 +18,7 @@ class DateTest extends \DoctrineExtensions\Tests\Query\MysqlTestCase
     public function testDateAdd()
     {
         $dql = "SELECT p FROM DoctrineExtensions\Tests\Entities\Date p WHERE DATEADD(CURRENT_TIME(), 4, 'MONTH') < 7";
-        $sql = "SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_ADD(CURRENT_TIME, INTERVAL 4 MONTH) < 7";
+        $sql = 'SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_ADD(CURRENT_TIME, INTERVAL 4 MONTH) < 7';
 
         $this->assertDqlProducesSql($dql, $sql);
     }
@@ -29,7 +30,7 @@ class DateTest extends \DoctrineExtensions\Tests\Query\MysqlTestCase
         }
 
         $dql = "SELECT p.created as alternative FROM DoctrineExtensions\Tests\Entities\Date p HAVING DATEADD(alternative, 4, 'MONTH') < 7";
-        $sql = "SELECT d0_.created AS created_0 FROM Date d0_ HAVING DATE_ADD(created_0, INTERVAL 4 MONTH) < 7";
+        $sql = 'SELECT d0_.created AS created_0 FROM Date d0_ HAVING DATE_ADD(created_0, INTERVAL 4 MONTH) < 7';
 
         $this->assertDqlProducesSql($dql, $sql);
     }
@@ -37,7 +38,7 @@ class DateTest extends \DoctrineExtensions\Tests\Query\MysqlTestCase
     public function testDateAddWithNegative()
     {
         $dql = "SELECT p FROM DoctrineExtensions\Tests\Entities\Date p WHERE DATEADD(CURRENT_TIME(), -4, 'MONTH') < 7";
-        $sql = "SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_ADD(CURRENT_TIME, INTERVAL -4 MONTH) < 7";
+        $sql = 'SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_ADD(CURRENT_TIME, INTERVAL -4 MONTH) < 7';
 
         $this->assertDqlProducesSql($dql, $sql);
     }
@@ -45,7 +46,7 @@ class DateTest extends \DoctrineExtensions\Tests\Query\MysqlTestCase
     public function testDateSub()
     {
         $dql = "SELECT p FROM DoctrineExtensions\Tests\Entities\Date p WHERE DATESUB(CURRENT_TIME(), 4, 'MONTH') < 7";
-        $sql = "SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_SUB(CURRENT_TIME, INTERVAL 4 MONTH) < 7";
+        $sql = 'SELECT d0_.id AS id_0, d0_.created AS created_1 FROM Date d0_ WHERE DATE_SUB(CURRENT_TIME, INTERVAL 4 MONTH) < 7';
 
         $this->assertDqlProducesSql($dql, $sql);
     }

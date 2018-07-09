@@ -4,6 +4,24 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## UNRELEASED
 
+## 1.7.0
+
+### Added
+
+- Support for `@translate` annotation. 
+- Better handle `@ignore` annotation on FormTypeChoices
+
+## 1.6.0
+
+### Added
+
+- Support for Symfony form help. 
+
+### Fixed 
+
+- Fixed issue where using the `@ignore` annotation ignored the wrong property.
+- Do not run the Twig worker if we are not extracting.
+
 ## 1.5.2
 
 ### Fixed

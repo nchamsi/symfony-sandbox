@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -11,16 +12,30 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class CheckConfigCommand extends ContainerAwareCommand
+class CheckConfigCommand extends Command
 {
+    protected static $defaultName = 'lexik:jwt:check-config';
+
+    private $keyLoader;
+
+    private $signatureAlgorithm;
+
+    public function __construct(KeyLoaderInterface $keyLoader, $signatureAlgorithm)
+    {
+        $this->keyLoader          = $keyLoader;
+        $this->signatureAlgorithm = $signatureAlgorithm;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
         $this
-            ->setName('lexik:jwt:check-config')
-            ->setDescription('Check JWT configuration');
+            ->setName(static::$defaultName)
+            ->setDescription('Checks JWT configuration');
     }
 
     /**
@@ -28,11 +43,12 @@ class CheckConfigCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $keyLoader = $this->getContainer()->get('lexik_jwt_authentication.key_loader');
-
         try {
-            $keyLoader->loadKey('public');
-            $keyLoader->loadKey('private');
+            $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);
+            // No public key for HMAC
+            if (false === strpos($this->signatureAlgorithm, 'HS')) {
+                $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
+            }
         } catch (\RuntimeException $e) {
             $output->writeln('<error>'.$e->getMessage().'</error>');
 

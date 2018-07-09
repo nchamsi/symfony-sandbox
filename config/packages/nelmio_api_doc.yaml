@@ -4,6 +4,14 @@ nelmio_api_doc:
             title: Api Docs
             description: Documentation for api features!
             version: 1.0.0
+        securityDefinitions:
+            Bearer:
+                type: apiKey
+                description: 'Value: Bearer {jwt}'
+                name: Authorization
+                in: header
+        security:
+            - Bearer: []
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
@@ -14,3 +22,10 @@ nelmio_api_doc:
 #    request_format:
 #        method: accept_header
 
+#    sandbox:
+#        authentication:
+#            delivery: http
+#            #type:     basic
+#            type:     bearer
+#        request_format:
+#            method: accept_header

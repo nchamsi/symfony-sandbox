@@ -2,10 +2,14 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
+@trigger_error(sprintf('The "%s\OpenSSLKeyLoader" class is deprecated since version 2.5 and will be removed in 3.0. Use "%s" instead.', __NAMESPACE__, RawKeyLoader::class), E_USER_DEPRECATED);
+
 /**
  * Load crypto keys for the OpenSSL crypto engine.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @deprecated since version 2.5, to be removed in 3.0. Use RawKeyLoader instead
  */
 class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 {
@@ -17,12 +21,12 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
      */
     public function loadKey($type)
     {
-        $path         = $this->getKeyPath($type);
-        $encryptedKey = file_get_contents($path);
-        $key          = call_user_func_array(
-            sprintf('openssl_pkey_get_%s', $type),
-            self::TYPE_PRIVATE == $type ? [$encryptedKey, $this->getPassphrase()] : [$encryptedKey]
-        );
+        if (!in_array($type, [self::TYPE_PUBLIC, self::TYPE_PRIVATE])) {
+            throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
+        }
+
+        $rawKey = file_get_contents($this->getKeyPath($type));
+        $key    = call_user_func_array("openssl_pkey_get_$type", self::TYPE_PRIVATE == $type ? [$rawKey, $this->getPassphrase()] : [$rawKey]);
 
         if (!$key) {
             $sslError = '';
@@ -30,11 +34,11 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
                 if ('error:' === substr($msg, 0, 6)) {
                     $msg = substr($msg, 6);
                 }
-                $sslError .= "\n ".$msg;
+                $sslError .= "\n $msg";
             }
 
             throw new \RuntimeException(
-                sprintf('Failed to load %s key "%s": %s', $type, $path, $sslError)
+                sprintf('Failed to load %s key: %s', $type, $sslError)
             );
         }
 

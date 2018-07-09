@@ -9,7 +9,7 @@ LexikJWTAuthenticationBundle
 
 This bundle provides JWT (Json Web Token) authentication for your Symfony API.
 
-It is compatible and tested with PHP 5.5, 7.1, HHVM on Symfony 2.8, 3.4 and 4.0.
+It is compatible and tested with PHP 5.5, 5.6, 7.0, 7.1, HHVM on Symfony 3.4 and 4.0.
 
 Documentation
 -------------
@@ -32,8 +32,8 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
   * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
 
-Support
--------
+Community Support
+-----------------
 
 Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle),  it is the official support platform for this bundle.
   

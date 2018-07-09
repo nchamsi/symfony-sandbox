@@ -10,7 +10,7 @@ A JWT is _self-contained_, meaning that we can trust into its payload for proces
 In a nutshell, there should be no need for loading the user from the database when authenticating a JWT Token,  
 the database should be hit only once for delivering the token. 
 
-That's why we decided to provide an user provider which is able to create User instances from the JWT payload.
+That's why we decided to provide a user provider which is able to create User instances from the JWT payload.
 
 Configuring the user provider
 -----------------------------
@@ -18,7 +18,7 @@ Configuring the user provider
 To work, the provider just needs a few lines of configuration:
 
 ```yaml
-# app/config/security.yml
+# config/packages/security.yaml
 security:
     providers:
         jwt:
@@ -39,7 +39,7 @@ security:
 What does it change?
 --------------------
 
-Now that the provider is configured, it will automatically be used by the `JWTGuardAuthenticator` at the time to authenticate a token.
+Now that the provider is configured, it will automatically be used by the `JWTGuardAuthenticator` when authenticating a token.
 Instead of loading the user from a "datastore" (i.e. memory or any database engine), a `JWTUserInterface` instance will be created from the JWT payload, will be cached for a request and be authenticated.
 We provide a simple  `JWTUser` class implementing this interface, which is used by default when configuring the provider.
 
@@ -50,10 +50,10 @@ Of course, you can. You just need to make your user class implement the `JWTUser
 This interface contains only a `createFromPayload()` _named constructor_ which takes the user's username and 
 the JWT token payload as arguments and returns an instance of the class.
 
-##### Example of implementation
+##### Sample implementation
 
 ```php
-namespace AppBundle\Security;
+namespace App\Security;
 
 final class User implements JWTUserInterface
 {
@@ -82,12 +82,12 @@ _Note_:  You can extend the default `JWTUser` class if that fits your needs.
 ##### Configuration
 
 ```yaml
-# app/config/security.yml
+# config/packages/security.yaml
 providers:
     # ...
     jwt:
         lexik_jwt:
-            class: AppBundle\Security\User
+            class: App\Security\User
 ```
 
 And voilà!

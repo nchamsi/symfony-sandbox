@@ -13,13 +13,13 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
-        '0ccdf99b8f62f02c52cba55802e0c2e7' => __DIR__ . '/..' . '/zircote/swagger-php/src/functions.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'd11dcc0191a380951885e568af488540' => __DIR__ . '/..' . '/sonata-project/block-bundle/src/Resources/stubs/symfony2.php',
+        '0ccdf99b8f62f02c52cba55802e0c2e7' => __DIR__ . '/..' . '/zircote/swagger-php/src/functions.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'd11dcc0191a380951885e568af488540' => __DIR__ . '/..' . '/sonata-project/block-bundle/src/Resources/stubs/symfony2.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -31,6 +31,7 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
         array (
             'Zend\\EventManager\\' => 18,
             'Zend\\Code\\' => 10,
+            'ZendDiagnostics\\' => 16,
         ),
         'Y' => 
         array (
@@ -158,6 +159,7 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
             'Liip\\ImagineBundle\\' => 19,
             'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 37,
             'Lexik\\Bundle\\FormFilterBundle\\' => 30,
+            'Lcobucci\\JWT\\' => 13,
         ),
         'K' => 
         array (
@@ -250,6 +252,10 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
         'Zend\\Code\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-code/src',
+        ),
+        'ZendDiagnostics\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zenddiagnostics/src',
         ),
         'Yokai\\SonataWorkflow\\' => 
         array (
@@ -663,6 +669,10 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
         array (
             0 => __DIR__ . '/..' . '/lexik/form-filter-bundle',
         ),
+        'Lcobucci\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
+        ),
         'KunicMarko\\SonataAnnotationBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/kunicmarko/sonata-annotation-bundle/src',
@@ -846,17 +856,6 @@ class ComposerStaticInit30f902ea4cbbe288852fd41a6319bb0a
     );
 
     public static $prefixesPsr0 = array (
-        'Z' => 
-        array (
-            'ZendDiagnostics\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/zendframework/zenddiagnostics/src',
-            ),
-            'ZendDiagnosticsTest\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/zendframework/zenddiagnostics/tests',
-            ),
-        ),
         'T' => 
         array (
             'Twig_Extensions_' => 
