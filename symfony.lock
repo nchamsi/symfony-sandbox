@@ -203,6 +203,9 @@
     "kunicmarko/sonata-annotation-bundle": {
         "version": "1.1.1"
     },
+    "lcobucci/jwt": {
+        "version": "3.2.2"
+    },
     "lexik/form-filter-bundle": {
         "version": "v5.0.7"
     },

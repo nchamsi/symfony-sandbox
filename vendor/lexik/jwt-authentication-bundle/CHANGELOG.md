@@ -1,14 +1,33 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.3
 
-## [2.4.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.4) (2018-03-06)
+## [2.5.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.3) (2018-07-6)
 
-* bug [\#466](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/466) bug #466 Public jwt manager ([chalasr](https://github.com/chalasr))
-* bug [\#465](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/465) bug #466 Make authentication Success/Failure handlers autowirable ([chalasr](https://github.com/chalasr))
+* bug [\#525](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/525) Make openssl key loader service deprecated ([Faecie](https://github.com/Faecie))
 
-## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-06)
+## [2.5.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.2) (2018-07-3)
+
+* bug [\#522](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/522) Fix clock skew + deprecation message ([chalasr](https://github.com/chalasr))
+
+## [2.5.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.1) (2018-06-30)
+
+* bug [\#515](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/515) Re-add namshi/jose as an hard requirement until 3.0 ([chalasr](https://github.com/chalasr))
+
+## [2.5.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.0) (2018-06-29)
+
+* feature [\#508](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/508) Replace namshi/jose by lcobucci/jwt ([chalasr](https://github.com/chalasr))
+* feature [\#485](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/485) Add a `lexik:jwt:generate-token` command ([sroze](https://github.com/sroze))
+* feature [\#369](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/369) Fix HMAC support ([chalasr](https://github.com/chalasr))
+* feature [\#492](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/492) Clock skew ([patrickjDE](https://github.com/patrickjDE))
+* feature [\#433](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/433) Added setPayload to JWTDecodedEvent analogous to JWTCreatedEvent. ([vgeyer](https://github.com/vgeyer))
+* feature [\#412](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/412) Make the token type case insensitive ([greg0ire](https://github.com/greg0ire))
+* feature [\#404](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/404) CheckConfigCommand should not be container aware ([chalasr](https://github.com/chalasr))
+* feature [\#352](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/352) JWT header alteration ([Spomky](https://github.com/Spomky))
+* feature [\#344](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/344) Add an extension point on the PayloadAwareUserProviderInterface ([sroze](https://github.com/sroze))
+
+## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-6)
 
 * bug [\#408](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/408) Response classes shouldn't have the @internal PhpDoc tag ([lashae](https://github.com/lashae))
 * bug [\#403](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/403) Switch to PSR-4 namespaces for PHPUnit ([chalasr](https://github.com/chalasr))

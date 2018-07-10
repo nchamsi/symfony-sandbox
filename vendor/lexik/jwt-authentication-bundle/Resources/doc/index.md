@@ -4,7 +4,7 @@ Getting started
 Prerequisites
 -------------
 
-This bundle requires Symfony 2.8+ (and the OpenSSL library if you intend to use the default provided encoder).
+This bundle requires Symfony 3.4+ and the openssl extension.
 
 **Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS. 
 
@@ -31,34 +31,32 @@ public function registerBundles()
 Generate the SSH keys :
 
 ``` bash
-$ mkdir -p var/jwt # For Symfony3+, no need of the -p option
-$ openssl genrsa -out var/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem
+$ mkdir -p config/jwt # For Symfony3+, no need of the -p option
+$ openssl genrsa -out config/jwt/private.pem -aes256 4096
+$ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+```
+
+In case first ```openssl``` command forces you to input password use following to get the private key decrypted
+``` bash
+$ openssl rsa -in config/jwt/private.pem -out config/jwt/private2.pem
+$ mv config/jwt/private.pem config/jwt/private.pem-back
+$ mv config/jwt/private2.pem config/jwt/private.pem
 ```
 
 Configuration
 -------------
 
-Configure the SSH keys path in your `config.yml` :
+Configure the SSH keys path in your `config/packages/lexik_jwt_authentication.yaml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    private_key_path: '%jwt_private_key_path%'
-    public_key_path:  '%jwt_public_key_path%'
-    pass_phrase:      '%jwt_key_pass_phrase%'
-    token_ttl:        '%jwt_token_ttl%'
+    secret_key:       '%kernel.project_dir%/config/jwt/private.pem' # required for token creation
+    public_key:       '%kernel.project_dir%/config/jwt/public.pem'  # required for token verification
+    pass_phrase:      'your_secret_passphrase' # required for token creation, usage of an environment variable is recommended
+    token_ttl:        3600
 ```
 
-Configure your `parameters.yml` :
-
-``` yaml
-jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem' # ssh private key path
-jwt_public_key_path:  '%kernel.root_dir%/../var/jwt/public.pem'  # ssh public key path
-jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
-jwt_token_ttl:        3600
-```
-
-Configure your `security.yml` :
+Configure your `config/packages/security.yaml` :
 
 ``` yaml
 security:
@@ -70,11 +68,10 @@ security:
             pattern:  ^/api/login
             stateless: true
             anonymous: true
-            form_login:
+            json_login:
                 check_path:               /api/login_check
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-                require_previous_session: false
 
         api:
             pattern:   ^/api
@@ -111,7 +108,7 @@ Store it (client side), the JWT is reusable until its ttl has expired (3600 seco
 Note: You can test getting the token with a simple curl command like this:
 
 ```bash
-curl -X POST http://localhost:8000/api/login_check -d _username=johndoe -d _password=test
+curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login_check -d '{"username":"johndoe","password":"test"}'
 ```
 
 If it works, you will receive something like this:
@@ -159,7 +156,7 @@ This may not be a problem depending on the system that makes calls to your API (
 
 #### Impersonation
 
-For impersonating users using JWT, see [lafourchette/SwitchUserStatelessBundle](https://github.com/lafourchette/SwitchUserStatelessBundle), a stateless replacement of the `switch_user` listener.
+For impersonating users using JWT, see https://symfony.com/doc/current/security/impersonating_user.html 
 
 #### Important note for Apache users
 
@@ -168,9 +165,7 @@ As stated in [this link](http://stackoverflow.com/questions/11990388/request-hea
 If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
 
 ```apache
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 ```
 
 Further documentation
